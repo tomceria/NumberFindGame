@@ -1,28 +1,27 @@
 package GUI;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameView {
     public JPanel contentPane;
     private JLabel lblTest1;
-    private JTextField txtTest1;
+    private JButton button1;
+    private JPanel gamePane;
+    private JPanel infoPane;
 
-    private String texter = "Hello now!";
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("GameView");
-        frame.setContentPane(new GameView().contentPane);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-    public String getTexter() {
-        return texter;
-    }
-
-    public void setTexter(String texter) {
-        this.texter = texter;
+    public GameView() {
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Hello there");
+                System.out.println(lblTest1.getLocation().x + lblTest1.getLocation().y);
+                lblTest1.setText("Hello now");
+                System.out.println("Before: " + lblTest1.getLocation().x + lblTest1.getLocation().y);
+                System.out.println("After: " + lblTest1.getLocation().x + lblTest1.getLocation().y);
+            }
+        });
     }
 
     public void setData(GameView data) {
