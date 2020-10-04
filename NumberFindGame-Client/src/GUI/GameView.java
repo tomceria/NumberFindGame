@@ -1,11 +1,15 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class GameView {
+    // GameView.form's Components
     public JPanel contentPane;
     private JLabel lblPlayerScore;
     private JButton btnQuit;
@@ -14,31 +18,57 @@ public class GameView {
     private JList listPlayers;
     private JLabel lblTimer;
 
+    // Runtime Components
+    private ArrayList<JButton> btnLevelArr;
+
     public GameView() {
         $$$setupUI$$$();
 
         bindListeners();
-
-        JButton btnTest = new JButton();
         gamePane.setLayout(null);
-        gamePane.add(btnTest);
-        btnTest.setText("Hello");
-        btnTest.setBounds(100, 200, 100, 30);
-        gamePane.revalidate();
-        gamePane.repaint();
     }
 
     public void bindListeners() {
+        gamePane.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                generateLevel();
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+            }
+
+            @Override
+            public void ancestorMoved(AncestorEvent event) {
+            }
+        });
+
         btnQuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("w: " + gamePane.getWidth() +
-                        "\nh: " + gamePane.getHeight() +
-                        "\nposX: " + gamePane.getX() +
-                        "\nposY: " + gamePane.getY());
                 System.out.println("NotImplemented: Quit Game");
             }
         });
+    }
+
+    private void generateLevel() {
+        int n = 100;
+        Rectangle gameRect = new Rectangle();
+        gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
+
+        Random rand = new Random();
+        for (int i = 1; i <= n; i++) {
+            // Calculate X and Y range
+            int posX = rand.nextInt(gameRect.width + 1) + gameRect.x;
+            int posY = rand.nextInt(gameRect.height + 1) + gameRect.y;
+
+            JButton btnTest = new JButton();
+            gamePane.add(btnTest);
+            btnTest.setText(String.format("%d", i));
+            btnTest.setBounds(posX, posY, 30, 30);
+            System.out.println(String.format("Added %d at %d,%d", i, btnTest.getLocation().x, btnTest.getLocation().y));
+        }
     }
 
     public void setData(GameView data) {
