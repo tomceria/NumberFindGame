@@ -18,17 +18,25 @@ public class GameView {
         $$$setupUI$$$();
 
         bindListeners();
+
+        JButton btnTest = new JButton();
+        gamePane.setLayout(null);
+        gamePane.add(btnTest);
+        btnTest.setText("Hello");
+        btnTest.setBounds(100, 200, 100, 30);
+        gamePane.revalidate();
+        gamePane.repaint();
     }
 
     public void bindListeners() {
         btnQuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Hello there");
-                System.out.println(lblPlayerScore.getLocation().x + lblPlayerScore.getLocation().y);
-                lblPlayerScore.setText("Hello now");
-                System.out.println("Before: " + lblPlayerScore.getLocation().x + lblPlayerScore.getLocation().y);
-                System.out.println("After: " + lblPlayerScore.getLocation().x + lblPlayerScore.getLocation().y);
+                System.out.println("w: " + gamePane.getWidth() +
+                        "\nh: " + gamePane.getHeight() +
+                        "\nposX: " + gamePane.getX() +
+                        "\nposY: " + gamePane.getY());
+                System.out.println("NotImplemented: Quit Game");
             }
         });
     }
@@ -59,7 +67,7 @@ public class GameView {
         contentPane.setLayout(new GridBagLayout());
         contentPane.setBackground(new Color(-1049857));
         gamePane = new JPanel();
-        gamePane.setLayout(new GridBagLayout());
+        gamePane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

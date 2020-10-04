@@ -9,8 +9,7 @@ public class Main {
         JFrame mainFrame = new JFrame(appName);
         mainFrame.setContentPane(new GameView().contentPane);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setSize(1024, 768);
-        System.out.print("Hello there");
+        mainFrame.setSize(1024, 768 + 22);
         mainFrame.setVisible(true);
         mainFrame.setResizable(false);
     }
