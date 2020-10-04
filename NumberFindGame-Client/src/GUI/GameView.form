@@ -26,25 +26,45 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="6d3f1" class="javax.swing.JLabel" binding="lblTest1">
+          <component id="d96d2" class="javax.swing.JButton" binding="btnQuit">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="1.0" weighty="1.0"/>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="a"/>
+              <text value="Quit"/>
+            </properties>
+          </component>
+          <component id="6d3f1" class="javax.swing.JLabel" binding="lblPlayerScore">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag top="20" left="0" bottom="20" right="0" weightx="1.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <font size="32"/>
+              <text value="10"/>
             </properties>
             <clientProperties>
               <html.disable class="java.lang.Boolean" value="false"/>
             </clientProperties>
           </component>
-          <component id="d96d2" class="javax.swing.JButton" binding="button1" default-binding="true">
+          <component id="e5561" class="javax.swing.JList" binding="listPlayers">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
               <gridbag weightx="1.0" weighty="1.0"/>
             </constraints>
+            <properties/>
+          </component>
+          <component id="b4feb" class="javax.swing.JLabel" binding="lblTimer">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="0.0"/>
+            </constraints>
             <properties>
-              <text value="Button"/>
+              <font size="21"/>
+              <text value="3:00"/>
             </properties>
           </component>
         </children>
