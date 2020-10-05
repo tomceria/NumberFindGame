@@ -98,6 +98,7 @@ public class GameView {
         contentPane.setBackground(new Color(-1049857));
         gamePane = new JPanel();
         gamePane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        gamePane.setBackground(new Color(-7411713));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -108,6 +109,7 @@ public class GameView {
         contentPane.add(gamePane, gbc);
         infoPane = new JPanel();
         infoPane.setLayout(new GridBagLayout());
+        infoPane.setBackground(new Color(-1));
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
