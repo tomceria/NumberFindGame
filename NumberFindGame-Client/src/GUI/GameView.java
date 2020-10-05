@@ -1,11 +1,15 @@
 package GUI;
 
+import Models.LevelNode;
+
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class GameView {
@@ -32,7 +36,7 @@ public class GameView {
         gamePane.addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                generateLevel();
+                renderLevel();
             }
 
             @Override
@@ -52,23 +56,42 @@ public class GameView {
         });
     }
 
-    private void generateLevel() {
-        int n = 100;
+    private void renderLevel() {
         Rectangle gameRect = new Rectangle();
         gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
 
-        Random rand = new Random();
-        for (int i = 1; i <= n; i++) {
+        ArrayList<LevelNode> level = generateLevel(100);        // TODO: Get from config
+        int index = 0;
+        for (LevelNode levelNode : level) {
             // Calculate X and Y range
-            int posX = rand.nextInt(gameRect.width + 1) + gameRect.x;
-            int posY = rand.nextInt(gameRect.height + 1) + gameRect.y;
+            int posX = (int) (levelNode.getCoord().x * gameRect.width) + gameRect.x;
+            int posY = (int) (levelNode.getCoord().y * gameRect.height) + gameRect.y;
 
             JButton btnTest = new JButton();
             gamePane.add(btnTest);
-            btnTest.setText(String.format("%d", i));
+            btnTest.setText(String.format("%d", levelNode.getValue()));
             btnTest.setBounds(posX, posY, 30, 30);
-            System.out.println(String.format("Added %d at %d,%d", i, btnTest.getLocation().x, btnTest.getLocation().y));
+            System.out.println(String.format("Added %d at %d,%d", levelNode.getValue(), btnTest.getLocation().x, btnTest.getLocation().y));
+            System.out.println("At " + index);
+            index++;
         }
+    }
+
+    private ArrayList<LevelNode> generateLevel(int count) {        // TODO: Move to Server
+        ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();
+        Random rand = new Random();         // TODO: add Seed support
+
+        for (int i = 1; i <= count; i++) {
+            LevelNode levelNode = new LevelNode();
+
+            levelNode.setValue(i);
+            levelNode.setCoord(new Point2D.Double(rand.nextDouble(), rand.nextDouble()));
+
+            levelNodes.add(levelNode);
+        }
+        Collections.shuffle(levelNodes, rand);
+
+        return levelNodes;
     }
 
     public void setData(GameView data) {
