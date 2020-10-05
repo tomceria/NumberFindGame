@@ -9,8 +9,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GameView {
     // GameView.form's Components
@@ -57,39 +60,60 @@ public class GameView {
     }
 
     private void renderLevel() {
+        int btnSize = 30;
+
         Rectangle gameRect = new Rectangle();
         gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
 
         ArrayList<LevelNode> level = generateLevel(100);        // TODO: Get from config
-        int index = 0;
         for (LevelNode levelNode : level) {
             // Calculate X and Y range
-            int posX = (int) (levelNode.getCoord().x * gameRect.width) + gameRect.x;
-            int posY = (int) (levelNode.getCoord().y * gameRect.height) + gameRect.y;
+            int posX = (int) (levelNode.getCoord().x * gameRect.width) + gameRect.x - btnSize;
+            int posY = (int) (levelNode.getCoord().y * gameRect.height) + gameRect.y - btnSize;
 
             JButton btnTest = new JButton();
             gamePane.add(btnTest);
             btnTest.setText(String.format("%d", levelNode.getValue()));
-            btnTest.setBounds(posX, posY, 30, 30);
+            btnTest.setBounds(posX, posY, btnSize, btnSize);
             System.out.println(String.format("Added %d at %d,%d", levelNode.getValue(), btnTest.getLocation().x, btnTest.getLocation().y));
-            System.out.println("At " + index);
-            index++;
         }
     }
 
     private ArrayList<LevelNode> generateLevel(int count) {        // TODO: Move to Server
         ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();
+
+        ArrayList<Integer> valueList = new ArrayList<Integer>();
+//        int[] valueArr = IntStream.rangeClosed(1, count).toArray();
+        for (int i = 1; i <= count; i++) {
+            valueList.add(i);
+        }
+
         Random rand = new Random();         // TODO: add Seed support
 
-        for (int i = 1; i <= count; i++) {
-            LevelNode levelNode = new LevelNode();
+        // GRID
+        int loopIterate = (int) (Math.sqrt(count) - 1);
+        for (int i = 0; i <= loopIterate; i++) {
+            for (int j = 0; j <= loopIterate; j++) {
+                LevelNode levelNode = new LevelNode();
 
-            levelNode.setValue(i);
-            levelNode.setCoord(new Point2D.Double(rand.nextDouble(), rand.nextDouble()));
+//                levelNode.setValue(i);
+                levelNode.setCoord(new Point2D.Double(
+                        (i + rand.nextDouble()) * 0.1,
+                        (j + rand.nextDouble()) * 0.1
+                        ));
+                System.out.println(String.format("i: %d, j: %d, val: %f, %f", i, j, levelNode.getCoord().x, levelNode.getCoord().y));
 
-            levelNodes.add(levelNode);
+                levelNodes.add(levelNode);
+            }
         }
-        Collections.shuffle(levelNodes, rand);
+
+//        Collections.shuffle(levelNodes, rand);
+//        Collections.shuffle(valueList, rand);
+
+        for (int i = 0; i < count; i++) {
+            System.out.println(i + "; " + valueList.get(i));
+            levelNodes.get(i).setValue(valueList.get(i));
+        }
 
         return levelNodes;
     }
