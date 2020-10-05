@@ -61,6 +61,7 @@ public class GameView {
 
     private void renderLevel() {
         int btnSize = 30;
+        int screenMargin = 15;
 
         Rectangle gameRect = new Rectangle();
         gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
@@ -68,19 +69,32 @@ public class GameView {
         ArrayList<LevelNode> level = generateLevel(100);        // TODO: Get from config
         for (LevelNode levelNode : level) {
             // Calculate X and Y range
-            int posX = (int) (levelNode.getCoord().x * gameRect.width) + gameRect.x - btnSize;
-            int posY = (int) (levelNode.getCoord().y * gameRect.height) + gameRect.y - btnSize;
+            int posX =
+                    (int) (
+                        (levelNode.getCoord().x * (gameRect.width - screenMargin * 2))
+                        +
+                        (gameRect.x + screenMargin)
+                    )
+                    -
+                    (btnSize / 2);
+            int posY =
+                    (int) (
+                        (levelNode.getCoord().y * (gameRect.height - screenMargin * 2))
+                        +
+                        (gameRect.y + screenMargin)
+                    )
+                    -
+                    (btnSize / 2);
 
             JButton btnTest = new JButton();
             gamePane.add(btnTest);
             btnTest.setText(String.format("%d", levelNode.getValue()));
             btnTest.setBounds(posX, posY, btnSize, btnSize);
-            System.out.println(String.format("Added %d at %d,%d", levelNode.getValue(), btnTest.getLocation().x, btnTest.getLocation().y));
         }
     }
 
     private ArrayList<LevelNode> generateLevel(int count) {        // TODO: Move to Server
-        double marginX = 0.2, marginY = 0.1;
+        double marginX = 0.2, marginY = 0.125;
         Random rand = new Random();         // TODO: add Seed support
         ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();
 
@@ -96,10 +110,19 @@ public class GameView {
                 LevelNode levelNode = new LevelNode();
 
                 levelNode.setCoord(new Point2D.Double(
-                        (i + (marginX + (1 - marginX * 2) * rand.nextDouble())) * ((double) blockPerRow / count),
-                        (j + (marginY + (1 - marginY * 2) * rand.nextDouble())) * ((double) blockPerRow / count)
+                        (
+                                i
+                                + (
+                                    marginX + (1 - marginX * 2) * rand.nextDouble()
+                                )
+                            ) * ((double) blockPerRow / count),
+                        (
+                                j
+                                + (
+                                    marginY + (1 - marginY * 2) * rand.nextDouble()
+                                )
+                            ) * ((double) blockPerRow / count)
                 ));
-                System.out.println(String.format("i: %d, j: %d, val: %f, %f", i, j, levelNode.getCoord().x, levelNode.getCoord().y));
 
                 levelNodes.add(levelNode);
             }
@@ -109,7 +132,6 @@ public class GameView {
         Collections.shuffle(valueList, rand);
 
         for (int i = 0; i < count; i++) {
-            System.out.println(i + "; " + valueList.get(i));
             levelNodes.get(i).setValue(valueList.get(i));
         }
 
