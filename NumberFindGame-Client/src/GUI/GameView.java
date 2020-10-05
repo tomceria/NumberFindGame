@@ -80,35 +80,33 @@ public class GameView {
     }
 
     private ArrayList<LevelNode> generateLevel(int count) {        // TODO: Move to Server
+        double marginX = 0.2, marginY = 0.1;
+        Random rand = new Random();         // TODO: add Seed support
         ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();
 
         ArrayList<Integer> valueList = new ArrayList<Integer>();
-//        int[] valueArr = IntStream.rangeClosed(1, count).toArray();
         for (int i = 1; i <= count; i++) {
             valueList.add(i);
         }
 
-        Random rand = new Random();         // TODO: add Seed support
-
         // GRID
-        int loopIterate = (int) (Math.sqrt(count) - 1);
-        for (int i = 0; i <= loopIterate; i++) {
-            for (int j = 0; j <= loopIterate; j++) {
+        int blockPerRow = (int) Math.sqrt(count);
+        for (int i = 0; i < blockPerRow; i++) {
+            for (int j = 0; j < blockPerRow; j++) {
                 LevelNode levelNode = new LevelNode();
 
-//                levelNode.setValue(i);
                 levelNode.setCoord(new Point2D.Double(
-                        (i + rand.nextDouble()) * 0.1,
-                        (j + rand.nextDouble()) * 0.1
-                        ));
+                        (i + (marginX + (1 - marginX * 2) * rand.nextDouble())) * ((double) blockPerRow / count),
+                        (j + (marginY + (1 - marginY * 2) * rand.nextDouble())) * ((double) blockPerRow / count)
+                ));
                 System.out.println(String.format("i: %d, j: %d, val: %f, %f", i, j, levelNode.getCoord().x, levelNode.getCoord().y));
 
                 levelNodes.add(levelNode);
             }
         }
 
-//        Collections.shuffle(levelNodes, rand);
-//        Collections.shuffle(valueList, rand);
+        Collections.shuffle(levelNodes, rand);
+        Collections.shuffle(valueList, rand);
 
         for (int i = 0; i < count; i++) {
             System.out.println(i + "; " + valueList.get(i));
