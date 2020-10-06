@@ -103,7 +103,7 @@ public class GameView {
             valueList.add(i);
         }
 
-        // GRID
+        // GRID-BASED NODE GENERATOR
         int blockPerRow = (int) Math.sqrt(count);
         for (int i = 0; i < blockPerRow; i++) {
             for (int j = 0; j < blockPerRow; j++) {
