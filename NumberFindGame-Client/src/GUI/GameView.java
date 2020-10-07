@@ -111,8 +111,8 @@ public class GameView {
         int countPerfect = (int) Math.pow(blockPerRow, 2);  // Lấy số Chính phương tiếp theo của count (trường hợp count ko là SCP)
         double blockSize = (double) blockPerRow / countPerfect;                   // Kích thước mỗi block theo trục X Y tương ứng
         double maxForX = Math.pow(30, 2), maxForY = Math.pow(25, 2); // 2 số này được tìm ra dựa trên tỉ lệ màn hình của Khung màn hình trận đấu
-        double marginX = valueFromTwoRanges(countPerfect, 0, maxForX, 0.15, 0.5); // Với mỗi ô block, có margin ngang và dọc (điều chỉnh tương ứng với tỉ lệ màn hình)
-        double marginY = valueFromTwoRanges(countPerfect, 0, maxForY, 0.065, 0.5); // 0.16, 0.065 là do Aspect Ratio của Màn hình trận đấu
+        double marginX = valueFromTwoRanges(countPerfect, 100, maxForX, 0.2, 0.5); // Với mỗi ô block, có margin ngang và dọc (điều chỉnh tương ứng với tỉ lệ màn hình)
+        double marginY = valueFromTwoRanges(countPerfect, 100, maxForY, 0.125, 0.5); // 0.16, 0.065 là do Aspect Ratio của Màn hình trận đấu
 
         for (int i = 0; i < blockPerRow; i++) {
             for (int j = 0; j < blockPerRow; j++) {                  // Lặp tuần tự từ trên xuống dưới, từ trái qua phải
@@ -162,7 +162,15 @@ public class GameView {
     private double valueFromTwoRanges(double value, double minA, double maxA, double minB, double maxB) {
         // Từ một value nằm trong khoảng (minA,maxA), cho ra giá trị tỉ lệ tương ứng trong khoảng (minB, maxB)
         double percent = ((value - minA) * 100) / (maxA - minA);
+
+        if (percent < 0) {
+            percent = 0;
+        } else if (percent > 100) {
+            percent = 100;
+        }
+
         double result = ((percent * (maxB - minB)) / 100) + minB;
+
         return result;
     }
 
