@@ -7,14 +7,12 @@ import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class GameView {
     // GameView.form's Components
@@ -27,7 +25,7 @@ public class GameView {
     private JLabel lblTimer;
 
     // Runtime Components
-    private ArrayList<JButton> btnLevelArr;
+    private ArrayList<LevelNode> level;
 
     public GameView() {
         $$$setupUI$$$();
@@ -67,7 +65,7 @@ public class GameView {
         Rectangle gameRect = new Rectangle();  // gameRect lưu trữ vị trí, kích thước của khung MÀN HÌNH TRẬN ĐẤU lúc bấy giờ => Không cho phép resize
         gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
 
-        ArrayList<LevelNode> level = generateLevel(100);                         // TODO: Fetched from match server
+        this.level = generateLevel(100);                         // TODO: Fetched from match server
         for (LevelNode levelNode : level) {
             int posX =     // Vị trí mà LevelNode được đặt trên màn hình tương ứng với tỉ lệ của LevelNode.coord ([0,1])
                     (int) (
@@ -89,7 +87,14 @@ public class GameView {
                             (btnSize / 2);
 
             LevelNodeButton btn = new LevelNodeButton(levelNode.getValue(), new Point(posX, posY));
+            levelNode.setButton(btn);
             btn.addToContainer(gamePane);
+            btn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println(levelNode.getValue());
+                }
+            });
         }
         gamePane.repaint();
     }
@@ -172,16 +177,6 @@ public class GameView {
         double result = ((percent * (maxB - minB)) / 100) + minB;
 
         return result;
-    }
-
-    public void setData(GameView data) {
-    }
-
-    public void getData(GameView data) {
-    }
-
-    public boolean isModified(GameView data) {
-        return false;
     }
 
     private void createUIComponents() {

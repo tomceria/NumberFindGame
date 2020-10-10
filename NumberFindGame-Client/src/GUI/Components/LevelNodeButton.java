@@ -2,7 +2,6 @@ package GUI.Components;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 
 public class LevelNodeButton extends JButton implements IComponent {
     final int SIZE = 30;
@@ -26,6 +25,9 @@ public class LevelNodeButton extends JButton implements IComponent {
         this.setBorderPainted(false);
         this.setBorder(null);
         this.setForeground(Color.WHITE);
-        this.setFont(new Font("SansSerif", Font.BOLD, 14));
+        this.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+        // Event listeners
+
     }
 }
