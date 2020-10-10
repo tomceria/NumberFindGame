@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.Components.LevelNodeButton;
 import Models.LevelNode;
 
 import javax.swing.*;
@@ -87,11 +88,10 @@ public class GameView {
                             -
                             (btnSize / 2);
 
-            JButton btnTest = new JButton(); // TODO: Button Component
-            gamePane.add(btnTest);
-            btnTest.setText(String.format("%d", levelNode.getValue()));
-            btnTest.setBounds(posX, posY, btnSize, btnSize);
+            LevelNodeButton btn = new LevelNodeButton(levelNode.getValue(), new Point(posX, posY));
+            btn.addToContainer(gamePane);
         }
+        gamePane.repaint();
     }
 
     private ArrayList<LevelNode> generateLevel(int count) {                  // TODO: Move to Server
