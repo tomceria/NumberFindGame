@@ -57,6 +57,9 @@ public class GameBUS {
         }
         game.setClientPlayer(clientPlayer);
 
+        // Set Current Level: value and timeStart
+        game.setCurrentLevel(1);
+
         return game;
     }
 
@@ -140,14 +143,19 @@ public class GameBUS {
     }
 
     private boolean sendLevelNodeForValidation(LevelNode levelNode) {
-        int currentLevel = game.getCurrentLevel();
+        Game.CurrentLevel currentLevel = game.getCurrentLevel();
         boolean accept = false;
 
-        if (currentLevel == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
+        if (currentLevel.getValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
             accept = true;
-            game.setCurrentLevel(currentLevel + 1);
+
+            // TODO: Set score, avgTime, placing for Players
+
+            // Increase currentLevel (also reset timer, done in model)
+            game.setCurrentLevel(currentLevel.getValue() + 1);
+
             // TODO: Server notify ALL PLAYERS that currentLevel has changed
-            System.out.println(game.getCurrentLevel());
+            System.out.println(game.getCurrentLevel().getValue());
         }
 
         return accept;
