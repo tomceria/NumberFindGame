@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 public class GameView {
     // GameView.form's Components
     public JPanel contentPane;
-    private JLabel lblPlayerScore;
+    private JLabel lblFindThis;
     private JButton btnQuit;
     private JPanel gamePane;
     private JPanel infoPane;
@@ -39,6 +39,10 @@ public class GameView {
             public void ancestorAdded(AncestorEvent event) {                       // Trigger when game screen is loaded
                 // Start game
                 gameBUS = new GameBUS();
+                gameBUS.viewBinder.lblFindThis = lblFindThis;
+                gameBUS.viewBinder.lblTimer = lblTimer;
+                gameBUS.viewBinder.listPlayers = listPlayers;
+                gameBUS.viewBinder.update();
                 renderLevel();
             }
 
@@ -151,17 +155,17 @@ public class GameView {
         gbc.gridy = 3;
         gbc.weightx = 1.0;
         infoPane.add(btnQuit, gbc);
-        lblPlayerScore = new JLabel();
-        Font lblPlayerScoreFont = this.$$$getFont$$$(null, -1, 32, lblPlayerScore.getFont());
-        if (lblPlayerScoreFont != null) lblPlayerScore.setFont(lblPlayerScoreFont);
-        lblPlayerScore.setText("10");
-        lblPlayerScore.putClientProperty("html.disable", Boolean.FALSE);
+        lblFindThis = new JLabel();
+        Font lblFindThisFont = this.$$$getFont$$$(null, -1, 32, lblFindThis.getFont());
+        if (lblFindThisFont != null) lblFindThis.setFont(lblFindThisFont);
+        lblFindThis.setText("10");
+        lblFindThis.putClientProperty("html.disable", Boolean.FALSE);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.insets = new Insets(20, 0, 20, 0);
-        infoPane.add(lblPlayerScore, gbc);
+        infoPane.add(lblFindThis, gbc);
         listPlayers = new JList();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

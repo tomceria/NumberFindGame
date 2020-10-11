@@ -6,6 +6,7 @@ import Models.MatchPlayer;
 import Models.Player;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
+import javax.swing.*;
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -28,8 +29,10 @@ public class GameBUS {
     private Game game;
     private HashMap<String, String> settings;
 
+    public ViewBinder viewBinder = new ViewBinder();                                       // TODO: Client-only Property
+
     public GameBUS() {
-        this.game = initGame(1);
+        this.game = initGame(1);                                 // TODO: get ClientPlayer from somewhere...
     }
 
     public Game getGame() {
@@ -72,6 +75,19 @@ public class GameBUS {
         }
 
         sendLevelNodeForValidation(levelNode, game.getClientPlayer());
+
+        // TODO: Remove this
+        this.viewBinder.update();
+    }
+
+    public class ViewBinder {
+        public JLabel lblFindThis;
+        public JLabel lblTimer;
+        public JList listPlayers;
+
+        public void update() {
+            lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
+        }
     }
 
     // TODO: SERVER-SIDE
@@ -188,6 +204,7 @@ public class GameBUS {
 
         // Bước 1: Những người chơi đã có điểm => Add vào ĐẦU danh sách tạm
         for (int i = 1; i <= game.getCurrentLevel().getValue(); i++) {
+            // TODO: Placing based on avgTime
             for (MatchPlayer matchPlayer : matchPlayers) {
                 if (matchPlayer.getScore() == i) {
                     sortingMatchPlayers.add(0, matchPlayer);
