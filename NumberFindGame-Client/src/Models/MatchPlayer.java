@@ -1,5 +1,6 @@
 package Models;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -9,6 +10,8 @@ public class MatchPlayer {
     int score = 0;
     double avgTime = 0;                                                                                     // in second
     int placing = 1;
+    // Client-only Properties
+    Color uiColor;
 
     public MatchPlayer(Player player) {
         this.player = player;
@@ -38,5 +41,9 @@ public class MatchPlayer {
     }
     public void setPlacing(int placing) {
         this.placing = placing;
+    }
+
+    public Color getUiColor() {
+        return uiColor;
     }
 }

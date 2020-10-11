@@ -7,6 +7,7 @@ import Models.Player;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -74,9 +75,26 @@ public class GameBUS {
             throw new IllegalArgumentException("Selected LevelNode does not belong to this Game's context");
         }
 
-        sendLevelNodeForValidation(levelNode, game.getClientPlayer());
+        boolean result = sendLevelNodeForValidation(levelNode, game.getClientPlayer());
+//        if (result == true) {
+//            levelNode.getButton().setOpaque(true);
+//            levelNode.getButton().setBackground(Color.RED);
+//        }
 
-        // TODO: Remove this
+        // TODO: Receive new Data from Server
+        this.listen_GameUpdated();
+    }
+
+    public void listen_GameUpdated() {
+        // Update colors of LevelNodeButtons
+        for (LevelNode levelNode : game.getLevel()) {
+            MatchPlayer pickingMatchPlayer = levelNode.getPickingMatchPlayer();
+            if (pickingMatchPlayer != null) {
+                levelNode.getButton().setOpaque(true);
+                levelNode.getButton().setBackground(pickingMatchPlayer.getUiColor());
+            }
+        }
+
         this.viewBinder.update();
     }
 
@@ -170,6 +188,9 @@ public class GameBUS {
 
             // TODO: Set score, avgTime for sendingPlayer
             this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
+
+            // TODO: Set picker=sendingPlayer for levelNode
+            levelNode.setPickingMatchPlayer(sendingPlayer);
 
             // TODO: Set placing for Players
             this.performPlacingPlayers();

@@ -9,6 +9,7 @@ public class LevelNode {
     int value;
     Point2D.Double coord;
     LevelNodeButton button;
+    MatchPlayer pickingMatchPlayer;
 
     public LevelNode() {
 
@@ -35,4 +36,11 @@ public class LevelNode {
 
     public LevelNodeButton getButton() { return button; }
     public void setButton(LevelNodeButton button) { this.button = button; }
+
+    public MatchPlayer getPickingMatchPlayer() {
+        return pickingMatchPlayer;
+    }
+    public void setPickingMatchPlayer(MatchPlayer pickingMatchPlayer) {
+        this.pickingMatchPlayer = pickingMatchPlayer;
+    }
 }

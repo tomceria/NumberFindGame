@@ -1,5 +1,6 @@
 package Models;
 
+import java.awt.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -37,7 +38,23 @@ public class Game {
         return players;
     }
     public void setMatchPlayers(ArrayList<MatchPlayer> players) {
+        // Set UiColor for MatchPlayers
+        ArrayList<Color> colors = new ArrayList<Color>() {{                                       // TODO: Move to Utils
+            add(Color.RED);
+            add(Color.YELLOW);
+            add(Color.BLUE);
+            add(Color.GREEN);
+            add(Color.ORANGE);
+            add(Color.PINK);
+            add(Color.CYAN);
+            add(Color.MAGENTA);
+        }};
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).uiColor = colors.get(i);
+        }
+
         this.players = players;
+
     }
 
     public MatchPlayer getClientPlayer() {
