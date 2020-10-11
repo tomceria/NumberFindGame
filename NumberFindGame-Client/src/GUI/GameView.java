@@ -3,6 +3,7 @@ package GUI;
 import BUS.GameBUS;
 import GUI.Components.LevelNodeButton;
 import Models.LevelNode;
+import Models.MatchPlayer;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -18,7 +19,7 @@ public class GameView {
     private JButton btnQuit;
     private JPanel gamePane;
     private JPanel infoPane;
-    private JList listPlayers;
+    private JList<MatchPlayer> listPlayers;
     private JLabel lblTimer;
 
     private GameBUS gameBUS;
@@ -130,7 +131,7 @@ public class GameView {
         contentPane.setBackground(new Color(-1049857));
         gamePane = new JPanel();
         gamePane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        gamePane.setBackground(new Color(-16747891));
+        gamePane.setBackground(new Color(-15064194));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -167,6 +168,8 @@ public class GameView {
         gbc.insets = new Insets(20, 0, 20, 0);
         infoPane.add(lblFindThis, gbc);
         listPlayers = new JList();
+        listPlayers.setBackground(new Color(-1));
+        listPlayers.setForeground(new Color(-16777216));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;

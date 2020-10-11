@@ -49,14 +49,12 @@ public class Game {
     public void setMatchPlayers(ArrayList<MatchPlayer> players) {
         // Set UiColor for MatchPlayers
         ArrayList<Color> colors = new ArrayList<Color>() {{                                       // TODO: Move to Utils
-            add(Color.RED);
-            add(Color.YELLOW);
-            add(Color.BLUE);
-            add(Color.GREEN);
-            add(Color.ORANGE);
-            add(Color.PINK);
-            add(Color.CYAN);
-            add(Color.MAGENTA);
+            add(Color.decode("#f73378"));
+            add(Color.decode("#ffee33"));
+            add(Color.decode("#33bfff"));
+            add(Color.decode("#33eb91"));
+            add(Color.decode("#ffa733"));
+            add(Color.decode("#834bff"));
         }};
         for (int i = 0; i < players.size(); i++) {
             players.get(i).uiColor = colors.get(i);

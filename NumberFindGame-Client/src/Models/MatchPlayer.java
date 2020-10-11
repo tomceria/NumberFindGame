@@ -46,4 +46,9 @@ public class MatchPlayer {
     public Color getUiColor() {
         return uiColor;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s", getPlayer().getFirstName(), getScore());
+    }
 }

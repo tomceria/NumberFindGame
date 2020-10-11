@@ -1,11 +1,11 @@
 package BUS;
 
 import Common.ViewBinder;
+import GUI.Components.MatchPlayerCellRenderer;
 import Models.*;
 
 import javax.swing.*;
 import java.awt.geom.Point2D;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -99,7 +99,7 @@ public class GameBUS {
         this.viewBinder.update();
     }
 
-    public String getTimerClock() {
+    public String ui_getTimerClock() {
         int timeInMillis = game.getMatchSettings().getTimeInMillis();
         LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
         LocalTime timeDiff = timeEnd.minusNanos(LocalTime.now().toNanoOfDay());
@@ -109,38 +109,38 @@ public class GameBUS {
         return timeDiff.format(dtf);
     }
 
+    public void ui_initPlayerList(JList list) {
+        DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
+        for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
+                listModel.addElement(matchPlayer);
+        }
+            list.setModel(listModel);
+            list.setCellRenderer(new MatchPlayerCellRenderer());
+    }
+
     public class GameBUS_ViewBinder extends ViewBinder {
         public JLabel lblFindThis;
         public JLabel lblTimer;
         public JList listPlayers;
 
-        private Timer timer = new Timer();
-
+        @Override
         public void startUpdatePeriod() {
-            timer.schedule(updateUiTask, 0, 250);
-        }
-        public void stopUpdatePeriod() {
-            timer.cancel();
+            super.startUpdatePeriod();
+
         }
 
         public void update() {
             lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
-            lblTimer.setText(getTimerClock());
+            lblTimer.setText(ui_getTimerClock());
+            ui_initPlayerList(listPlayers);
         }
-
-        private TimerTask updateUiTask = new TimerTask() {
-            @Override
-            public void run() {
-                update();
-            }
-        };
     }
 
     // TODO: SERVER-SIDE
 
     private MatchSettings loadMatchSettingsFromConfigs() {
         // TODO: Load from Config file
-        MatchSettings matchSettings = new MatchSettings(100, 180000, 4);
+        MatchSettings matchSettings = new MatchSettings(50, 180000, 4);
         return matchSettings;
     }
 
