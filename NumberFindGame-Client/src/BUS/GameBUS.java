@@ -1,15 +1,13 @@
 package BUS;
 
-import Models.Game;
-import Models.LevelNode;
-import Models.MatchPlayer;
-import Models.Player;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+import Models.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.geom.Point2D;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.Timer;
 
@@ -42,8 +40,11 @@ public class GameBUS {
         Game game = new Game();
         MatchPlayer clientPlayer = null;
 
+        // Receive Game Settings from Server
+        game.setMatchSettings(loadMatchSettingsFromConfigs());                         // TODO: Get settings from Server
+
         // Receive Level info from Server
-        game.setLevel(generateLevel(100));                                          // TODO: Get level from Server
+        game.setLevel(generateLevel(game.getMatchSettings().getNumberQty()));             // TODO: Get level from Server
         ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();     // Also used for placings, by sort order
 
         // Get Room's players info
@@ -67,6 +68,7 @@ public class GameBUS {
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
         game.setCurrentLevel(1);                                                    // also reset timer for CurrentLevel
+
         this.viewBinder.startUpdatePeriod();
 
         return game;
@@ -96,6 +98,16 @@ public class GameBUS {
         this.viewBinder.update();
     }
 
+    public String getTimerClock() {
+        int timeInMillis = game.getMatchSettings().getTimeInMillis();
+        LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
+        LocalTime timeDiff = timeEnd.minusNanos(LocalTime.now().toNanoOfDay());
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("mm:ss");
+
+        return timeDiff.format(dtf);
+    }
+
     public class ViewBinder {
         public JLabel lblFindThis;
         public JLabel lblTimer;
@@ -112,6 +124,7 @@ public class GameBUS {
 
         public void update() {
             lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
+            lblTimer.setText(getTimerClock());
         }
 
         private TimerTask updateUiTask = new TimerTask() {
@@ -123,6 +136,12 @@ public class GameBUS {
     }
 
     // TODO: SERVER-SIDE
+
+    private MatchSettings loadMatchSettingsFromConfigs() {
+        // TODO: Load from Config file
+        MatchSettings matchSettings = new MatchSettings(100, 180000, 4);
+        return matchSettings;
+    }
 
     private ArrayList<LevelNode> generateLevel(int count) {                                      // TODO: Move to server
         Random rand = new Random();                                                            // TODO: add Seed support

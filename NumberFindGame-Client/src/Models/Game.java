@@ -5,12 +5,20 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Game {
+    MatchSettings matchSettings;
     CurrentLevel currentLevel;
     ArrayList<LevelNode> level;
     ArrayList<MatchPlayer> players;
     LocalTime startTime;
 
     MatchPlayer clientPlayer;                                                              // TODO: Client-only Property
+
+    public MatchSettings getMatchSettings() {
+        return matchSettings;
+    }
+    public void setMatchSettings(MatchSettings matchSettings) {
+        this.matchSettings = matchSettings;
+    }
 
     public CurrentLevel getCurrentLevel() {
         return currentLevel;
