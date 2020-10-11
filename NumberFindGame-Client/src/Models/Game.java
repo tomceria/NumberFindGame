@@ -8,6 +8,7 @@ public class Game {
     CurrentLevel currentLevel;
     ArrayList<LevelNode> level;
     ArrayList<MatchPlayer> players;
+    LocalTime startTime;
 
     MatchPlayer clientPlayer;                                                              // TODO: Client-only Property
 
@@ -55,6 +56,13 @@ public class Game {
 
         this.players = players;
 
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
     public MatchPlayer getClientPlayer() {

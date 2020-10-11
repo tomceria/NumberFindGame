@@ -10,10 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
+import java.util.Timer;
 
 public class GameBUS {
     // TODO: Placeholder - Dump Players data
@@ -64,8 +62,12 @@ public class GameBUS {
         }
         game.setClientPlayer(clientPlayer);
 
-        // Set Current Level: value and timeStart. This has to be the LAST statement in the init() to provide fair gameplay
-        game.setCurrentLevel(1);
+        // TODO: Server-side Actions
+
+        // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
+        game.setStartTime(LocalTime.now());
+        game.setCurrentLevel(1);                                                    // also reset timer for CurrentLevel
+        this.viewBinder.startUpdatePeriod();
 
         return game;
     }
@@ -76,10 +78,6 @@ public class GameBUS {
         }
 
         boolean result = sendLevelNodeForValidation(levelNode, game.getClientPlayer());
-//        if (result == true) {
-//            levelNode.getButton().setOpaque(true);
-//            levelNode.getButton().setBackground(Color.RED);
-//        }
 
         // TODO: Receive new Data from Server
         this.listen_GameUpdated();
@@ -103,9 +101,25 @@ public class GameBUS {
         public JLabel lblTimer;
         public JList listPlayers;
 
+        private Timer timer = new Timer();
+
+        public void startUpdatePeriod() {
+            timer.schedule(updateUiTask, 0, 250);
+        }
+        public void stopUpdatePeriod() {
+            timer.cancel();
+        }
+
         public void update() {
             lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
         }
+
+        private TimerTask updateUiTask = new TimerTask() {
+            @Override
+            public void run() {
+                update();
+            }
+        };
     }
 
     // TODO: SERVER-SIDE
