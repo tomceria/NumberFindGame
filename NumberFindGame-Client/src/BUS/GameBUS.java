@@ -23,6 +23,16 @@ public class GameBUS {
         return game;
     }
 
+    public void handle_OnClick_NodeLevelButton(LevelNode levelNode) {
+        if (game.getLevel().indexOf(levelNode) < 0) {
+            throw new IllegalArgumentException("Selected LevelNode does not belong to this Game's context");
+        }
+
+        System.out.println(levelNode.getValue());
+    }
+
+    // SERVER-SIDE
+
     private ArrayList<LevelNode> generateLevel(int count) {                                      // TODO: Move to server
         Random rand = new Random();                                                            // TODO: add Seed support
         ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();

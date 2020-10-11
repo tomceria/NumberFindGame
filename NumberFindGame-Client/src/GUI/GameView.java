@@ -41,10 +41,10 @@ public class GameView {
     private void bindListeners() {
         gamePane.addAncestorListener(new AncestorListener() {
             @Override
-            public void ancestorAdded(AncestorEvent event) {
+            public void ancestorAdded(AncestorEvent event) {                       // Trigger when game screen is loaded
                 // Start game
                 gameBUS = new GameBUS();
-                renderLevel(gameBUS.getGame());
+                renderLevel();
             }
 
             @Override
@@ -64,14 +64,14 @@ public class GameView {
         });
     }
 
-    private void renderLevel(Game game) {
+    private void renderLevel() {
         int btnSize = 30;                                                              // Kích thước của Button hiển thị
         int screenMargin = 15;     // Margin của Màn hình trận đấu, giúp cho Nút không bị che khuất bởi phạm vi hiển thị
 
         Rectangle gameRect = new Rectangle();  // gameRect lưu trữ vị trí, kích thước của khung MÀN HÌNH TRẬN ĐẤU lúc bấy giờ => Không cho phép resize
         gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
 
-        for (LevelNode levelNode : game.getLevel()) {
+        for (LevelNode levelNode : gameBUS.getGame().getLevel()) {
             int posX =     // Vị trí mà LevelNode được đặt trên màn hình tương ứng với tỉ lệ của LevelNode.coord ([0,1])
                     (int) (
                             (levelNode.getCoord().x                    // coord.x là vị trí x của LevelNode, nằm trong [0,1]
@@ -97,7 +97,7 @@ public class GameView {
             btn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println(levelNode.getValue());
+                    gameBUS.handle_OnClick_NodeLevelButton(levelNode);
                 }
             });
         }
