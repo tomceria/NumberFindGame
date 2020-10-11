@@ -13,10 +13,17 @@ public class Game {
     public CurrentLevel getCurrentLevel() {
         return currentLevel;
     }
+    public int getCurrentLevelNodeValue() {
+        return level
+                .get(currentLevel.value - 1)
+                .getValue();
+    }
     public void setCurrentLevel(int currentLevelValue) {    // Set will also restart timer
         this.currentLevel = new CurrentLevel();
         this.currentLevel.setValue(currentLevelValue);
         this.currentLevel.setTimeStart(LocalTime.now());
+
+        System.out.println("NOW FIND: " + getCurrentLevelNodeValue());
     }
 
     public ArrayList<LevelNode> getLevel() {

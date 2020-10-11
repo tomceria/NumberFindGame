@@ -147,19 +147,18 @@ public class GameBUS {
         Game.CurrentLevel currentLevel = game.getCurrentLevel();
         boolean accept = false;
 
-        if (currentLevel.getValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
+        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
             accept = true;
 
             // TODO: Set score, avgTime for sendingPlayer
+            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
 
             // TODO: Set placing for Players
-            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
 
             // Increase currentLevel (also reset timer, done in model)
             game.setCurrentLevel(currentLevel.getValue() + 1);
 
             // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
-            System.out.println(game.getCurrentLevel().getValue() + "; " + game.getClientPlayer().getAvgTime());
         }
 
         return accept;
@@ -168,6 +167,8 @@ public class GameBUS {
     private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart) {
         matchPlayer.setScore(matchPlayer.getScore() + 1);
         matchPlayer.newAvgTime(timeStart);
+
+        System.out.println(String.format("SCORE: %s; AVGTIME: %s", game.getClientPlayer().getScore(), game.getClientPlayer().getAvgTime()));
     }
 
     // TODO: Utils

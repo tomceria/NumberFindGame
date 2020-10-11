@@ -29,7 +29,6 @@ public class MatchPlayer {
         return avgTime;
     }
     public void newAvgTime(LocalTime timeStart) {
-        System.out.println(LocalTime.now().getSecond() + "; " + timeStart.getSecond());
         double time = Duration.between(timeStart, LocalTime.now()).toMillis() * 1.0 / 1000;
         this.avgTime = avgTime <= 0 ? time : (double)(time + avgTime) / 2;
     }
