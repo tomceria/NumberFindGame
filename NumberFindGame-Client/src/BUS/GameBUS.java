@@ -1,5 +1,6 @@
 package BUS;
 
+import Common.ViewBinder;
 import Models.*;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class GameBUS {
     private Game game;
     private HashMap<String, String> settings;
 
-    public ViewBinder viewBinder = new ViewBinder();                                       // TODO: Client-only Property
+    public GameBUS_ViewBinder viewBinder = new GameBUS_ViewBinder();                       // TODO: Client-only Property
 
     public GameBUS() {
         this.game = initGame(1);                                 // TODO: get ClientPlayer from somewhere...
@@ -108,7 +109,7 @@ public class GameBUS {
         return timeDiff.format(dtf);
     }
 
-    public class ViewBinder {
+    public class GameBUS_ViewBinder extends ViewBinder {
         public JLabel lblFindThis;
         public JLabel lblTimer;
         public JList listPlayers;
