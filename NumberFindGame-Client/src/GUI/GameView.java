@@ -1,6 +1,7 @@
 package GUI;
 
 import GUI.Components.LevelNodeButton;
+import Models.Game;
 import Models.LevelNode;
 
 import javax.swing.*;
@@ -25,19 +26,24 @@ public class GameView {
     private JLabel lblTimer;
 
     // Runtime Components
-    private ArrayList<LevelNode> level;
+    private Game game;
 
     public GameView() {
         $$$setupUI$$$();
-
+        customizeComponents();
         bindListeners();
+    }
+
+    private void customizeComponents() {
         gamePane.setLayout(null);
     }
 
-    public void bindListeners() {
+    private void bindListeners() {
         gamePane.addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
+                // Start game
+                game = new Game();
                 renderLevel();
             }
 
@@ -65,8 +71,8 @@ public class GameView {
         Rectangle gameRect = new Rectangle();  // gameRect lưu trữ vị trí, kích thước của khung MÀN HÌNH TRẬN ĐẤU lúc bấy giờ => Không cho phép resize
         gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
 
-        this.level = generateLevel(100);                         // TODO: Fetched from match server
-        for (LevelNode levelNode : level) {
+        game.setLevel(generateLevel(100));                                      // TODO: Fetched from match server
+        for (LevelNode levelNode : game.getLevel()) {
             int posX =     // Vị trí mà LevelNode được đặt trên màn hình tương ứng với tỉ lệ của LevelNode.coord ([0,1])
                     (int) (
                             (levelNode.getCoord().x                    // coord.x là vị trí x của LevelNode, nằm trong [0,1]
