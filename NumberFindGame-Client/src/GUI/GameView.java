@@ -128,7 +128,7 @@ public class GameView {
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
-        contentPane.setBackground(new Color(-1049857));
+        contentPane.setBackground(new Color(-1));
         gamePane = new JPanel();
         gamePane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         gamePane.setBackground(new Color(-15064194));
@@ -143,6 +143,7 @@ public class GameView {
         infoPane = new JPanel();
         infoPane.setLayout(new GridBagLayout());
         infoPane.setBackground(new Color(-1));
+        infoPane.setForeground(new Color(-16777216));
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -153,7 +154,7 @@ public class GameView {
         btnQuit.setText("Quit");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.weightx = 1.0;
         infoPane.add(btnQuit, gbc);
         lblFindThis = new JLabel();
@@ -163,7 +164,7 @@ public class GameView {
         lblFindThis.putClientProperty("html.disable", Boolean.FALSE);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         gbc.weightx = 1.0;
         gbc.insets = new Insets(20, 0, 20, 0);
         infoPane.add(lblFindThis, gbc);
@@ -172,7 +173,7 @@ public class GameView {
         listPlayers.setForeground(new Color(-16777216));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -183,9 +184,21 @@ public class GameView {
         lblTimer.setText("3:00");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.weightx = 1.0;
         infoPane.add(lblTimer, gbc);
+        final JPanel spacer1 = new JPanel();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.BOTH;
+        infoPane.add(spacer1, gbc);
+        final JPanel spacer2 = new JPanel();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        infoPane.add(spacer2, gbc);
     }
 
     /**

@@ -91,8 +91,7 @@ public class GameBUS {
         for (LevelNode levelNode : game.getLevel()) {
             MatchPlayer pickingMatchPlayer = levelNode.getPickingMatchPlayer();
             if (pickingMatchPlayer != null) {
-                levelNode.getButton().setOpaque(true);
-                levelNode.getButton().setBackground(pickingMatchPlayer.getUiColor());
+                levelNode.getButton().setPicked(pickingMatchPlayer);
             }
         }
 
@@ -130,9 +129,11 @@ public class GameBUS {
         }
 
         public void update() {
-            lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
-            lblTimer.setText(ui_getTimerClock());
-            ui_initPlayerList(listPlayers);
+            if (game != null) {
+                lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
+                lblTimer.setText(ui_getTimerClock());
+                ui_initPlayerList(listPlayers);
+            }
         }
     }
 
@@ -140,7 +141,7 @@ public class GameBUS {
 
     private MatchSettings loadMatchSettingsFromConfigs() {
         // TODO: Load from Config file
-        MatchSettings matchSettings = new MatchSettings(50, 180000, 4);
+        MatchSettings matchSettings = new MatchSettings(100, 180000, 4);
         return matchSettings;
     }
 

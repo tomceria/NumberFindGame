@@ -70,12 +70,16 @@ public class MatchPlayerCellRenderer extends JPanel implements ListCellRenderer<
         Player player = value.getPlayer();
 
         paneAvatar.setBackground(value.getUiColor());
+
         lblNameInitial.setText(String.format(
                 "%c%c",
                 player.getFirstName().toUpperCase().charAt(0),
                 player.getLastName().toUpperCase().charAt(0)
         ));
+        lblNameInitial.setFont(new Font("SansSerif", Font.PLAIN, 21));
+
         lblScore.setText(value.getScore() + "");
+        lblScore.setFont(new Font("SansSerif", Font.BOLD, 12));
 
         return this;
     }

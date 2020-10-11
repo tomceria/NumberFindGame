@@ -1,5 +1,7 @@
 package GUI.Components;
 
+import Models.MatchPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,8 +28,11 @@ public class LevelNodeButton extends JButton implements IComponent {
         this.setBorder(null);
         this.setForeground(Color.WHITE);
         this.setFont(new Font("SansSerif", Font.PLAIN, 14));
+    }
 
-        // Event listeners
-
+    public void setPicked(MatchPlayer matchPlayer) {
+        this.setOpaque(true);
+        this.setBackground(matchPlayer.getUiColor());
+        this.setForeground(Color.BLACK);
     }
 }
