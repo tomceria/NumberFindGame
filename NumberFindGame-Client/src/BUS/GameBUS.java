@@ -38,8 +38,11 @@ public class GameBUS {
         Game game = new Game();
         MatchPlayer clientPlayer = null;
 
+        // Receive Level info from Server
         game.setLevel(generateLevel(100));                                          // TODO: Get level from Server
         ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
+
+        // Get Room's players info
         for (Player player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
             MatchPlayer matchPlayer = new MatchPlayer(player);
             matchPlayers.add(matchPlayer);
@@ -48,19 +51,21 @@ public class GameBUS {
             }
         }
 
+        // Set Client Player
         if (clientPlayer == null) {
             throw new RuntimeException("Player ID mismatch");
         }
         game.setClientPlayer(clientPlayer);
+
         return game;
     }
 
-    public void handle_OnClick_NodeLevelButton(LevelNode levelNode) {
+    public void action_ClientChooseLevelNode(LevelNode levelNode) {
         if (game.getLevel().indexOf(levelNode) < 0) {
             throw new IllegalArgumentException("Selected LevelNode does not belong to this Game's context");
         }
 
-        System.out.println(levelNode.getValue());
+        sendLevelNodeForValidation(levelNode);
     }
 
     // TODO: SERVER-SIDE
@@ -133,6 +138,22 @@ public class GameBUS {
     private ArrayList<Player> getPlayersInRoom() {
         return DUMPPLAYERS;
     }
+
+    private boolean sendLevelNodeForValidation(LevelNode levelNode) {
+        int currentLevel = game.getCurrentLevel();
+        boolean accept = false;
+
+        if (currentLevel == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
+            accept = true;
+            game.setCurrentLevel(currentLevel + 1);
+            // TODO: Server notify ALL PLAYERS that currentLevel has changed
+            System.out.println(game.getCurrentLevel());
+        }
+
+        return accept;
+    }
+
+    // TODO: Utils
 
     private double valueFromTwoRanges(double value, double minA, double maxA, double minB, double maxB) {
         // Từ một value nằm trong khoảng (minA,maxA), cho ra giá trị tỉ lệ tương ứng trong khoảng (minB, maxB)

@@ -3,7 +3,7 @@ package Models;
 import java.util.ArrayList;
 
 public class Game {
-    int currentLevel = 0;
+    int currentLevel = 1;
     ArrayList<LevelNode> level;
     ArrayList<MatchPlayer> players;
     MatchPlayer clientPlayer;

@@ -2,7 +2,6 @@ package GUI;
 
 import BUS.GameBUS;
 import GUI.Components.LevelNodeButton;
-import Models.Game;
 import Models.LevelNode;
 
 import javax.swing.*;
@@ -11,10 +10,6 @@ import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 public class GameView {
     // GameView.form's Components
@@ -97,12 +92,22 @@ public class GameView {
             btn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    gameBUS.handle_OnClick_NodeLevelButton(levelNode);
+                    handle_OnClick_NodeLevelButton(levelNode);
                 }
             });
         }
         gamePane.repaint();
     }
+
+    // Event Handlers
+
+    private void handle_OnClick_NodeLevelButton(LevelNode levelNode) {
+        gameBUS.action_ClientChooseLevelNode(levelNode);
+    }
+
+    /**
+     * IDE Generated methods
+     */
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
