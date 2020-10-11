@@ -2,6 +2,8 @@ package BUS;
 
 import Models.Game;
 import Models.LevelNode;
+import Models.MatchPlayer;
+import Models.Player;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -10,16 +12,46 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class GameBUS {
+    // TODO: Placeholder - Dump Players data
+    private ArrayList<Player> DUMPPLAYERS = new ArrayList<Player>() {
+        {
+            this.add(new Player(1, "luuminhhoang", "lala@gmail.com", "Hoàng", "Lưu"));
+            this.add(new Player(2, "vohoanghuy", "lala2@gmail.com", "Huy", "Võ"));
+            this.add(new Player(3, "huathianhngan", "lala3@gmail.com", "Ngân", "Hứa"));
+            this.add(new Player(4, "tranthuythuyan", "lala4@gmail.com", "An", "Trần"));
+        }
+    };
+
     // Runtime Components
     private Game game;
     private HashMap<String, String> settings;
 
     public GameBUS() {
-        this.game = new Game();
-        game.setLevel(generateLevel(100));                                         // TODO: Get level from Server
+        this.game = initGame(1);
     }
 
     public Game getGame() {
+        return game;
+    }
+
+    private Game initGame(int clientPlayerId) {
+        Game game = new Game();
+        MatchPlayer clientPlayer = null;
+
+        game.setLevel(generateLevel(100));                                          // TODO: Get level from Server
+        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
+        for (Player player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
+            MatchPlayer matchPlayer = new MatchPlayer(player);
+            matchPlayers.add(matchPlayer);
+            if (player.getId() == clientPlayerId) {
+                clientPlayer = matchPlayer;
+            }
+        }
+
+        if (clientPlayer == null) {
+            throw new RuntimeException("Player ID mismatch");
+        }
+        game.setClientPlayer(clientPlayer);
         return game;
     }
 
@@ -31,7 +63,7 @@ public class GameBUS {
         System.out.println(levelNode.getValue());
     }
 
-    // SERVER-SIDE
+    // TODO: SERVER-SIDE
 
     private ArrayList<LevelNode> generateLevel(int count) {                                      // TODO: Move to server
         Random rand = new Random();                                                            // TODO: add Seed support
@@ -96,6 +128,10 @@ public class GameBUS {
         }
 
         return levelNodes;
+    }
+
+    private ArrayList<Player> getPlayersInRoom() {
+        return DUMPPLAYERS;
     }
 
     private double valueFromTwoRanges(double value, double minA, double maxA, double minB, double maxB) {

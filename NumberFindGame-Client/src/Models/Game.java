@@ -22,10 +22,17 @@ public class Game {
         this.level = level;
     }
 
-    public ArrayList<MatchPlayer> getPlayers() {
+    public ArrayList<MatchPlayer> getMatchPlayers() {
         return players;
     }
-    public void setPlayers(ArrayList<MatchPlayer> players) {
+    public void setMatchPlayers(ArrayList<MatchPlayer> players) {
         this.players = players;
+    }
+
+    public MatchPlayer getClientPlayer() {
+        return clientPlayer;
+    }
+    public void setClientPlayer(MatchPlayer clientPlayer) {
+        this.clientPlayer = clientPlayer;
     }
 }
