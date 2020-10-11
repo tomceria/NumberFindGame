@@ -36,4 +36,7 @@ public class MatchPlayer {
     public int getPlacing() {
         return placing;
     }
+    public void setPlacing(int placing) {
+        this.placing = placing;
+    }
 }

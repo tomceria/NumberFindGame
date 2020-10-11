@@ -4,6 +4,7 @@ import Models.Game;
 import Models.LevelNode;
 import Models.MatchPlayer;
 import Models.Player;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
@@ -41,7 +42,7 @@ public class GameBUS {
 
         // Receive Level info from Server
         game.setLevel(generateLevel(100));                                          // TODO: Get level from Server
-        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
+        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();     // Also used for placings, by sort order
 
         // Get Room's players info
         for (Player player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
@@ -51,6 +52,7 @@ public class GameBUS {
                 clientPlayer = matchPlayer;
             }
         }
+        game.setMatchPlayers(matchPlayers);
 
         // Set Client Player
         if (clientPlayer == null) {
@@ -154,11 +156,18 @@ public class GameBUS {
             this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
 
             // TODO: Set placing for Players
+            this.performPlacingPlayers();
 
             // Increase currentLevel (also reset timer, done in model)
             game.setCurrentLevel(currentLevel.getValue() + 1);
 
             // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
+            for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
+                System.out.println(String.format("Name: %s; Score: %s; Placing: %s",
+                        matchPlayer.getPlayer().getUsername(),
+                        matchPlayer.getScore(),
+                        matchPlayer.getPlacing()));
+            }
         }
 
         return accept;
@@ -167,8 +176,42 @@ public class GameBUS {
     private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart) {
         matchPlayer.setScore(matchPlayer.getScore() + 1);
         matchPlayer.newAvgTime(timeStart);
+    }
 
-        System.out.println(String.format("SCORE: %s; AVGTIME: %s", game.getClientPlayer().getScore(), game.getClientPlayer().getAvgTime()));
+    private void performPlacingPlayers() {
+        // Sắp xếp thứ hạng của người chơi trong trận đầu dựa vào:
+        // Điểm tìm số (score); Thời gian trung bình tìm ra số (avgTime)
+        // Nếu 2 người chơi có score bằng nhau, sẽ dựa vào avgTime để chọn người chơi thứ hạng cao hơn
+
+        ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
+        ArrayList<MatchPlayer> sortingMatchPlayers = new ArrayList<MatchPlayer>();
+
+        // Bước 1: Những người chơi đã có điểm => Add vào ĐẦU danh sách tạm
+        for (int i = 1; i <= game.getCurrentLevel().getValue(); i++) {
+            for (MatchPlayer matchPlayer : matchPlayers) {
+                if (matchPlayer.getScore() == i) {
+                    sortingMatchPlayers.add(0, matchPlayer);
+                }
+            }
+        }
+        // Bước 2: Những người chơi chưa có điểm => Add vào ĐUÔI danh sách tạm
+        for (MatchPlayer matchPlayer : matchPlayers) {
+            if (matchPlayer.getScore() == 0) {
+                sortingMatchPlayers.add(matchPlayer);
+            }
+        }
+        // Bước 3: Với danh sách tạm đã có thứ tự thứ hạng => gán Placing
+        for (int i = 0; i < sortingMatchPlayers.size(); i++) {
+            int newPlacing;
+            MatchPlayer mP = sortingMatchPlayers.get(i);
+            if (mP.getScore() == 0) {
+                newPlacing = matchPlayers.size();
+            } else {
+                newPlacing = i + 1;
+            }
+            sortingMatchPlayers.get(i).setPlacing(newPlacing);
+        }
+
     }
 
     // TODO: Utils
