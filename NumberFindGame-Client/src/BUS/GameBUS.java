@@ -6,6 +6,7 @@ import Models.MatchPlayer;
 import Models.Player;
 
 import java.awt.geom.Point2D;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ public class GameBUS {
         }
         game.setClientPlayer(clientPlayer);
 
-        // Set Current Level: value and timeStart
+        // Set Current Level: value and timeStart. This has to be the LAST statement in the init() to provide fair gameplay
         game.setCurrentLevel(1);
 
         return game;
@@ -68,7 +69,7 @@ public class GameBUS {
             throw new IllegalArgumentException("Selected LevelNode does not belong to this Game's context");
         }
 
-        sendLevelNodeForValidation(levelNode);
+        sendLevelNodeForValidation(levelNode, game.getClientPlayer());
     }
 
     // TODO: SERVER-SIDE
@@ -142,23 +143,31 @@ public class GameBUS {
         return DUMPPLAYERS;
     }
 
-    private boolean sendLevelNodeForValidation(LevelNode levelNode) {
+    private boolean sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {
         Game.CurrentLevel currentLevel = game.getCurrentLevel();
         boolean accept = false;
 
         if (currentLevel.getValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
             accept = true;
 
-            // TODO: Set score, avgTime, placing for Players
+            // TODO: Set score, avgTime for sendingPlayer
+
+            // TODO: Set placing for Players
+            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
 
             // Increase currentLevel (also reset timer, done in model)
             game.setCurrentLevel(currentLevel.getValue() + 1);
 
-            // TODO: Server notify ALL PLAYERS that currentLevel has changed
-            System.out.println(game.getCurrentLevel().getValue());
+            // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
+            System.out.println(game.getCurrentLevel().getValue() + "; " + game.getClientPlayer().getAvgTime());
         }
 
         return accept;
+    }
+
+    private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart) {
+        matchPlayer.setScore(matchPlayer.getScore() + 1);
+        matchPlayer.newAvgTime(timeStart);
     }
 
     // TODO: Utils

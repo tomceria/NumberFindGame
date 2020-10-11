@@ -7,7 +7,8 @@ public class Game {
     CurrentLevel currentLevel;
     ArrayList<LevelNode> level;
     ArrayList<MatchPlayer> players;
-    MatchPlayer clientPlayer;
+
+    MatchPlayer clientPlayer;                                                              // TODO: Client-only Property
 
     public CurrentLevel getCurrentLevel() {
         return currentLevel;
