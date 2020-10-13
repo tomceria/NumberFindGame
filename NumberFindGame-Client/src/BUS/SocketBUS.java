@@ -2,6 +2,7 @@ package BUS;
 
 import Models.Player;
 import Socket.*;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,7 +33,7 @@ public class SocketBUS {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
 
-            SocketRequest request = new SocketRequest("MSG");
+            LogInRequest request = new LogInRequest(DUMPPLAYERS.get(0).getUsername(), "123456");
             out.writeObject(request);
 
             out.close();

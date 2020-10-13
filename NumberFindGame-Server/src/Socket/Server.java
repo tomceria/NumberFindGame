@@ -1,5 +1,7 @@
 package Socket;
 
+import sun.rmi.runtime.Log;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,6 +25,12 @@ public class Server {
 
             SocketRequest requestObj = (SocketRequest) in.readObject();
             System.out.println(requestObj.action);
+            switch (requestObj.action) {
+                case "REQ_LOGIN": {
+                    LogInRequest logInRequest = (LogInRequest) requestObj;
+                    System.out.println(logInRequest.username + "; " + logInRequest.password);
+                }
+            }
 
             out.close();
             in.close();

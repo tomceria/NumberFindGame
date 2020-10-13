@@ -2,7 +2,7 @@ package Socket;
 
 import java.io.Serializable;
 
-public class SocketRequest implements Serializable {
+public abstract class SocketRequest implements Serializable {
     String action;
 
     public SocketRequest(String action) {
