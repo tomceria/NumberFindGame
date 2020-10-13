@@ -35,10 +35,13 @@ public class SocketBUS {
 
             LogInRequest request = new LogInRequest(DUMPPLAYERS.get(0).getUsername(), "123456");
             out.writeObject(request);
+            while (true) {
 
-            out.close();
-            in.close();
-            socket.close();
+            }
+//
+//            out.close();
+//            in.close();
+//            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

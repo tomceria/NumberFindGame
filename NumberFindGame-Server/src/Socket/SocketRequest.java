@@ -8,4 +8,8 @@ public abstract class SocketRequest implements Serializable {
     public SocketRequest(String action) {
         this.action = action;
     }
+
+    public String getAction() {
+        return action;
+    }
 }
