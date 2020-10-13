@@ -5,7 +5,7 @@
       <xy x="20" y="20" width="829" height="622"/>
     </constraints>
     <properties>
-      <background color="-1049857"/>
+      <background color="-1"/>
     </properties>
     <border type="none"/>
     <children>
@@ -15,7 +15,7 @@
           <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <background color="-7411713"/>
+          <background color="-15064194"/>
         </properties>
         <border type="none"/>
         <children/>
@@ -27,21 +27,22 @@
         </constraints>
         <properties>
           <background color="-1"/>
+          <foreground color="-16777216"/>
         </properties>
         <border type="none"/>
         <children>
           <component id="d96d2" class="javax.swing.JButton" binding="btnQuit">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="1.0" weighty="0.0"/>
             </constraints>
             <properties>
               <text value="Quit"/>
             </properties>
           </component>
-          <component id="6d3f1" class="javax.swing.JLabel" binding="lblPlayerScore">
+          <component id="6d3f1" class="javax.swing.JLabel" binding="lblFindThis">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag top="20" left="0" bottom="20" right="0" weightx="1.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -54,16 +55,19 @@
           </component>
           <component id="e5561" class="javax.swing.JList" binding="listPlayers">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
               </grid>
               <gridbag weightx="1.0" weighty="1.0"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-1"/>
+              <foreground color="-16777216"/>
+            </properties>
           </component>
           <component id="b4feb" class="javax.swing.JLabel" binding="lblTimer">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="1.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -71,6 +75,18 @@
               <text value="3:00"/>
             </properties>
           </component>
+          <vspacer id="cc896">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+          </vspacer>
+          <vspacer id="89edb">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+          </vspacer>
         </children>
       </grid>
     </children>
