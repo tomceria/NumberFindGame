@@ -1,8 +1,8 @@
-package GUI.Components;
+package Common;
 
 import java.awt.*;
 
-interface IComponent {
+public interface IComponent {
     default public void addToContainer(Container container) {
         container.add((Component) this);
     }

@@ -1,5 +1,6 @@
 package GUI.Components;
 
+import Common.IComponent;
 import Models.MatchPlayer;
 
 import javax.swing.*;
