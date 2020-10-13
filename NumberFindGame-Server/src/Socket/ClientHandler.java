@@ -23,6 +23,7 @@ public class ClientHandler extends Thread {
                     case "REQ_LOGIN": {
                         LogInRequest request = (LogInRequest) requestRaw;
                         System.out.println(request.username + "; " + request.password);
+                        output.writeObject(new SocketResponse(SocketResponse.Status.SUCCESS));
                         break;
                     }
                     case "REQ_DISCONNECT": {
