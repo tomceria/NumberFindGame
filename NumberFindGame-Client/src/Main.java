@@ -1,14 +1,30 @@
+import BUS.SocketBUS;
 import GUI.GameView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Scanner;
 
 public class Main {
     static String appName = "Number Find Game";
 
     public static void main (String[] args) {
-        JFrame mainFrame = new JFrame(appName);
-        configureWindow(mainFrame);
+        System.out.print("Test Menu:\n(1) Core Game\n(2) Connect to Server\nChoose: ");
+        Scanner scan = new Scanner(System.in);
+        int choose = scan.nextInt();
+
+        switch (choose) {
+            case 1: {
+                JFrame mainFrame = new JFrame(appName);
+                configureWindow(mainFrame);
+                break;
+            }
+            case 2: {
+                SocketBUS socketBUS = new SocketBUS();
+                socketBUS.establishConnection();
+            }
+        }
+
     }
 
     public static void configureWindow(JFrame mainFrame) {

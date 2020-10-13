@@ -32,8 +32,6 @@ public class Game {
         this.currentLevel = new CurrentLevel();
         this.currentLevel.setValue(currentLevelValue);
         this.currentLevel.setTimeStart(LocalTime.now());                                  // Set will also restart timer
-
-        System.out.println("NOW FIND: " + getCurrentLevelNodeValue());
     }
 
     public ArrayList<LevelNode> getLevel() {
