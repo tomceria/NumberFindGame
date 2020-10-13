@@ -1,19 +1,48 @@
 package bus;
 
-import java.util.ArrayList;
-
 import dao.PlayerDAO;
 import dto.PlayerDTO;
+import util.BCrypt;
+
+import java.util.ArrayList;
 
 public class PlayerBUS {
-	private PlayerDAO playerDao = new PlayerDAO();
+    private final PlayerDAO playerDao = new PlayerDAO();
 
-	/**
-	 * @return all players
-	 */
-	public ArrayList<PlayerDTO> getAll() {
-		ArrayList<PlayerDTO> players = playerDao.getAll();
-		System.out.print(players.get(0).getFirstName() + " " + players.get(0).getLastName());
-		return players;
-	}
+    /**
+     * @return all players
+     */
+    public ArrayList<PlayerDTO> getAll() {
+        return playerDao.getAll();
+    }
+
+    /**
+     * @param player the new player to register
+     */
+    public void register(PlayerDTO player) {
+        // hash password
+        player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt(12)));
+        playerDao.create(player);
+    }
+
+    /**
+     *
+     * @param username the login username
+     * @param password the login password
+     * @return true if username and password is correct, false if username or password is incorrect
+     */
+    public boolean login(String username, String password) {
+        PlayerDTO player = playerDao.getByUsername(username);
+
+        if (player != null) {
+            String hashedPassword = player.getPassword();
+
+            // return true if password is matched
+            // return false if password is not matched
+            return BCrypt.checkpw(password, hashedPassword);
+        }
+
+        // user name is incorrect
+        return false;
+    }
 }
