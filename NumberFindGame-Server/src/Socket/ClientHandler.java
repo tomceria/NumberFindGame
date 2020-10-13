@@ -16,25 +16,27 @@ public class ClientHandler extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            try {
+        try {
+            while (true) {
                 SocketRequest requestRaw = (SocketRequest) input.readObject();
                 switch (requestRaw.getAction()) {
-                    case "REQ_LOGIN": {
+                    case LOGIN: {
                         LogInRequest request = (LogInRequest) requestRaw;
                         System.out.println(request.username + "; " + request.password);
                         output.writeObject(new SocketResponse(SocketResponse.Status.SUCCESS));
                         break;
                     }
-                    case "REQ_DISCONNECT": {
+                    case DISCONNECT: {
+                        output.writeObject(new SocketResponse(SocketResponse.Status.END));
                         closeSocket();
                         break;
                     }
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                break;
             }
+        } catch (EOFException e) {
+            System.out.println("Disconnected!");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

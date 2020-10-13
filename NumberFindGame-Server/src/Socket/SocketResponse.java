@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 public class SocketResponse implements Serializable {
     public static enum Status {
-        SUCCESS
+        SUCCESS,
+        END
     }
 
     Status status;
@@ -19,7 +20,7 @@ public class SocketResponse implements Serializable {
         this.message = message;
     }
 
-    public Status getResult() {
+    public Status getStatus() {
         return status;
     }
 }

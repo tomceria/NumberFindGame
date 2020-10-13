@@ -17,15 +17,33 @@ public class ClientSocket {
 
         output.writeObject(new LogInRequest(username, password));             // Gửi thông tin đăng nhập để server duyệt
         SocketResponse result = (SocketResponse) input.readObject();
-        System.out.println(result.getResult().toString());
+
+        switch (result.getStatus()) {
+            case SUCCESS: {                                                           // Đăng nhập thành công => Kết nối
+                System.out.println("Login successfully!");
+                ClientSocketProcess process = new ClientSocketProcess();
+                process.start();
+                break;
+            }
+            case END: {
+                System.out.println("Goodbye");
+                close();
+                return;
+            }
+        }
     }
 
-    public static void close() throws IOException {
-        input.close();
-        output.close();
-        socket.close();
-        socket = null;
-        output = null;
-        input = null;
+    public static void close() {
+        try {
+            input.close();
+            output.close();
+            socket.close();
+            socket = null;
+            output = null;
+            input = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }

@@ -5,7 +5,7 @@ public class LogInRequest extends SocketRequest {
     String password;
 
     public LogInRequest(String username, String password) {
-        super("REQ_LOGIN");
+        super(SocketRequest.Action.LOGIN);
         this.username = username;
         this.password = password;
     }

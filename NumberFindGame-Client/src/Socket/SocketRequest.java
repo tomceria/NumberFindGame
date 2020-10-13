@@ -3,13 +3,18 @@ package Socket;
 import java.io.Serializable;
 
 public abstract class SocketRequest implements Serializable {
-    String action;
+    public static enum Action {
+        LOGIN,
+        DISCONNECT
+    }
 
-    public SocketRequest(String action) {
+    Action action;
+
+    public SocketRequest(Action action) {
         this.action = action;
     }
 
-    public String getAction() {
+    public Action getAction() {
         return action;
     }
 }
