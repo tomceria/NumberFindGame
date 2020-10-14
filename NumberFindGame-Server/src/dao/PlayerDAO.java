@@ -35,17 +35,17 @@ public class PlayerDAO {
 	public ArrayList<PlayerDTO> getAll() {
 		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
 
-		ArrayList<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		ArrayList<PlayerDTO> players = new ArrayList<>();
 
 		String query = "SELECT * FROM players";
 
 		try {
 			ResultSet rs = conn.executeQuery(query);
 			while (rs.next()) {
-				// khởi tạo
+				// create new player
 				PlayerDTO player = this.mapping(rs);
 
-				// thêm vào array list
+				// add player to array list
 				players.add(player);
 			}
 		} catch (SQLException ex) {
@@ -55,6 +55,71 @@ public class PlayerDAO {
 		conn.Close();
 
 		return players;
+	}
+
+	/**
+	 *
+	 * @param username the username to find
+	 * @return a player if found, null if not found
+	 */
+	public PlayerDTO getByUsername(String username) {
+		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
+
+		String query = "SELECT * FROM players WHERE username = ?";
+
+		// prepare statement
+		conn.prepare(query);
+
+		// bind values
+		int order = 1;
+		conn.bind(order, username);
+
+		boolean isAny;
+		PlayerDTO player = null;
+		try {
+			ResultSet rs = conn.executeQueryPre();
+
+			// isAny = false if there is no record
+			isAny = rs.isBeforeFirst();
+
+			// if there is any record
+			if (isAny) {
+				rs.next();
+				player = this.mapping(rs);
+			}
+		} catch (SQLException throwable) {
+			throwable.printStackTrace();
+		}
+
+		conn.Close();
+
+		return player;
+	}
+
+	/**
+	 *
+	 * @param player the new player to insert into database
+	 */
+	public void create(PlayerDTO player) {
+		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
+
+		String query = "INSERT INTO players (username, password, email, first_name, last_name) VALUES(?, ?, ?, ?, ?)";
+
+		// prepare statement
+		conn.prepare(query);
+
+		// bind values
+		int order = 1;
+		conn.bind(order++, player.getUsername());
+		conn.bind(order++, player.getPassword());
+		conn.bind(order++, player.getEmail());
+		conn.bind(order++, player.getFirstName());
+		conn.bind(order, player.getLastName());
+
+		// execute update with prepare statement
+		conn.executeUpdatePre();
+
+		conn.Close();
 	}
 
 }

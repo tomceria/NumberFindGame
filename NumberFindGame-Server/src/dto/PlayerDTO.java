@@ -8,6 +8,17 @@ public class PlayerDTO {
 	private String firstName;
 	private String lastName;
 
+	public PlayerDTO() {
+	}
+
+	public PlayerDTO(String username, String password, String email, String firstName, String lastName) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
 	/**
 	 * @return the username
 	 */
