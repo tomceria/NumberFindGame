@@ -26,7 +26,9 @@ public class ClientHandler extends Thread {
                 SocketRequest requestRaw = (SocketRequest) input.readObject();
                 SocketResponse response;
 
-                System.out.println(requestRaw.getMessage());
+                if (requestRaw.getMessage() != null) {
+                    System.out.println(requestRaw.getMessage());
+                }
 
                 switch (requestRaw.getAction()) {
                     case LOGIN: {
