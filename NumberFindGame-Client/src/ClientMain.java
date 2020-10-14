@@ -11,9 +11,11 @@ public class ClientMain {
     static String appName = "Number Find Game";
 
     public static void main (String[] args) throws IOException {
+        // TODO: TEMPORARY - Migrate to GUI
         System.out.print("Test Menu:\n(1) Core Game\n(2) Connect to Server\nChoose: ");
         Scanner scan = new Scanner(System.in);
         int choose = scan.nextInt();
+        scan.nextLine();
 
         switch (choose) {
             case 1: {
@@ -22,8 +24,10 @@ public class ClientMain {
                 break;
             }
             case 2: {
+                System.out.print("username: "); String username = scan.nextLine();
+                System.out.print("password: "); String password = scan.nextLine();
                 try {
-                    ClientSocket.connect("127.0.0.1", "luuminhhoang", "123456");
+                    ClientSocket.connect("127.0.0.1", 54321, username, password);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

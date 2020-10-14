@@ -6,12 +6,12 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientSocket {
-    static Socket socket;
-    static ObjectInputStream input;
-    static ObjectOutputStream output;
+    private static Socket socket;                                // Chỉ được tương tác với socket thông qua ClientSocket
+    public static ObjectInputStream input;                   // input và output được đặc static để các hàm BUS truy xuất
+    public static ObjectOutputStream output;
 
-    public static void connect(String hostname, String username, String password) throws IOException, ClassNotFoundException {
-        socket = new Socket(hostname, 54321);                 // Thực hiện kết nối đến server với hostname xác định
+    public static void connect(String hostname, int port, String username, String password) throws IOException, ClassNotFoundException {
+        socket = new Socket(hostname, port);                       // Thực hiện kết nối đến server với hostname xác định
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
 
@@ -25,7 +25,7 @@ public class ClientSocket {
                 process.start();
                 break;
             }
-            case END: {
+            case FAILED: {
                 System.out.println("Goodbye");
                 close();
                 return;

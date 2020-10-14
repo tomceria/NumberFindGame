@@ -20,15 +20,24 @@ public class ClientHandler extends Thread {
         try {
             while (true) {
                 SocketRequest requestRaw = (SocketRequest) input.readObject();
+                SocketResponse response;
+
                 switch (requestRaw.getAction()) {
                     case LOGIN: {
                         LogInRequest request = (LogInRequest) requestRaw;
                         System.out.println(request.username + "; " + request.password);
-                        output.writeObject(new SocketResponse(SocketResponse.Status.SUCCESS));
+                        // TODO: Thực hiện kiểm tra thông tin đăng nhập
+                        if (request.username.equals("luuminhhoang")) {
+                            response = new SocketResponse(SocketResponse.Status.SUCCESS, "Successfully logged in!");
+                        } else {
+                            response = new SocketResponse(SocketResponse.Status.FAILED, "Login failed.");
+                        }
+                        output.writeObject(response);
                         break;
                     }
                     case DISCONNECT: {
-                        output.writeObject(new SocketResponse(SocketResponse.Status.END));
+                        response = new SocketResponse(SocketResponse.Status.END);
+                        output.writeObject(response);
                         closeSocket();
                         break;
                     }

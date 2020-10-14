@@ -9,6 +9,7 @@ public class ClientSocketProcess extends Thread {
         while(true) {
             try {
                 SocketResponse result = (SocketResponse) ClientSocket.input.readObject();
+                switch (result.getStatus()) {}                                                      // TODO: Xử lý input
             } catch (EOFException e) {                                                          // Ngắt kết nối bất chợt
                 ClientSocket.close();
                 break;

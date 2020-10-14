@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class SocketResponse implements Serializable {
     public static enum Status {
         SUCCESS,
+        FAILED,
         END
     }
 
