@@ -1,5 +1,6 @@
 package GUI.Components;
 
+import Common.ColorScheme;
 import Common.IComponent;
 import Models.MatchPlayer;
 
@@ -31,9 +32,9 @@ public class LevelNodeButton extends JButton implements IComponent {
         this.setMargin(new Insets(0, SIZE * -1, 0, SIZE * -1));
         this.setFocusPainted(false);
         this.setBorderPainted(true);
-        this.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.decode("#191E80")));
+        this.setBorder(null);
         this.setForeground(Color.WHITE);
-        this.setBackground(Color.decode("#1A237E"));
+        this.setBackground(ColorScheme.INDIGO);
         this.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
         // Hover
@@ -43,7 +44,7 @@ public class LevelNodeButton extends JButton implements IComponent {
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                Color ogColor = isPicked ? assignedColor : Color.decode("#1A237E");
+                Color ogColor = isPicked ? assignedColor : ColorScheme.INDIGO;
                 setBackground(ogColor);
             }
         });
@@ -55,6 +56,5 @@ public class LevelNodeButton extends JButton implements IComponent {
         this.setForeground(Color.BLACK);
         this.isPicked = true;
         this.assignedColor = matchPlayer.getUiColor();
-        System.out.println("PICKED");
     }
 }
