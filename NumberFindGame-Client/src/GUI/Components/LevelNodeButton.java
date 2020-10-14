@@ -26,6 +26,8 @@ public class LevelNodeButton extends JButton implements IComponent {
         this.setHorizontalAlignment(SwingConstants.CENTER);
         this.setMargin(new Insets(0, SIZE * -1, 0, SIZE * -1));
         this.setBorderPainted(false);
+        this.setFocusPainted(false);
+        this.setContentAreaFilled(false);
         this.setBorder(null);
         this.setForeground(Color.WHITE);
         this.setFont(new Font("SansSerif", Font.PLAIN, 14));

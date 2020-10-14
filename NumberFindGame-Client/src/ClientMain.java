@@ -11,6 +11,12 @@ public class ClientMain {
     static String appName = "Number Find Game";
 
     public static void main (String[] args) throws IOException {
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // TODO: TEMPORARY - Migrate to GUI
         System.out.print("Test Menu:\n(1) Core Game\n(2) Connect to Server\nChoose: ");
         Scanner scan = new Scanner(System.in);
