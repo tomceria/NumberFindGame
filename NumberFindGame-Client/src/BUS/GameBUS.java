@@ -234,12 +234,6 @@ public class GameBUS {
             game.setCurrentLevel(currentLevel.getValue() + 1);
 
             // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
-            for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
-                System.out.println(String.format("Name: %s; Score: %s; Placing: %s",
-                        matchPlayer.getPlayer().getUsername(),
-                        matchPlayer.getScore(),
-                        matchPlayer.getPlacing()));
-            }
         }
 
         return accept;
