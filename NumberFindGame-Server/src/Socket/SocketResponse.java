@@ -15,7 +15,6 @@ public class SocketResponse implements Serializable {
     public SocketResponse(Status status) {
         this.status = status;
     }
-
     public SocketResponse(Status status, String message) {
         this.status = status;
         this.message = message;

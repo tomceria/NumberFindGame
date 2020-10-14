@@ -24,7 +24,7 @@ public class ClientHandler extends Thread {
 
                 switch (requestRaw.getAction()) {
                     case LOGIN: {
-                        LogInRequest request = (LogInRequest) requestRaw;
+                        SocketRequest_Login request = (SocketRequest_Login) requestRaw;
                         System.out.println(request.username + "; " + request.password);
                         // TODO: Thực hiện kiểm tra thông tin đăng nhập
                         if (request.username.equals("luuminhhoang")) {

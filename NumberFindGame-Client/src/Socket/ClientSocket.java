@@ -15,7 +15,7 @@ public class ClientSocket {
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
 
-        output.writeObject(new LogInRequest(username, password));             // Gửi thông tin đăng nhập để server duyệt
+        output.writeObject(new SocketRequest_Login(username, password));             // Gửi thông tin đăng nhập để server duyệt
         SocketResponse result = (SocketResponse) input.readObject();
 
         switch (result.getStatus()) {

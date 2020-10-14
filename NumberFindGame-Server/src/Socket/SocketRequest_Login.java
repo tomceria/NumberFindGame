@@ -1,10 +1,10 @@
 package Socket;
 
-public class LogInRequest extends SocketRequest {
+public class SocketRequest_Login extends SocketRequest {
     String username;
     String password;
 
-    public LogInRequest(String username, String password) {
+    public SocketRequest_Login(String username, String password) {
         super(SocketRequest.Action.LOGIN);
         this.username = username;
         this.password = password;
