@@ -26,10 +26,6 @@ public class Server {
                         ClientHandler clientHandler = new ClientHandler(client);
                         clientHandler.start();
                         clientConnections.put(UUID.randomUUID(), clientHandler);
-                        System.out.println("Current connections: ");
-                        for (UUID key : clientConnections.keySet()) {
-                            System.out.println(key + ": " + clientConnections.get(key).client.getInetAddress().toString());
-                        }
                     }
 
                 } catch (SocketException e) {       // Sẽ chạy vào Exception này sau khi có class khác gọi server.halt()
@@ -39,6 +35,10 @@ public class Server {
                 }
             }
         };
+    }
+
+    public HashMap<UUID, ClientHandler> getClientConnections() {
+        return clientConnections;
     }
 
     public void listen() {

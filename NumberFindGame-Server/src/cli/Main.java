@@ -3,6 +3,7 @@ package cli;
 import Socket.Server;
 
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
 	static Scanner scan = new Scanner(System.in);
@@ -21,9 +22,22 @@ public class Main {
 		do {
 			String command = scan.nextLine();
 			switch (command) {
+				case "list": {
+					System.out.println("Current connections: ");
+					for (UUID key : server.getClientConnections().keySet()) {
+						System.out.println(key + ": " +
+								server.getClientConnections()
+										.get(key)
+										.getClient()
+										.getInetAddress()
+										.toString());
+					}
+					break;
+				}
 				case "exit": {
 					server.halt();
 					isCommanding = false;
+					break;
 				}
 			}
 		} while (isCommanding);

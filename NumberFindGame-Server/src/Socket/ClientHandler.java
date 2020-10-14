@@ -15,6 +15,10 @@ public class ClientHandler extends Thread {
         this.input = new ObjectInputStream(client.getInputStream());
     }
 
+    public Socket getClient() {
+        return client;
+    }
+
     @Override
     public void run() {
         try {
@@ -22,12 +26,14 @@ public class ClientHandler extends Thread {
                 SocketRequest requestRaw = (SocketRequest) input.readObject();
                 SocketResponse response;
 
+                System.out.println(requestRaw.getMessage());
+
                 switch (requestRaw.getAction()) {
                     case LOGIN: {
                         SocketRequest_Login request = (SocketRequest_Login) requestRaw;
-                        System.out.println(request.username + "; " + request.password);
                         // TODO: Thực hiện kiểm tra thông tin đăng nhập
                         if (request.username.equals("luuminhhoang")) {
+                            System.out.println(String.format("%s logged in.", request.username));
                             response = new SocketResponse(SocketResponse.Status.SUCCESS, "Successfully logged in!");
                         } else {
                             response = new SocketResponse(SocketResponse.Status.FAILED, "Login failed.");
