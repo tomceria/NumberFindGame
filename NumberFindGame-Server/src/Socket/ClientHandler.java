@@ -2,6 +2,7 @@ package Socket;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientHandler extends Thread {
     Socket client;
@@ -33,7 +34,7 @@ public class ClientHandler extends Thread {
                     }
                 }
             }
-        } catch (EOFException e) {
+        } catch (EOFException | SocketException e) {
             System.out.println("Disconnected!");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
