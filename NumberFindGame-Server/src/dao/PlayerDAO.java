@@ -42,10 +42,10 @@ public class PlayerDAO {
 		try {
 			ResultSet rs = conn.executeQuery(query);
 			while (rs.next()) {
-				// khởi tạo
+				// create new player
 				PlayerDTO player = this.mapping(rs);
 
-				// thêm vào array list
+				// add player to array list
 				players.add(player);
 			}
 		} catch (SQLException ex) {
@@ -87,8 +87,8 @@ public class PlayerDAO {
 				rs.next();
 				player = this.mapping(rs);
 			}
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
+		} catch (SQLException throwable) {
+			throwable.printStackTrace();
 		}
 
 		conn.Close();
@@ -103,7 +103,7 @@ public class PlayerDAO {
 	public void create(PlayerDTO player) {
 		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
 
-		String query = "INSERT INTO players (username, password, email, first_name, last_name) VALUES(?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO players (username, password, email, first_name, last_name) VALUES(?, ?, ?, ?, ?)";
 
 		// prepare statement
 		conn.prepare(query);
