@@ -1,6 +1,5 @@
 package Socket;
 
-import util.IThreadCompleteListener;
 import util.NotifyingThread;
 
 import java.io.*;
@@ -27,31 +26,7 @@ public class ClientHandler {
                 try {
                     while (true) {
                         SocketRequest requestRaw = (SocketRequest) input.readObject();
-                        SocketResponse response;
-
-                        if (requestRaw.getMessage() != null) {
-                            System.out.println(requestRaw.getMessage());
-                        }
-
-                        switch (requestRaw.getAction()) {
-                            case LOGIN: {
-                                SocketRequest_Login request = (SocketRequest_Login) requestRaw;
-                                // TODO: Thực hiện kiểm tra thông tin đăng nhập
-                                if (request.username.equals("luuminhhoang")) { System.out.println(String.format("%s logged in.", request.username));
-                                    response = new SocketResponse(SocketResponse.Status.SUCCESS, "Successfully logged in!");
-                                } else {
-                                    response = new SocketResponse(SocketResponse.Status.FAILED, "Login failed.");
-                                }
-                                output.writeObject(response);
-                                break;
-                            }
-                            case DISCONNECT: {
-                                response = new SocketResponse(SocketResponse.Status.END);
-                                output.writeObject(response);
-                                closeSocket();
-                                break;
-                            }
-                        }
+                        new RequestHandler(requestRaw).init();
                     }
                 } catch (EOFException | SocketException e) {
                     System.out.println("Disconnected!");
@@ -64,16 +39,18 @@ public class ClientHandler {
         this.clientHandleThread.addListener(clientManager);  // Khi clientHandleThread kết thúc, sẽ báo cho listener (clientManager) để thực hiện xoá khỏi danh sách clientConnections
     }
 
-    public void init() {
-        clientHandleThread.start();
-    }
-
     public Socket getClient() {
         return client;
     }
 
-    public NotifyingThread getClientHandleThread() {
-        return clientHandleThread;
+    protected void init() {
+        clientHandleThread.start();
+    }
+
+    // Client Socket functions
+
+    public void sendRequest(SocketRequest requestRaw) throws IOException {
+        output.writeObject(requestRaw);
     }
 
     public void closeSocket() throws IOException {
@@ -81,6 +58,8 @@ public class ClientHandler {
         input.close();
         client.close();
     }
+
+    //
 
     abstract class ClientThread extends NotifyingThread {
         private UUID uuid;

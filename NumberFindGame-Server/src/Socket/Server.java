@@ -59,4 +59,15 @@ public class Server {
             e.printStackTrace();
         }
     }
+
+    public void broadcast(SocketRequest requestRaw) {
+        HashMap<UUID, ClientHandler> clientConnections = this.clientManager.getClientConnections();
+        try {
+            for (ClientHandler clientHandler : clientConnections.values()) {
+                clientHandler.sendRequest(requestRaw);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

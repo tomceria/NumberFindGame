@@ -15,7 +15,7 @@ public class ClientManager implements IThreadCompleteListener {
         return clientConnections;
     }
 
-    public void addAndStartClient(Socket client) {      // Nhận tham biến là Socket client được Server instance accept()
+    protected void addAndStartClient(Socket client) {      // Nhận tham biến là Socket client được Server instance accept()
         try {
             UUID clientHandlerId = UUID.randomUUID();           // UUID này được gắn liền với ClientHandler.ClientThread
             ClientHandler clientHandler = new ClientHandler(client, clientHandlerId, this);
