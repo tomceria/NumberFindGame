@@ -24,9 +24,9 @@ public class Main {
 			switch (command) {
 				case "list": {
 					System.out.println("Current connections: ");
-					for (UUID key : server.getClientConnections().keySet()) {
+					for (UUID key : server.getClientManager().getClientConnections().keySet()) {
 						System.out.println(key + ": " +
-								server.getClientConnections()
+								server.getClientManager().getClientConnections()
 										.get(key)
 										.getClient()
 										.getInetAddress()
