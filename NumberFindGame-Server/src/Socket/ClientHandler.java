@@ -61,7 +61,7 @@ public class ClientHandler {
             }
         };
         this.clientHandleThread.setUuid(id);
-        this.clientHandleThread.addListener(clientManager);
+        this.clientHandleThread.addListener(clientManager);  // Khi clientHandleThread kết thúc, sẽ báo cho listener (clientManager) để thực hiện xoá khỏi danh sách clientConnections
     }
 
     public void init() {

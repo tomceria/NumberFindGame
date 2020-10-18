@@ -14,21 +14,20 @@ public class Server {
     boolean isRunning = false;
 
     public Server(int port) {
-        clientManager = new ClientManager();
+        clientManager = new ClientManager();                      // ClientManager quản lý các Client kết nối đến server
         serverThread = new Thread() {
             @Override
             public void run() {
                 try {
                     serverSocket = new ServerSocket(port);
-                    isRunning = true;
-                    System.out.println(String.format("Server is running on port %s", port));
-                    while (isRunning) {
-                        Socket client = serverSocket.accept();
+                    isRunning = true;                         // isRunning true chỉ khi ServerSocket khởi tạo thành công
+                    System.out.println(String.format("Server is running on port %s", port));  // TODO: Xuất console qua 1 class chuyên dụng
+                    while (isRunning) {                        // isRunning được gán false tại halt() => Kết thúc Thread
+                        Socket client = serverSocket.accept();                                  // Chờ kết nối từ Client
                         clientManager.addAndStartClient(client);
-
                     }
 
-                } catch (SocketException e) {       // Sẽ chạy vào Exception này sau khi có class khác gọi server.halt()
+                } catch (SocketException e) {       // Sẽ chạy vào Exception này sau khi có class KHÁC gọi server.halt()
                     System.out.println("Shutting down server.");
                 } catch (IOException e) {
                     e.printStackTrace();

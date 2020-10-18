@@ -15,12 +15,12 @@ public class ClientManager implements IThreadCompleteListener {
         return clientConnections;
     }
 
-    public void addAndStartClient(Socket client) {
+    public void addAndStartClient(Socket client) {      // Nhận tham biến là Socket client được Server instance accept()
         try {
-            UUID clientHandlerId = UUID.randomUUID();
+            UUID clientHandlerId = UUID.randomUUID();           // UUID này được gắn liền với ClientHandler.ClientThread
             ClientHandler clientHandler = new ClientHandler(client, clientHandlerId, this);
-            clientHandler.init();
-            clientConnections.put(clientHandlerId, clientHandler);
+            clientHandler.init();                                     // Khởi động Thread mới duy trì kết nối với Client
+            clientConnections.put(clientHandlerId, clientHandler);  // Thêm vào danh sách clientConnections để quản lý sau này
         } catch (IOException e) {
             e.printStackTrace();
         }
