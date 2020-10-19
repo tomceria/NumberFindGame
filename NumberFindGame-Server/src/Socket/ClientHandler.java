@@ -1,5 +1,7 @@
 package Socket;
 
+import bus.PlayerBUS;
+import dto.PlayerDTO;
 import util.NotifyingThread;
 
 import java.io.*;
@@ -14,6 +16,10 @@ public class ClientHandler {
     ObjectOutputStream output;
     ClientThread clientHandleThread;
 
+    boolean isLoggedIn = false;
+    IClientIdentifier clientIdentifier;
+    ClientManager clientManager;
+
     public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
         this.id = id;
         this.client = client;
@@ -26,7 +32,18 @@ public class ClientHandler {
                 try {
                     while (true) {
                         SocketRequest requestRaw = (SocketRequest) input.readObject();
-                        new RequestHandler(requestRaw).init();
+                        if (isLoggedIn == false) {
+                            if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
+                                if (performValidateClient(requestRaw)) {
+                                    isLoggedIn = true;
+                                    onSuccessConnection();
+                                }
+                            } else {
+                                break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
+                            }
+                        } else if (isLoggedIn && clientIdentifier != null) {                  // Đã đăng nhập => Xử lý MỌI yêu cầu
+                            new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init();  // RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
+                        }
                     }
                 } catch (EOFException | SocketException e) {
                     System.out.println("Disconnected!");
@@ -37,14 +54,18 @@ public class ClientHandler {
         };
         this.clientHandleThread.setUuid(id);
         this.clientHandleThread.addListener(clientManager);  // Khi clientHandleThread kết thúc, sẽ báo cho listener (clientManager) để thực hiện xoá khỏi danh sách clientConnections
+        this.clientManager = clientManager;
     }
 
     public Socket getClient() {
         return client;
     }
+    public ClientManager getClientManager() {
+        return clientManager;
+    }
 
-    protected void init() {
-        clientHandleThread.start();
+    public IClientIdentifier getClientIdentifier() {
+        return clientIdentifier;
     }
 
     // Client Socket functions
@@ -60,6 +81,27 @@ public class ClientHandler {
     }
 
     //
+
+    protected void init() {
+        clientHandleThread.start();
+    }
+
+    private boolean performValidateClient(SocketRequest requestRaw) {
+        boolean isValidated = false;
+        SocketRequest_Login request = (SocketRequest_Login) requestRaw;
+        PlayerBUS playerBUS = new PlayerBUS();
+
+        if (playerBUS.login(request.username, request.password)) {
+            ClientHandler.this.clientIdentifier = playerBUS.getOneByUsername(request.username);
+            isValidated = true;
+        }
+
+        return isValidated;
+    }
+
+    private void onSuccessConnection() {
+        ((GameServer) clientManager.getServer()).gameRoom.joinRoom((PlayerDTO) clientIdentifier);
+    }
 
     abstract class ClientThread extends NotifyingThread {
         private UUID uuid;

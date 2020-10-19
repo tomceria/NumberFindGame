@@ -9,11 +9,14 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ClientManager implements IThreadCompleteListener {
+    Server server;
     HashMap<UUID, ClientHandler> clientConnections = new HashMap<UUID, ClientHandler>();
 
-    public HashMap<UUID, ClientHandler> getClientConnections() {
-        return clientConnections;
+    public ClientManager(Server server) {
+        this.server = server;
     }
+
+    // Methods
 
     protected void addAndStartClient(Socket client) {      // Nhận tham biến là Socket client được Server instance accept()
         try {
@@ -31,4 +34,15 @@ public class ClientManager implements IThreadCompleteListener {
         UUID clientHandlerId = ((ClientHandler.ClientThread) thread).getUuid();
         clientConnections.remove(clientHandlerId);
     }
+
+    // Properties
+
+    public Server getServer() {
+        return server;
+    }
+
+    public HashMap<UUID, ClientHandler> getClientConnections() {
+        return clientConnections;
+    }
+
 }

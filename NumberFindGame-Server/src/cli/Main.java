@@ -1,5 +1,6 @@
 package cli;
 
+import Socket.GameServer;
 import Socket.Server;
 
 import java.util.Scanner;
@@ -16,7 +17,7 @@ public class Main {
 		// System.out.print(playerBus.login("saidan00", "123"));
 
 		// Start server
-		server = new Server(54321);
+		server = new GameServer(54321);
 		server.listen();
 
 		do {

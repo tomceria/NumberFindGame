@@ -14,7 +14,7 @@ public class Server {
     boolean isRunning = false;
 
     public Server(int port) {
-        clientManager = new ClientManager();                      // ClientManager quản lý các Client kết nối đến server
+        clientManager = new ClientManager(this);                      // ClientManager quản lý các Client kết nối đến server
         serverThread = new Thread() {
             @Override
             public void run() {

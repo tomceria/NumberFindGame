@@ -1,11 +1,17 @@
 package Socket;
 
+import dto.PlayerDTO;
+
 public class RequestHandler {
     Thread requestHandleThread;
+    IClientIdentifier clientIdentifier;
+    ClientHandler clientHandler;
     SocketRequest requestRaw;
 
-    public RequestHandler(SocketRequest requestRaw) {
+    public RequestHandler(SocketRequest requestRaw, IClientIdentifier clientIdentifier, ClientHandler clientHandler) {
         this.requestRaw = requestRaw;
+        this.clientIdentifier = clientIdentifier;
+        this.clientHandler = clientHandler;
         this.requestHandleThread = new Thread() {
             @Override
             public void run() {
@@ -14,20 +20,15 @@ public class RequestHandler {
                 }
 
                 switch (requestRaw.getAction()) {
-                    case LOGIN: {
-                        SocketRequest_Login request = (SocketRequest_Login) requestRaw;
-//                if (request.username.equals("luuminhhoang")) { System.out.println(String.format("%s logged in.", request.username));
-//                    response = new SocketResponse(SocketResponse.Status.SUCCESS, "Successfully logged in!");
-//                } else {
-//                    response = new SocketResponse(SocketResponse.Status.FAILED, "Login failed.");
-//                }
-//                output.writeObject(response);
-                        break;
+                    case MESSAGE: {
+                        System.out.println("Received message: " + requestRaw.getMessage());
+                        PlayerDTO player = (PlayerDTO) clientHandler.getClientIdentifier();
+//                        ((GameServer)(clientHandler.getClientManager().getServer())).gameRoom.joinRoom(player);
                     }
                     case DISCONNECT: {
-//                response = new SocketResponse(SocketResponse.Status.END);
-//                output.writeObject(response);
-//                closeSocket();
+//                        response = new SocketResponse(SocketResponse.Status.END);
+//                        output.writeObject(response);
+//                        closeSocket();
                         break;
                     }
                 }

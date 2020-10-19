@@ -1,6 +1,8 @@
 package dto;
 
-public class PlayerDTO {
+import Socket.IClientIdentifier;
+
+public class PlayerDTO implements IClientIdentifier {
 	private int id;
 	private String username;
 	private String password;
