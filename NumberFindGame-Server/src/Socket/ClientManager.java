@@ -1,7 +1,6 @@
 package Socket;
 
 import util.IThreadCompleteListener;
-import util.NotifyingThread;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -9,8 +8,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ClientManager implements IThreadCompleteListener {
-    Server server;
-    HashMap<UUID, ClientHandler> clientConnections = new HashMap<UUID, ClientHandler>();
+    Server server; // PARENT
+    HashMap<UUID, ClientHandler> clientConnections = new HashMap<UUID, ClientHandler>(); // Server instance's current active players
 
     public ClientManager(Server server) {
         this.server = server;
@@ -18,7 +17,7 @@ public class ClientManager implements IThreadCompleteListener {
 
     // Methods
 
-    protected void addAndStartClient(Socket client) {      // Nhận tham biến là Socket client được Server instance accept()
+    protected void addAndStartClient(Socket client) {   // Nhận tham biến là Socket client được Server instance accept()
         try {
             UUID clientHandlerId = UUID.randomUUID();           // UUID này được gắn liền với ClientHandler.ClientThread
             ClientHandler clientHandler = new ClientHandler(client, clientHandlerId, this);
@@ -30,9 +29,10 @@ public class ClientManager implements IThreadCompleteListener {
     }
 
     @Override
-    public void notifyOfThreadComplete(Runnable thread) {
+    public void notifyOfThreadComplete(Runnable thread) {  // Chạy khi ClientHandler.clientHandleThread hoàn tất công việc run()
         UUID clientHandlerId = ((ClientHandler.ClientThread) thread).getUuid();
-        clientConnections.remove(clientHandlerId);
+        clientConnections.remove(clientHandlerId);                // Xoá khỏi danh sách người chơi hiện tại trong SERVER
+        ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
     }
 
     // Properties

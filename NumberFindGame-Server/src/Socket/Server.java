@@ -60,11 +60,11 @@ public class Server {
         }
     }
 
-    public void broadcast(SocketRequest requestRaw) {
+    public void broadcast(SocketResponse response) {
         HashMap<UUID, ClientHandler> clientConnections = this.clientManager.getClientConnections();
         try {
             for (ClientHandler clientHandler : clientConnections.values()) {
-                clientHandler.sendRequest(requestRaw);
+                clientHandler.sendResponse(response);
             }
         } catch (IOException e) {
             e.printStackTrace();

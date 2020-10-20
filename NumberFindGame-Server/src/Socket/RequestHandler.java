@@ -1,6 +1,7 @@
 package Socket;
 
-import dto.PlayerDTO;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class RequestHandler {
     Thread requestHandleThread;
@@ -22,8 +23,11 @@ public class RequestHandler {
                 switch (requestRaw.getAction()) {
                     case MESSAGE: {
                         System.out.println("Received message: " + requestRaw.getMessage());
-                        PlayerDTO player = (PlayerDTO) clientHandler.getClientIdentifier();
-//                        ((GameServer)(clientHandler.getClientManager().getServer())).gameRoom.joinRoom(player);
+                        GameServer server = ((GameServer) (clientHandler.getClientManager().getServer()));
+                        HashMap<UUID, ClientHandler> playerClients = server.getGameRooms().get(0).getPlayerClients();
+
+                        SocketResponse response = new SocketResponse(SocketResponse.Status.SUCCESS, "Current players count: " + playerClients.size());
+                        server.broadcast(response);
                     }
                     case DISCONNECT: {
 //                        response = new SocketResponse(SocketResponse.Status.END);

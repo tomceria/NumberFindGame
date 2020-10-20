@@ -1,7 +1,6 @@
 package Socket;
 
 import bus.PlayerBUS;
-import dto.PlayerDTO;
 import util.NotifyingThread;
 
 import java.io.*;
@@ -17,8 +16,8 @@ public class ClientHandler {
     ClientThread clientHandleThread;
 
     boolean isLoggedIn = false;
-    IClientIdentifier clientIdentifier;
-    ClientManager clientManager;
+    IClientIdentifier clientIdentifier; // inherits PlayerDTO
+    ClientManager clientManager;  // PARENT
 
     public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
         this.id = id;
@@ -36,9 +35,13 @@ public class ClientHandler {
                             if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
                                 if (performValidateClient(requestRaw)) {
                                     isLoggedIn = true;
+                                    sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, "Logged in."));
                                     onSuccessConnection();
+                                } else {
+                                    sendResponse(new SocketResponse(SocketResponse.Status.FAILED, "Invalid login credentials."));
                                 }
                             } else {
+                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, "Invalid access request."));
                                 break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
                             }
                         } else if (isLoggedIn && clientIdentifier != null) {                  // Đã đăng nhập => Xử lý MỌI yêu cầu
@@ -46,7 +49,7 @@ public class ClientHandler {
                         }
                     }
                 } catch (EOFException | SocketException e) {
-                    System.out.println("Disconnected!");
+                    System.out.println(String.format("Client '%s' disconnected.", ClientHandler.this.id));
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -70,8 +73,8 @@ public class ClientHandler {
 
     // Client Socket functions
 
-    public void sendRequest(SocketRequest requestRaw) throws IOException {
-        output.writeObject(requestRaw);
+    public void sendResponse(SocketResponse response) throws IOException {
+        output.writeObject(response);
     }
 
     public void closeSocket() throws IOException {
@@ -100,7 +103,7 @@ public class ClientHandler {
     }
 
     private void onSuccessConnection() {
-        ((GameServer) clientManager.getServer()).gameRoom.joinRoom((PlayerDTO) clientIdentifier);
+        ((GameServer) clientManager.getServer()).getGameRooms().get(0).joinRoom(this);  // TODO: Game business logic => Join room upon joining server
     }
 
     abstract class ClientThread extends NotifyingThread {

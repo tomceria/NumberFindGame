@@ -15,18 +15,19 @@ public class ClientSocket {
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
 
-        output.writeObject(new SocketRequest_Login(username, password));      // Gửi thông tin đăng nhập để server duyệt
-        SocketResponse result = (SocketResponse) input.readObject();
+        SocketRequest_Login authenticationRequest = new SocketRequest_Login(username, password);
+        output.writeObject(authenticationRequest);                            // Gửi thông tin đăng nhập để server duyệt
+        SocketResponse authenticationResponse = (SocketResponse) input.readObject();
 
-        switch (result.getStatus()) {
+        switch (authenticationResponse.getStatus()) {
             case SUCCESS: {                                                           // Đăng nhập thành công => Kết nối
-                System.out.println("Login successfully!");
+                System.out.println("CLIENT: Connected");
                 ClientSocketProcess process = new ClientSocketProcess();
                 process.start();
                 break;
             }
             case FAILED: {
-                System.out.println("Goodbye");
+                System.out.println("CLIENT: Disconnected");
                 close();
                 return;
             }
