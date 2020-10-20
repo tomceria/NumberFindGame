@@ -136,7 +136,7 @@ public class ClientHandler {
     }
 
     private void onSuccessConnection() {
-        ((GameServer) clientManager.getServer()).getGameRooms().get(0).joinRoom(this);  // TODO: Game business logic => Join room upon joining server
+        ((GameServer) clientManager.getServer()).joinGame(this);
     }
 
     abstract class ClientThread extends NotifyingThread {

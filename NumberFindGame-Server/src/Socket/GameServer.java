@@ -22,4 +22,8 @@ public class GameServer extends Server {
     public ArrayList<GameRoom> getGameRooms() {
         return gameRooms;
     }
+
+    public void joinGame(ClientHandler playerClient) {
+        gameRooms.get(0).joinRoom(playerClient);
+    }
 }
