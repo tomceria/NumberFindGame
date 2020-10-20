@@ -1,5 +1,7 @@
 package dto;
 
+import Socket.IClientIdentifier;
+
 public class PlayerDTO {
 	private int id;
 	private String username;

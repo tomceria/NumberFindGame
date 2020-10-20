@@ -16,6 +16,12 @@ public class PlayerBUS {
         return playerDao.getAll();
     }
 
+    public PlayerDTO getOneByUsername(String username) {
+        PlayerDTO player = playerDao.getByUsername(username);
+
+        return player;
+    }
+
     /**
      * @param player the new player to register
      */
