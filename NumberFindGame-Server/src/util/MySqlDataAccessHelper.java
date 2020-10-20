@@ -19,6 +19,12 @@ public class MySqlDataAccessHelper {
 	ResultSet result;
 
 	public MySqlDataAccessHelper() {
+		/* HUY */
+//		this.Host = "localhost";
+//		this.UserName = "root";
+//		this.Password = "passne";
+//		this.DataBase = "numberfindgame";
+		/* HOÀNG */
 		this.Host = "localhost:9001";
 		this.UserName = "root";
 		this.Password = "CaraCara123123";
