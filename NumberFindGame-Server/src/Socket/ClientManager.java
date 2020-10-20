@@ -1,5 +1,7 @@
 package Socket;
 
+import Socket.Request.SocketRequest;
+import Socket.Response.SocketResponse;
 import util.IThreadCompleteListener;
 
 import java.io.IOException;
@@ -32,8 +34,33 @@ public class ClientManager implements IThreadCompleteListener {
 
     protected void disconnectClient(UUID clientHandlerId) {
         clientConnections.remove(clientHandlerId);                // Xoá khỏi danh sách người chơi hiện tại trong SERVER
-        ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
+        ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // TODO: Game Business logic. Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
     }
+
+    protected void sendResponseToClient(UUID clientHandlerId, SocketResponse response) {
+        ClientHandler clientHandler = clientConnections.get(clientHandlerId);
+        clientHandler.sendResponse(response);
+    }
+
+    protected SocketRequest receiveRequestFromClient(UUID clientHandlerId) {
+        ClientHandler clientHandler = clientConnections.get(clientHandlerId);
+        SocketRequest request = null;
+        try {
+            request = clientHandler.receiveRequest();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return request;
+    }
+
+    protected void broadcastResponse(SocketResponse response) {
+        HashMap<UUID, ClientHandler> clientConnections = this.clientConnections;
+        for (ClientHandler clientHandler : clientConnections.values()) {
+            clientHandler.sendResponse(response);
+        }
+    }
+
+    // Overrides
 
     @Override
     public void notifyOfThreadComplete(Runnable thread) {  // Chạy khi ClientHandler.clientHandleThread hoàn tất công việc run()

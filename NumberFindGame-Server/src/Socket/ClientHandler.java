@@ -84,7 +84,7 @@ public class ClientHandler {
 
     // Client Socket functions
 
-    public void sendResponse(SocketResponse response) {
+    protected void sendResponse(SocketResponse response) {
         try {
             output.writeObject(response);
         } catch (IOException e) {
@@ -92,13 +92,13 @@ public class ClientHandler {
         }
     }
 
-    private SocketRequest receiveRequest() throws IOException, ClassNotFoundException {
+    protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException {
         SocketRequest request = null;
-            request = (SocketRequest) input.readObject();
+        request = (SocketRequest) input.readObject();
         return request;
     }
 
-    public void closeSocket() {
+    protected void closeSocket() {
         try {
             if (input != null) {
                 input.close();
