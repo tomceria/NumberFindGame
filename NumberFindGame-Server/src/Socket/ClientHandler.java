@@ -21,7 +21,7 @@ public class ClientHandler {
     ClientThread clientHandleThread;
 
     boolean isLoggedIn = false;
-    IClientIdentifier clientIdentifier; // inherits PlayerDTO
+    IClientIdentifier clientIdentifier; // inherits MatchPlayer
     ClientManager clientManager;  // PARENT
 
     public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {

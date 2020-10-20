@@ -30,11 +30,15 @@ public class ClientManager implements IThreadCompleteListener {
         }
     }
 
+    protected void disconnectClient(UUID clientHandlerId) {
+        clientConnections.remove(clientHandlerId);                // Xoá khỏi danh sách người chơi hiện tại trong SERVER
+        ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
+    }
+
     @Override
     public void notifyOfThreadComplete(Runnable thread) {  // Chạy khi ClientHandler.clientHandleThread hoàn tất công việc run()
         UUID clientHandlerId = ((ClientHandler.ClientThread) thread).getUuid();
-        clientConnections.remove(clientHandlerId);                // Xoá khỏi danh sách người chơi hiện tại trong SERVER
-        ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
+        disconnectClient(clientHandlerId);
     }
 
     // Properties
