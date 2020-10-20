@@ -1,5 +1,8 @@
 package Socket;
 
+import Socket.Request.SocketRequest;
+import Socket.Response.SocketResponse;
+
 import java.util.HashMap;
 import java.util.UUID;
 

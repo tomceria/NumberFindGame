@@ -1,5 +1,8 @@
 package Socket;
 
+import Socket.Request.SocketRequest_Login;
+import Socket.Response.SocketResponse;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,7 +21,7 @@ public class ClientSocket {
         SocketRequest_Login authenticationRequest = new SocketRequest_Login(username, password);
         output.writeObject(authenticationRequest);                            // Gửi thông tin đăng nhập để server duyệt
         SocketResponse authenticationResponse = (SocketResponse) input.readObject();
-        System.out.println("SERVER: " + authenticationResponse.message);
+        System.out.println("SERVER: " + authenticationResponse.getMessage());
 
         switch (authenticationResponse.getStatus()) {
             case SUCCESS: {                                                           // Đăng nhập thành công => Kết nối

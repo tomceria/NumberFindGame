@@ -1,11 +1,11 @@
-package Socket;
+package Socket.Request;
 
 public class SocketRequest_Login extends SocketRequest {
-    String username;
-    String password;
+    public String username;
+    public String password;
 
     public SocketRequest_Login(String username, String password) {
-        super(SocketRequest.Action.LOGIN, "Login attempt detected.");
+        super(SocketRequest.Action.LOGIN, "Login request.");
         this.username = username;
         this.password = password;
     }

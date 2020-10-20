@@ -1,9 +1,10 @@
-package Socket;
+package Socket.Request;
 
 import java.io.Serializable;
 
 public class SocketRequest implements Serializable {
     public static enum Action {
+        MESSAGE,
         LOGIN,
         DISCONNECT
     }

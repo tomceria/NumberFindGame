@@ -1,5 +1,7 @@
 package Socket;
 
+import Socket.Response.SocketResponse;
+
 import java.io.EOFException;
 import java.io.IOException;
 

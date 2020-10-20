@@ -1,4 +1,4 @@
-package Socket;
+package Socket.Response;
 
 import java.io.Serializable;
 
@@ -22,5 +22,8 @@ public class SocketResponse implements Serializable {
 
     public Status getStatus() {
         return status;
+    }
+    public String getMessage() {
+        return message;
     }
 }

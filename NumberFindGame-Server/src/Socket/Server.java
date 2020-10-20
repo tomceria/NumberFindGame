@@ -1,5 +1,7 @@
 package Socket;
 
+import Socket.Response.SocketResponse;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +16,7 @@ public class Server {
     boolean isRunning = false;
 
     public Server(int port) {
-        clientManager = new ClientManager(this);                      // ClientManager quản lý các Client kết nối đến server
+        clientManager = new ClientManager(this);           // ClientManager quản lý các Client kết nối đến server
         serverThread = new Thread() {
             @Override
             public void run() {
