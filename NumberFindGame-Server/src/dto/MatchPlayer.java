@@ -2,6 +2,9 @@ package dto;
 
 import Socket.IClientIdentifier;
 
+import java.time.Duration;
+import java.time.LocalTime;
+
 public class MatchPlayer implements IClientIdentifier {
 //	private int playerId;
 //	private int matchId;
@@ -94,10 +97,19 @@ public class MatchPlayer implements IClientIdentifier {
 	}
 
 	/**
-	 * @param avgTime the avgTime to set
+	 * avgTime cannot be set manually, but instead has to go through this method to assign average time value
+	 * @param timeStart The starting time for CurrentLevel
 	 */
-	public void setAvgTime(double avgTime) {
-		this.avgTime = avgTime;
+	public void newAvgTime(LocalTime timeStart) {
+		double time = Duration.between(timeStart, LocalTime.now()).toMillis() * 1.0 / 1000;
+		this.avgTime = avgTime <= 0 ? time : (double)(time + avgTime) / 2;
 	}
+
+//	/**
+//	 * @param avgTime the avgTime to set
+//	 */
+//	public void setAvgTime(double avgTime) {
+//		this.avgTime = avgTime;
+//	}
 
 }

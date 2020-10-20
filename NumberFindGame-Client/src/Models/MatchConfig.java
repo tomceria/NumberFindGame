@@ -1,11 +1,11 @@
 package Models;
 
-public class MatchSettings {
+public class MatchConfig {
     int numberQty;
     int timeInMillis;
     int maxPlayer;
 
-    public MatchSettings(int numberQty, int timeInMillis, int maxPlayer) {
+    public MatchConfig(int numberQty, int timeInMillis, int maxPlayer) {
         this.numberQty = numberQty;
         this.timeInMillis = timeInMillis;
         this.maxPlayer = maxPlayer;

@@ -1,4 +1,4 @@
-package Models;
+package dto;
 
 import java.awt.*;
 import java.time.LocalTime;
@@ -10,9 +10,6 @@ public class Game {
     ArrayList<LevelNode> level;
     ArrayList<MatchPlayer> players;
     LocalTime startTime;
-
-    // Client-only Properties
-    MatchPlayer clientPlayer;
 
     public MatchConfig getMatchSettings() {
         return matchConfig;
@@ -46,21 +43,7 @@ public class Game {
         return players;
     }
     public void setMatchPlayers(ArrayList<MatchPlayer> players) {
-        // Set UiColor for MatchPlayers
-        ArrayList<Color> colors = new ArrayList<Color>() {{                                       // TODO: Move to Utils
-            add(Color.decode("#f73378"));
-            add(Color.decode("#ffee33"));
-            add(Color.decode("#33bfff"));
-            add(Color.decode("#33eb91"));
-            add(Color.decode("#ffa733"));
-            add(Color.decode("#834bff"));
-        }};
-        for (int i = 0; i < players.size(); i++) {
-            players.get(i).uiColor = colors.get(i);
-        }
-
         this.players = players;
-
     }
 
     public LocalTime getStartTime() {
@@ -68,13 +51,6 @@ public class Game {
     }
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
-    }
-
-    public MatchPlayer getClientPlayer() {
-        return clientPlayer;
-    }
-    public void setClientPlayer(MatchPlayer clientPlayer) {
-        this.clientPlayer = clientPlayer;
     }
 
     public class CurrentLevel {
