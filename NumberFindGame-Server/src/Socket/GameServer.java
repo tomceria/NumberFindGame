@@ -1,5 +1,6 @@
 package Socket;
 
+import dto.MatchPlayer;
 import dto.PlayerDTO;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class GameServer extends Server {
 
     public GameServer(int port) {
         super(port);
+        // TODO: Game business Logic: Create a room upon server starting
         gameRooms = new ArrayList<GameRoom>() {{
             add(new GameRoom());
         }};
@@ -29,8 +31,8 @@ public class GameServer extends Server {
 
         public void joinRoom(ClientHandler playerClient) {
             playerClients.put(playerClient.id, playerClient);
-            PlayerDTO player = (PlayerDTO) playerClient.getClientIdentifier();
-            System.out.println(String.format("%s joined the room.", player.getUsername()));
+            MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
+            System.out.println(String.format("%s joined the room.", matchPlayer.getPlayer().getUsername()));
         }
     }
 }

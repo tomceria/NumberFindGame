@@ -18,6 +18,7 @@ public class ClientSocket {
         SocketRequest_Login authenticationRequest = new SocketRequest_Login(username, password);
         output.writeObject(authenticationRequest);                            // Gửi thông tin đăng nhập để server duyệt
         SocketResponse authenticationResponse = (SocketResponse) input.readObject();
+        System.out.println("SERVER: " + authenticationResponse.message);
 
         switch (authenticationResponse.getStatus()) {
             case SUCCESS: {                                                           // Đăng nhập thành công => Kết nối

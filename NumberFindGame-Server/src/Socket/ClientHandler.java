@@ -1,6 +1,8 @@
 package Socket;
 
 import bus.PlayerBUS;
+import dto.MatchPlayer;
+import dto.PlayerDTO;
 import util.NotifyingThread;
 
 import java.io.*;
@@ -92,10 +94,12 @@ public class ClientHandler {
     private boolean performValidateClient(SocketRequest requestRaw) {
         boolean isValidated = false;
         SocketRequest_Login request = (SocketRequest_Login) requestRaw;
-        PlayerBUS playerBUS = new PlayerBUS();
 
+        // TODO: BUSINESS LOGIC
+        PlayerBUS playerBUS = new PlayerBUS();
         if (playerBUS.login(request.username, request.password)) {
-            ClientHandler.this.clientIdentifier = playerBUS.getOneByUsername(request.username);
+            PlayerDTO player = playerBUS.getOneByUsername(request.username);
+            ClientHandler.this.clientIdentifier = new MatchPlayer(player);
             isValidated = true;
         }
 
