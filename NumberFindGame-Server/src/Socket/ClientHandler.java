@@ -35,7 +35,7 @@ public class ClientHandler {
             public void doRun() {
                 try {
                     while (true) {
-                        SocketRequest requestRaw = (SocketRequest) input.readObject();
+                        SocketRequest requestRaw = receiveRequest();
                         if (isLoggedIn == false) {
                             if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
                                 if (performValidateClient(requestRaw)) {
@@ -49,12 +49,14 @@ public class ClientHandler {
                                 sendResponse(new SocketResponse(SocketResponse.Status.FAILED, "Invalid access request."));
                                 break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
                             }
-                        } else if (isLoggedIn && clientIdentifier != null) {                  // Đã đăng nhập => Xử lý MỌI yêu cầu
+                        } else if (isLoggedIn && clientIdentifier != null) {        // Đã đăng nhập => Xử lý MỌI yêu cầu
                             new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init();  // RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
                         }
                     }
                 } catch (EOFException | SocketException e) {
+                    // Disconnect
                     System.out.println(String.format("Client '%s' disconnected.", ClientHandler.this.id));
+                    closeSocket();
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -82,14 +84,34 @@ public class ClientHandler {
 
     // Client Socket functions
 
-    public void sendResponse(SocketResponse response) throws IOException {
-        output.writeObject(response);
+    public void sendResponse(SocketResponse response) {
+        try {
+            output.writeObject(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void closeSocket() throws IOException {
-        output.close();
-        input.close();
-        client.close();
+    private SocketRequest receiveRequest() throws IOException, ClassNotFoundException {
+        SocketRequest request = null;
+            request = (SocketRequest) input.readObject();
+        return request;
+    }
+
+    public void closeSocket() {
+        try {
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.close();
+            }
+            if (client != null) {
+                client.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //
