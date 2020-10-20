@@ -1,5 +1,6 @@
 package Socket;
 
+import dto.GameRoom;
 import dto.MatchPlayer;
 import dto.PlayerDTO;
 
@@ -20,19 +21,5 @@ public class GameServer extends Server {
 
     public ArrayList<GameRoom> getGameRooms() {
         return gameRooms;
-    }
-
-    public class GameRoom {
-        private HashMap<UUID, ClientHandler> playerClients = new HashMap<UUID, ClientHandler>();
-
-        public HashMap<UUID, ClientHandler> getPlayerClients() {
-            return playerClients;
-        }
-
-        public void joinRoom(ClientHandler playerClient) {
-            playerClients.put(playerClient.id, playerClient);
-            MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
-            System.out.println(String.format("%s joined the room.", matchPlayer.getPlayer().getUsername()));
-        }
     }
 }

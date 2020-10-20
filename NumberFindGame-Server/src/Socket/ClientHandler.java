@@ -65,6 +65,10 @@ public class ClientHandler {
         this.clientManager = clientManager;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public Socket getClient() {
         return client;
     }
