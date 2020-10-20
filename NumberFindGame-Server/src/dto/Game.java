@@ -11,10 +11,10 @@ public class Game {
     ArrayList<MatchPlayer> players;
     LocalTime startTime;
 
-    public MatchConfig getMatchSettings() {
+    public MatchConfig getMatchConfig() {
         return matchConfig;
     }
-    public void setMatchSettings(MatchConfig matchConfig) {
+    public void setMatchConfig(MatchConfig matchConfig) {
         this.matchConfig = matchConfig;
     }
 

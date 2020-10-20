@@ -15,13 +15,23 @@ public class GameBUS {
     // Runtime Components
     private Game game;
 
-    private MatchConfig loadMatchSettingsFromConfigs() {
-        // TODO: Load from Config file
-        MatchConfig matchConfig = new MatchConfig();
-        matchConfig.setNumberQty(100);
-        matchConfig.setTime(180000);
-        matchConfig.setMaxPlayer(4);
-        return matchConfig;
+    public GameBUS(MatchConfig matchConfig) {
+        this.game = initGame(matchConfig);
+    }
+
+    public Game initGame(MatchConfig matchConfig) {
+        Game game = new Game();
+        game.setMatchConfig(matchConfig);
+        game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
+        game.setMatchPlayers(getPlayersInRoom());
+
+        // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
+        game.setStartTime(LocalTime.now());
+        game.setCurrentLevel(1);                                                    // also reset timer for CurrentLevel
+
+        // TODO: Broadcast Game states to all players
+
+        return game;
     }
 
     private ArrayList<LevelNode> generateLevel(int count) {
@@ -89,7 +99,7 @@ public class GameBUS {
         return levelNodes;
     }
 
-    private ArrayList<PlayerDTO> getPlayersInRoom() {
+    private ArrayList<MatchPlayer> getPlayersInRoom() {
         // TODO: get Players
         return null;
 //        return DUMPPLAYERS;
@@ -162,4 +172,9 @@ public class GameBUS {
 
     }
 
+    // Properties
+
+    public Game getGame() {
+        return game;
+    }
 }
