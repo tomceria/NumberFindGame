@@ -1,9 +1,14 @@
 package bus;
 
 import Socket.ClientHandler;
+import Socket.ClientManager;
+import Socket.Response.SocketResponse;
 import dto.GameRoom;
 import dto.MatchConfig;
 import dto.MatchPlayer;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 public class GameRoomBUS {
     private GameRoom gameRoom; // PARENT
@@ -45,5 +50,10 @@ public class GameRoomBUS {
         matchConfig.setTime(180000);
         matchConfig.setMaxPlayer(4);
         return matchConfig;
+    }
+
+    public void broadcastResponseToRoom(SocketResponse response) {
+        ClientManager clientManager = gameRoom.getServer().getClientManager();
+        clientManager.sendResponseToBulkClients(gameRoom.getPlayerClients(), response);
     }
 }

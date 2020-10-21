@@ -19,6 +19,22 @@ public class ClientManager implements IThreadCompleteListener {
 
     // Methods
 
+
+    public void sendResponseToClient(UUID clientHandlerId, SocketResponse response) {
+        ClientHandler clientHandler = clientConnections.get(clientHandlerId);
+        clientHandler.sendResponse(response);
+    }
+
+    public void sendResponseToBulkClients(HashMap<UUID, ClientHandler> clientConnections, SocketResponse response) {
+        for (ClientHandler clientHandler : clientConnections.values()) {
+            clientHandler.sendResponse(response);
+        }
+    }
+
+    public void broadcastResponse(SocketResponse response) {
+        sendResponseToBulkClients(this.clientConnections, response);
+    }
+
     protected void addAndStartClient(Socket client) {   // Nhận tham biến là Socket client được Server instance accept()
 
         try {
@@ -37,11 +53,6 @@ public class ClientManager implements IThreadCompleteListener {
         ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // TODO: Game Business logic. Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
     }
 
-    protected void sendResponseToClient(UUID clientHandlerId, SocketResponse response) {
-        ClientHandler clientHandler = clientConnections.get(clientHandlerId);
-        clientHandler.sendResponse(response);
-    }
-
     protected SocketRequest receiveRequestFromClient(UUID clientHandlerId) {
         ClientHandler clientHandler = clientConnections.get(clientHandlerId);
         SocketRequest request = null;
@@ -51,13 +62,6 @@ public class ClientManager implements IThreadCompleteListener {
             e.printStackTrace();
         }
         return request;
-    }
-
-    protected void broadcastResponse(SocketResponse response) {
-        HashMap<UUID, ClientHandler> clientConnections = this.clientConnections;
-        for (ClientHandler clientHandler : clientConnections.values()) {
-            clientHandler.sendResponse(response);
-        }
     }
 
     // Overrides

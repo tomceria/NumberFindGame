@@ -17,7 +17,7 @@ public class GameServer extends Server {
         super(port);
         // TODO: Game business Logic: Create a room upon server starting
         gameRooms = new ArrayList<GameRoom>() {{
-            add(new GameRoom());
+            add(new GameRoom(GameServer.this));
         }};
     }
 
