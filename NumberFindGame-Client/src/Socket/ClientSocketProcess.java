@@ -16,8 +16,8 @@ public class ClientSocketProcess extends Thread {
                 continue;
             }
 
-            switch (result.getStatus()) {
-                case END: {
+            switch (result.getAction()) {
+                case NET_CLOSE: {
                     System.out.println(result.getMessage());
                     ClientSocket.close();
                     isRunning = false;

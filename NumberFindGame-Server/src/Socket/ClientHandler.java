@@ -40,13 +40,13 @@ public class ClientHandler {
                             if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
                                 if (performValidateClient(requestRaw)) {
                                     isLoggedIn = true;
-                                    sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, "Logged in."));
+                                    sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.MSG, "Logged in."));
                                     onSuccessConnection();
                                 } else {
-                                    sendResponse(new SocketResponse(SocketResponse.Status.FAILED, "Invalid login credentials."));
+                                    sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid login credentials."));
                                 }
                             } else {
-                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, "Invalid access request."));
+                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));
                                 break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
                             }
                         } else if (isLoggedIn && clientIdentifier != null) {        // Đã đăng nhập => Xử lý MỌI yêu cầu

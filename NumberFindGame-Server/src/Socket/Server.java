@@ -47,7 +47,7 @@ public class Server {
     }
 
     public void halt() {
-        this.clientManager.broadcastResponse(new SocketResponse(SocketResponse.Status.END, "Server closed."));
+        this.clientManager.broadcastResponse(new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.NET_CLOSE, "Server closed."));
 
         this.isRunning = false;
         HashMap<UUID, ClientHandler> clientConnections = this.clientManager.getClientConnections();

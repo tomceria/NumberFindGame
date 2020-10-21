@@ -8,7 +8,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientMain {
-    static String appName = "Number Find Game";
+    public static String appName = "Number Find Game";
+    public static JFrame mainFrame;
 
     public static void main (String[] args) throws IOException {
         try {
@@ -25,8 +26,9 @@ public class ClientMain {
 
         switch (choose) {
             case 1: {
-                JFrame mainFrame = new JFrame(appName);
+                mainFrame = new JFrame(appName);
                 configureWindow(mainFrame);
+                gotoGameView(mainFrame);
                 break;
             }
             case 2: {
@@ -43,7 +45,6 @@ public class ClientMain {
     }
 
     public static void configureWindow(JFrame mainFrame) {
-        mainFrame.setContentPane(new GameView().contentPane);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(1024, 768 + 22);
         mainFrame.setResizable(false);
@@ -51,6 +52,10 @@ public class ClientMain {
         mainFrame.setLocation(
                 dim.width/2-mainFrame.getSize().width/2,
                 dim.height/2-mainFrame.getSize().height/2);
+    }
+
+    public static void gotoGameView(JFrame mainFrame) {
+        mainFrame.setContentPane(new GameView().contentPane);
         mainFrame.setVisible(true);
     }
 }
