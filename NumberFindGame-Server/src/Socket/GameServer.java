@@ -28,6 +28,6 @@ public class GameServer extends Server {
     public void joinGame(ClientHandler playerClient) {
         // Nếu đúng là sẽ đưa Player vào Lobby. Nhưng vì giới hạn về thời gian phát triển nên ko có hệ thống Lobby
         // Thay vào đó, khi đăng nhập Player được đưa thẳng vào 1 phòng chơi duy nhất của Server
-        gameRooms.get(0).joinRoom(playerClient);
+        gameRooms.get(0).getGameRoomBUS().joinRoom(playerClient);
     }
 }
