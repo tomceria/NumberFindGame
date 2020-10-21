@@ -5,6 +5,7 @@ import Socket.Request.SocketRequest_Login;
 import Socket.Response.SocketResponse;
 import bus.PlayerBUS;
 import dto.MatchPlayer;
+import dto.MatchPlayer_Server;
 import dto.PlayerDTO;
 import util.NotifyingThread;
 
@@ -128,7 +129,7 @@ public class ClientHandler {
         PlayerBUS playerBUS = new PlayerBUS();
         if (playerBUS.login(request.username, request.password)) {
             PlayerDTO player = playerBUS.getOneByUsername(request.username);
-            ClientHandler.this.clientIdentifier = new MatchPlayer(player);
+            ClientHandler.this.clientIdentifier = new MatchPlayer_Server(player);
             isValidated = true;
         }
 

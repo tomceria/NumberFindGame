@@ -16,15 +16,15 @@ public class GameBUS implements IChangeListener {
     // Runtime Components
     private Game game;
 
-    public GameBUS(MatchConfig matchConfig) {
-        this.game = initGame(matchConfig);
+    public GameBUS(MatchConfig matchConfig, ArrayList<MatchPlayer> matchPlayers) {
+        this.game = initGame(matchConfig, matchPlayers);
     }
 
-    public Game initGame(MatchConfig matchConfig) {
+    public Game initGame(MatchConfig matchConfig, ArrayList<MatchPlayer> matchPlayers) {
         Game game = new Game();
         game.setMatchConfig(matchConfig);
+        game.setMatchPlayers(matchPlayers);
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
-        game.setMatchPlayers(getPlayersInRoom());
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
@@ -99,12 +99,6 @@ public class GameBUS implements IChangeListener {
         }
 
         return levelNodes;
-    }
-
-    private ArrayList<MatchPlayer> getPlayersInRoom() {
-        // TODO: get Players
-        return null;
-//        return DUMPPLAYERS;
     }
 
     private boolean sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {

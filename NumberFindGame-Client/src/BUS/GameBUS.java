@@ -2,7 +2,7 @@ package BUS;
 
 import Common.ViewBinder;
 import GUI.Components.MatchPlayerCellRenderer;
-import Models.*;
+import dto.*;
 
 import javax.swing.*;
 import java.awt.geom.Point2D;
@@ -13,12 +13,12 @@ import java.util.*;
 
 public class GameBUS {
     // TODO: Placeholder - Dump Players data
-    private ArrayList<Player> DUMPPLAYERS = new ArrayList<Player>() {
+    private ArrayList<PlayerDTO> DUMPPLAYERS = new ArrayList<PlayerDTO>() {
         {
-            this.add(new Player(1, "luuminhhoang", "lala@gmail.com", "Hoàng", "Lưu"));
-            this.add(new Player(2, "vohoanghuy", "lala2@gmail.com", "Huy", "Võ"));
-            this.add(new Player(3, "huathianhngan", "lala3@gmail.com", "Ngân", "Hứa"));
-            this.add(new Player(4, "tranthuythuyan", "lala4@gmail.com", "An", "Trần"));
+            this.add(new PlayerDTO("luuminhhoang", "123", "lala@gmail.com", "Hoàng", "Lưu"));
+            this.add(new PlayerDTO("vohoanghuy", "123", "lala2@gmail.com", "Huy", "Võ"));
+            this.add(new PlayerDTO("huathianhngan", "123", "lala3@gmail.com", "Ngân", "Hứa"));
+            this.add(new PlayerDTO("tranthithuyan", "123", "lala4@gmail.com", "An", "Trần"));
         }
     };
 
@@ -49,8 +49,8 @@ public class GameBUS {
         ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();     // Also used for placings, by sort order
 
         // Get Room's players info
-        for (Player player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
-            MatchPlayer matchPlayer = new MatchPlayer(player);
+        for (PlayerDTO player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
+            MatchPlayer matchPlayer = new MatchPlayer_UI(player);
             matchPlayers.add(matchPlayer);
             if (player.getId() == clientPlayerId) {
                 clientPlayer = matchPlayer;
@@ -58,9 +58,9 @@ public class GameBUS {
         }
         game.setMatchPlayers(matchPlayers);
 
-        // Set Client Player
+        // Set Client PlayerDTO
         if (clientPlayer == null) {
-            throw new RuntimeException("Player ID mismatch");
+            throw new RuntimeException("PlayerDTO ID mismatch");
         }
         game.setClientPlayer(clientPlayer);
 
@@ -99,7 +99,7 @@ public class GameBUS {
     }
 
     public String ui_getTimerClock() {
-        int timeInMillis = game.getMatchSettings().getTimeInMillis();
+        int timeInMillis = game.getMatchSettings().getTime();
         LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
         LocalTime timeDiff = timeEnd.minusNanos(LocalTime.now().toNanoOfDay());
 
@@ -141,7 +141,10 @@ public class GameBUS {
 
     private MatchConfig loadMatchSettingsFromConfigs() {
         // TODO: Load from Config file
-        MatchConfig matchConfig = new MatchConfig(100, 180000, 4);
+        MatchConfig matchConfig = new MatchConfig();
+        matchConfig.setNumberQty(100);
+        matchConfig.setTime(180000);
+        matchConfig.setMaxPlayer(4);
         return matchConfig;
     }
 
@@ -210,7 +213,7 @@ public class GameBUS {
         return levelNodes;
     }
 
-    private ArrayList<Player> getPlayersInRoom() {
+    private ArrayList<PlayerDTO> getPlayersInRoom() {
         return DUMPPLAYERS;
     }
 

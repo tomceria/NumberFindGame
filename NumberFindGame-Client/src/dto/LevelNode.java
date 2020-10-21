@@ -1,8 +1,7 @@
-package Models;
+package dto;
 
 import GUI.Components.LevelNodeButton;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class LevelNode {

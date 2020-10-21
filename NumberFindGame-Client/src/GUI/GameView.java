@@ -2,8 +2,8 @@ package GUI;
 
 import BUS.GameBUS;
 import GUI.Components.LevelNodeButton;
-import Models.LevelNode;
-import Models.MatchPlayer;
+import dto.LevelNode;
+import dto.MatchPlayer;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;

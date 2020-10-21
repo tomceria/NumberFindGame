@@ -9,16 +9,14 @@ public class SocketResponse implements Serializable {
     }
     public static enum Action {
         MSG,
-        NET_CLOSE
+        NET_CLOSE,
+        UPDATE_GAMEROOM
     }
 
     Status status;
     Action action;
     String message;
 
-    public SocketResponse(Status status) {
-        this.status = status;
-    }
     public SocketResponse(Status status, Action action, String message) {
         this.status = status;
         this.action = action;
