@@ -7,9 +7,16 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class GameRoom {
+    private GameBUS gameBUS;
     private HashMap<UUID, ClientHandler> playerClients;
     private MatchConfig matchConfig;
-    private GameBUS gameBUS;
+    private GameRoomStatus status;
+
+    public static enum GameRoomStatus {
+        OPEN,
+        LOCKED,
+        PLAYING
+    }
 
     public GameRoom() {
         this.playerClients = new HashMap<UUID, ClientHandler>();
@@ -21,12 +28,23 @@ public class GameRoom {
     }
 
     public void joinRoom(ClientHandler playerClient) {
+        if (this.status != GameRoomStatus.OPEN) {
+            // TODO: throw exception
+            return;
+        }
+
         playerClients.put(playerClient.getId(), playerClient);  // Copy ClientHandler từ ClientManager.clientConnections sang GameRoom.playerClients
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
         System.out.println(String.format("%s joined the room.", matchPlayer.getPlayer().getUsername()));
+
+        // TODO: Change startGame condition
+        if (playerClients.size() == this.matchConfig.getMaxPlayer()) {
+            this.startGame();
+        }
     }
 
     public void startGame() {
+        this.status = GameRoomStatus.PLAYING;
         this.gameBUS = new GameBUS(matchConfig);
     }
 

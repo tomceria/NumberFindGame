@@ -1,6 +1,7 @@
 package bus;
 
 import dto.*;
+import util.IChangeListener;
 
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
@@ -11,7 +12,7 @@ import java.util.Random;
 
 import static util.Maths.valueFromTwoRanges;
 
-public class GameBUS {
+public class GameBUS implements IChangeListener {
     // Runtime Components
     private Game game;
 
@@ -29,7 +30,8 @@ public class GameBUS {
         game.setStartTime(LocalTime.now());
         game.setCurrentLevel(1);                                                    // also reset timer for CurrentLevel
 
-        // TODO: Broadcast Game states to all players
+        // Misc: Set IChangeListener
+        game.setChangeListener(this); // Hàm này BẮT BUỘC phải đặt sau các hàm khởi tạo bên trên. Tránh việc gọi onChangeHappened() liên tục trong quá trình khởi tạo
 
         return game;
     }
@@ -172,9 +174,17 @@ public class GameBUS {
 
     }
 
+    // Overrides
+
+    @Override
+    public void onChangeHappened() {
+        // TODO: Broadcast new Game states to all players
+    }
+
     // Properties
 
     public Game getGame() {
         return game;
     }
+
 }
