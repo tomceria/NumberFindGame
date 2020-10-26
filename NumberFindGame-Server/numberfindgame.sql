@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2020 at 12:05 PM
+-- Generation Time: Oct 26, 2020 at 02:16 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -20,6 +20,36 @@ SET time_zone = "+00:00";
 --
 -- Database: `numberfindgame`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `matches`
+--
+
+CREATE TABLE `matches` (
+  `id` int(11) NOT NULL,
+  `time_start` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `duration` double NOT NULL,
+  `found_count` int(11) NOT NULL,
+  `number_quantity` int(11) NOT NULL,
+  `time` double NOT NULL,
+  `max_player` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `match_player`
+--
+
+CREATE TABLE `match_player` (
+  `player_id` int(11) NOT NULL,
+  `match_id` int(11) NOT NULL,
+  `score` int(11) NOT NULL,
+  `placing` int(11) NOT NULL,
+  `avg_time` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -48,6 +78,19 @@ INSERT INTO `players` (`id`, `username`, `password`, `email`, `first_name`, `las
 --
 
 --
+-- Indexes for table `matches`
+--
+ALTER TABLE `matches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `match_player`
+--
+ALTER TABLE `match_player`
+  ADD PRIMARY KEY (`player_id`,`match_id`),
+  ADD KEY `match_id` (`match_id`);
+
+--
 -- Indexes for table `players`
 --
 ALTER TABLE `players`
@@ -59,10 +102,28 @@ ALTER TABLE `players`
 --
 
 --
+-- AUTO_INCREMENT for table `matches`
+--
+ALTER TABLE `matches`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `players`
 --
 ALTER TABLE `players`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `match_player`
+--
+ALTER TABLE `match_player`
+  ADD CONSTRAINT `match_player_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`),
+  ADD CONSTRAINT `match_player_ibfk_2` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`),
+  ADD CONSTRAINT `match_player_ibfk_3` FOREIGN KEY (`match_id`) REFERENCES `matches` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
