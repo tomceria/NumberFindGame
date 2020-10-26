@@ -5,6 +5,7 @@ import Socket.ClientManager;
 import Socket.GameServer;
 import Socket.Response.SocketResponse;
 import Socket.Response.SocketResponse_GameRoomProps;
+import Socket.Response.SocketResponse_PlayerJoinRoom;
 import dto.*;
 
 import java.util.ArrayList;
@@ -61,19 +62,22 @@ public class GameRoomBUS {
          */
         this.gameRoom.getPlayerClients().put(playerClient.getId(), playerClient);  // Copy ClientHandler từ ClientManager.clientConnections sang GameRoom.playerClients
 
+        /**
+         * 3. Cho Player mới (playerClient) vào phòng (phía Client)
+         */
+        sendResponseToPlayer(
+                new SocketResponse_PlayerJoinRoom(
+                        new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
+                ),
+                playerClient.getId()
+        );
 
         /**
-         * 3. Thông báo về cập nhật Game state cho toàn phòng
+         * 4. Thông báo về cập nhật Game state cho toàn phòng
+         * Hành động này phải thực hiện sau bước "2" vì playerClient cần được nhận notifyUpdateGameRoomProps ngay khi vào phòng
          */
         ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), false);
         this.notifyUpdateGameRoomProps(matchPlayers, null, null);
-
-        /**
-         * 4. Cho Player mới (playerClient) vào phòng (phía Client)
-         */
-//        sendResponseToPlayer(
-//                new SocketResponse_PlayerJoinRoom(matchPlayers.indexOf())
-//        );
 
         // TODO: Change startGame condition
         if (this.gameRoom.getPlayerClients().size() == this.gameRoom.getMatchConfig().getMaxPlayer()) {
