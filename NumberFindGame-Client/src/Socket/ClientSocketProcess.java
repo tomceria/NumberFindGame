@@ -17,6 +17,18 @@ public class ClientSocketProcess extends Thread {
             }
 
             switch (result.getAction()) {
+                case MSG: {
+                    System.out.println(String.format("[Server] : %s", result.getMessage()));
+                    break;
+                }
+                case UPDATE_GAMEROOM: {
+                    System.out.println("Updating game room props. " + result.getMessage()); // TODO: Placeholder
+                    break;
+                }
+                case UPDATE_CLIENTPLAYER: {
+                    System.out.println("You have joined the game. " + result.getMessage()); // TODO: Placeholder
+                    break;
+                }
                 case NET_CLOSE: {
                     System.out.println(result.getMessage());
                     ClientSocket.close();

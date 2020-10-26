@@ -2,10 +2,13 @@ package Socket;
 
 import Socket.Request.SocketRequest;
 import Socket.Response.SocketResponse;
+import dto.GameRoom;
+import dto.GameRoom_Server;
 import util.IThreadCompleteListener;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -49,8 +52,22 @@ public class ClientManager implements IThreadCompleteListener {
     }
 
     protected void disconnectClient(UUID clientHandlerId) {
-        clientConnections.remove(clientHandlerId);                // Xoá khỏi danh sách người chơi hiện tại trong SERVER
-        ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // TODO: Game Business logic. Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
+        /**
+         * Duyệt tất cả các GameRoom trong server
+         */
+        ArrayList<GameRoom_Server> gameRooms = ((GameServer) server).getGameRooms();
+        for (GameRoom_Server gameRoom : gameRooms) {
+            ClientHandler playerClient = gameRoom.getPlayerClients().get(clientHandlerId);
+            if (playerClient != null) {
+                gameRoom.getGameRoomBUS().leaveRoom(playerClient);  // Về mặt lý thuyết, Client không ở trong nhiều phòng cùng 1 lúc
+                break;
+            }
+        }
+
+        /**
+         * Xoá khỏi danh sách người chơi hiện tại trong SERVER
+         */
+        clientConnections.remove(clientHandlerId);
     }
 
     protected SocketRequest receiveRequestFromClient(UUID clientHandlerId) {

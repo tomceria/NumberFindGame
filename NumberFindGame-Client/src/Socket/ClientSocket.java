@@ -23,18 +23,17 @@ public class ClientSocket {
         SocketRequest_Login authenticationRequest = new SocketRequest_Login(username, password);
         sendRequest(authenticationRequest);                                          // Gửi thông tin đăng nhập để server duyệt
         SocketResponse authenticationResponse = receiveResponse();
-        System.out.println("SERVER: " + authenticationResponse.getMessage());
+        System.out.println("SERVER AUTH MESSAGE: " + authenticationResponse.getMessage());
 
         switch (authenticationResponse.getStatus()) {
             case SUCCESS: {                                                           // Đăng nhập thành công => Kết nối
-                System.out.println("CLIENT: Connected");
-                sendRequest(new SocketRequest(SocketRequest.Action.MESSAGE, "Test sending Request while waiting for Response"));
+                System.out.println("CLIENT: Logged in successfully.");
                 ClientSocketProcess process = new ClientSocketProcess();
                 process.start();
                 break;
             }
             case FAILED: {
-                System.out.println("CLIENT: Disconnected");
+                System.out.println("CLIENT: Disconnected.");
                 close();
                 return;
             }
@@ -49,7 +48,7 @@ public class ClientSocket {
         }
     }
 
-    public static SocketResponse receiveResponse() {
+    protected static SocketResponse receiveResponse() {
         SocketResponse response = null;
         try {
             response = (SocketResponse) ClientSocket.input.readObject();

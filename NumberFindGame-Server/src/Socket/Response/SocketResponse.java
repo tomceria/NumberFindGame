@@ -10,7 +10,8 @@ public class SocketResponse implements Serializable {
     public static enum Action {
         MSG,
         NET_CLOSE,
-        UPDATE_GAMEROOM
+        UPDATE_GAMEROOM,
+        UPDATE_CLIENTPLAYER
     }
 
     Status status;

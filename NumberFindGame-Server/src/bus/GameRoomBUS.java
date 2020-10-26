@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static Socket.Response.SocketResponse.Action.*;
+import static Socket.Response.SocketResponse.Status.*;
 import static dto.GameRoomStatus.*;
 
 public class GameRoomBUS {
@@ -19,9 +21,17 @@ public class GameRoomBUS {
         this.gameRoom = gameRoom;
     }
 
-    public void notifyUpdateGameRoomProps() {
-        ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(gameRoom.getPlayerClients(), false);
-        SocketResponse response = new SocketResponse_GameRoomProps(matchPlayers, gameRoom.getMatchConfig(), gameRoom.getStatus());
+    public void notifyUpdateGameRoomProps(ArrayList<MatchPlayer> matchPlayers, MatchConfig matchConfig, GameRoomStatus status) {
+        if (matchPlayers == null) {
+            matchPlayers = convertClientHandlersToMatchPlayers(gameRoom.getPlayerClients(), false);
+        }
+        if (matchConfig == null) {
+            matchConfig = gameRoom.getMatchConfig();
+        }
+        if (status == null) {
+            status = gameRoom.getStatus();
+        }
+        SocketResponse response = new SocketResponse_GameRoomProps(matchPlayers, matchConfig, status);
         broadcastResponseToRoom(response);
     }
 
@@ -35,16 +45,42 @@ public class GameRoomBUS {
             return;
         }
 
-        this.gameRoom.getPlayerClients().put(playerClient.getId(), playerClient);  // Copy ClientHandler từ ClientManager.clientConnections sang GameRoom.playerClients
+        /**
+         * 1. Thông báo về có người chơi mới vào phòng cho cả phòng
+         */
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
-        System.out.println(String.format("%s joined the room.", matchPlayer.getPlayer().getUsername()));
+        broadcastResponseToRoom( new SocketResponse(SUCCESS, MSG, String.format("%s joined the room.", matchPlayer.getPlayer().getUsername())) );
 
-        this.notifyUpdateGameRoomProps();
+        /**
+         * 2. Cho Player mới (playerClient) vào phòng (phía Server)
+         */
+        this.gameRoom.getPlayerClients().put(playerClient.getId(), playerClient);  // Copy ClientHandler từ ClientManager.clientConnections sang GameRoom.playerClients
+
+
+        /**
+         * 3. Thông báo về cập nhật Game state cho toàn phòng
+         */
+        ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(gameRoom.getPlayerClients(), false);
+        this.notifyUpdateGameRoomProps(matchPlayers, null, null);
+
+        /**
+         * 4. Cho Player mới (playerClient) vào phòng (phía Client)
+         */
+//        sendResponseToPlayer(
+//                new SocketResponse_PlayerJoinRoom(matchPlayers.indexOf())
+//        );
 
         // TODO: Change startGame condition
         if (this.gameRoom.getPlayerClients().size() == this.gameRoom.getMatchConfig().getMaxPlayer()) {
             this.startGame();
         }
+    }
+
+    public void leaveRoom(ClientHandler playerClient) {
+        this.gameRoom.getPlayerClients().remove(playerClient.getId());
+
+        MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
+        broadcastResponseToRoom( new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())) );
     }
 
     public void startGame() {
@@ -64,6 +100,8 @@ public class GameRoomBUS {
         return matchConfig;
     }
 
+    // Privates
+
     private ArrayList<MatchPlayer> convertClientHandlersToMatchPlayers(HashMap<UUID, ClientHandler> playerClients, boolean willIncludeMPS) {
         ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
         for (ClientHandler playerClient : playerClients.values()) {
@@ -77,6 +115,11 @@ public class GameRoomBUS {
         }
 
         return matchPlayers;
+    }
+
+    private void sendResponseToPlayer(SocketResponse response, UUID clientHandlerId) {
+        ClientManager clientManager = gameRoom.getServer().getClientManager();
+        clientManager.sendResponseToClient(clientHandlerId, response);
     }
 
     private void broadcastResponseToRoom(SocketResponse response) {

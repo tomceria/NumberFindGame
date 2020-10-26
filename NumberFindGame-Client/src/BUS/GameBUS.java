@@ -30,14 +30,14 @@ public class GameBUS {
     public GameBUS_ViewBinder viewBinder = new GameBUS_ViewBinder();
 
     public GameBUS() {
-        this.game = initGame(1);                                 // TODO: get ClientPlayer from somewhere...
+        this.game = initGame("luuminhhoang");              // TODO: get ClientPlayer from somewhere...
     }
 
     public Game getGame() {
         return game;
     }
 
-    private Game initGame(int clientPlayerId) {
+    private Game initGame(String clientPlayerUsername) {
         Game game = new Game();
         MatchPlayer clientPlayer = null;
 
@@ -52,7 +52,7 @@ public class GameBUS {
         for (PlayerDTO player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
             MatchPlayer matchPlayer = new MatchPlayer_UI(player);
             matchPlayers.add(matchPlayer);
-            if (player.getId() == clientPlayerId) {
+            if (clientPlayerUsername.equals(player.getUsername())) {
                 clientPlayer = matchPlayer;
             }
         }
