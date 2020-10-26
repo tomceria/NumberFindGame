@@ -11,7 +11,7 @@ public class SocketResponse implements Serializable {
         MSG,
         NET_CLOSE,
         UPDATE_GAMEROOM,
-        UPDATE_CLIENTPLAYER
+        UPDATE_PLAYERJOINROOM
     }
 
     Status status;

@@ -3,7 +3,7 @@ package GUI.Components;
 import Common.ColorScheme;
 import Common.IComponent;
 import dto.MatchPlayer;
-import dto.MatchPlayer_UI;
+import dto.MatchPlayer_Client;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,9 +53,9 @@ public class LevelNodeButton extends JButton implements IComponent {
 
     public void setPicked(MatchPlayer matchPlayer) {
         this.setOpaque(true);
-        this.setBackground(((MatchPlayer_UI) matchPlayer).getUiColor());
+        this.setBackground(((MatchPlayer_Client) matchPlayer).getUiColor());
         this.setForeground(Color.BLACK);
         this.isPicked = true;
-        this.assignedColor = ((MatchPlayer_UI) matchPlayer).getUiColor();
+        this.assignedColor = ((MatchPlayer_Client) matchPlayer).getUiColor();
     }
 }

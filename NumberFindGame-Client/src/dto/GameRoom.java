@@ -1,12 +1,13 @@
 package dto;
 
+import bus.GameBUS;
+import bus.GameRoomBUS;
+
 public class GameRoom {
     protected MatchConfig matchConfig;
     protected GameRoomStatus status;
-
-    public GameRoom() {
-        this.status = GameRoomStatus.OPEN;
-    }
+    protected GameRoomBUS gameRoomBUS;
+    private GameBUS gameBUS;
 
     // Properties
     public MatchConfig getMatchConfig() {
@@ -23,5 +24,17 @@ public class GameRoom {
 
     public void setStatus(GameRoomStatus status) {
         this.status = status;
+    }
+
+    public GameRoomBUS getGameRoomBUS() {
+        return gameRoomBUS;
+    }
+
+    public GameBUS getGameBUS() {
+        return gameBUS;
+    }
+
+    public void setGameBUS(GameBUS gameBUS) {
+        this.gameBUS = gameBUS;
     }
 }

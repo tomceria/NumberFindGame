@@ -1,6 +1,6 @@
 package GUI;
 
-import BUS.GameBUS;
+import bus.GameBUS;
 import GUI.Components.LevelNodeButton;
 import dto.LevelNode;
 import dto.MatchPlayer;

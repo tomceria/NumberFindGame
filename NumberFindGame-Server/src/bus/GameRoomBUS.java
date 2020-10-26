@@ -2,6 +2,7 @@ package bus;
 
 import Socket.ClientHandler;
 import Socket.ClientManager;
+import Socket.GameServer;
 import Socket.Response.SocketResponse;
 import Socket.Response.SocketResponse_GameRoomProps;
 import dto.*;
@@ -19,11 +20,15 @@ public class GameRoomBUS {
 
     public GameRoomBUS(GameRoom_Server gameRoom) {
         this.gameRoom = gameRoom;
+        this.gameRoom.setMatchConfig(getDefaultMatchConfig());
+
+        this.gameRoom.setStatus(GameRoomStatus.OPEN);
+        this.gameRoom.setGameBUS(null);                                          // Chưa bắt đầu game ngay lúc tạo phòng
     }
 
     public void notifyUpdateGameRoomProps(ArrayList<MatchPlayer> matchPlayers, MatchConfig matchConfig, GameRoomStatus status) {
         if (matchPlayers == null) {
-            matchPlayers = convertClientHandlersToMatchPlayers(gameRoom.getPlayerClients(), false);
+            matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), false);
         }
         if (matchConfig == null) {
             matchConfig = gameRoom.getMatchConfig();
@@ -60,7 +65,7 @@ public class GameRoomBUS {
         /**
          * 3. Thông báo về cập nhật Game state cho toàn phòng
          */
-        ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(gameRoom.getPlayerClients(), false);
+        ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), false);
         this.notifyUpdateGameRoomProps(matchPlayers, null, null);
 
         /**
@@ -102,6 +107,10 @@ public class GameRoomBUS {
 
     // Privates
 
+    private GameServer getServer() {
+        return gameRoom.getServer();
+    }
+
     private ArrayList<MatchPlayer> convertClientHandlersToMatchPlayers(HashMap<UUID, ClientHandler> playerClients, boolean willIncludeMPS) {
         ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
         for (ClientHandler playerClient : playerClients.values()) {
@@ -118,12 +127,12 @@ public class GameRoomBUS {
     }
 
     private void sendResponseToPlayer(SocketResponse response, UUID clientHandlerId) {
-        ClientManager clientManager = gameRoom.getServer().getClientManager();
+        ClientManager clientManager = this.getServer().getClientManager();
         clientManager.sendResponseToClient(clientHandlerId, response);
     }
 
     private void broadcastResponseToRoom(SocketResponse response) {
-        ClientManager clientManager = gameRoom.getServer().getClientManager();
-        clientManager.sendResponseToBulkClients(gameRoom.getPlayerClients(), response);
+        ClientManager clientManager = this.getServer().getClientManager();
+        clientManager.sendResponseToBulkClients(this.gameRoom.getPlayerClients(), response);
     }
 }

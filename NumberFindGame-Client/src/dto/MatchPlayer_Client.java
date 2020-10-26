@@ -2,10 +2,10 @@ package dto;
 
 import java.awt.*;
 
-public class MatchPlayer_UI extends MatchPlayer {
+public class MatchPlayer_Client extends MatchPlayer {
     Color uiColor;
 
-    public MatchPlayer_UI(PlayerDTO player) {
+    public MatchPlayer_Client(PlayerDTO player) {
         super(player);
     }
 

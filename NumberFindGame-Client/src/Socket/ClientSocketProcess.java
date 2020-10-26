@@ -25,7 +25,7 @@ public class ClientSocketProcess extends Thread {
                     System.out.println("Updating game room props. " + result.getMessage()); // TODO: Placeholder
                     break;
                 }
-                case UPDATE_CLIENTPLAYER: {
+                case UPDATE_PLAYERJOINROOM: {
                     System.out.println("You have joined the game. " + result.getMessage()); // TODO: Placeholder
                     break;
                 }

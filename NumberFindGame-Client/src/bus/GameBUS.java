@@ -1,4 +1,4 @@
-package BUS;
+package bus;
 
 import Common.ViewBinder;
 import GUI.Components.MatchPlayerCellRenderer;
@@ -50,7 +50,7 @@ public class GameBUS {
 
         // Get Room's players info
         for (PlayerDTO player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
-            MatchPlayer matchPlayer = new MatchPlayer_UI(player);
+            MatchPlayer matchPlayer = new MatchPlayer_Client(player);
             matchPlayers.add(matchPlayer);
             if (clientPlayerUsername.equals(player.getUsername())) {
                 clientPlayer = matchPlayer;

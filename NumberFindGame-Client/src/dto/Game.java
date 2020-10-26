@@ -56,7 +56,7 @@ public class Game {
             add(Color.decode("#834bff"));
         }};
         for (int i = 0; i < players.size(); i++) {
-            ((MatchPlayer_UI) players.get(i)).uiColor = colors.get(i);
+            ((MatchPlayer_Client) players.get(i)).uiColor = colors.get(i);
         }
 
         this.players = players;
