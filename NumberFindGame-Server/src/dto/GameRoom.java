@@ -1,14 +1,10 @@
 package dto;
 
-import bus.GameBUS;
-import bus.GameRoomBUS;
-
 public class GameRoom {
     private int id;
     protected MatchConfig matchConfig;
     protected GameRoomStatus status;
-    protected GameRoomBUS gameRoomBUS;
-    private GameBUS gameBUS;
+    private Game game;
 
     public GameRoom(int id) {
         this.id = id;
@@ -35,15 +31,11 @@ public class GameRoom {
         this.status = status;
     }
 
-    public GameRoomBUS getGameRoomBUS() {
-        return gameRoomBUS;
+    public Game getGame() {
+        return game;
     }
 
-    public GameBUS getGameBUS() {
-        return gameBUS;
-    }
-
-    public void setGameBUS(GameBUS gameBUS) {
-        this.gameBUS = gameBUS;
+    public void setGame(Game game) {
+        this.game = game;
     }
 }

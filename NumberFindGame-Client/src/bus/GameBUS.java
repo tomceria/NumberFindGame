@@ -23,7 +23,7 @@ public class GameBUS {
     };
 
     // Runtime Components
-    private Game game;
+    private Game_Client game;
     private HashMap<String, String> settings;
 
     // Client-only Properties
@@ -33,19 +33,19 @@ public class GameBUS {
         this.game = initGame("luuminhhoang");              // TODO: get ClientPlayer from somewhere...
     }
 
-    public Game getGame() {
+    public Game_Client getGame() {
         return game;
     }
 
-    private Game initGame(String clientPlayerUsername) {
-        Game game = new Game();
+    private Game_Client initGame(String clientPlayerUsername) {
+        Game_Client game = new Game_Client();
         MatchPlayer clientPlayer = null;
 
-        // Receive Game Settings from Server
-        game.setMatchSettings(loadMatchSettingsFromConfigs());                         // TODO: Get settings from Server
+        // Receive Game Config from Server
+        game.setMatchConfig(loadMatchConfigFromConfigs());                         // TODO: Get settings from Server
 
         // Receive Level info from Server
-        game.setLevel(generateLevel(game.getMatchSettings().getNumberQty()));             // TODO: Get level from Server
+        game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));             // TODO: Get level from Server
         ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();     // Also used for placings, by sort order
 
         // Get Room's players info
@@ -99,7 +99,7 @@ public class GameBUS {
     }
 
     public String ui_getTimerClock() {
-        int timeInMillis = game.getMatchSettings().getTime();
+        int timeInMillis = game.getMatchConfig().getTime();
         LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
         LocalTime timeDiff = timeEnd.minusNanos(LocalTime.now().toNanoOfDay());
 
@@ -139,7 +139,7 @@ public class GameBUS {
 
     // TODO: SERVER-SIDE
 
-    private MatchConfig loadMatchSettingsFromConfigs() {
+    private MatchConfig loadMatchConfigFromConfigs() {
         // TODO: Load from Config file
         MatchConfig matchConfig = new MatchConfig();
         matchConfig.setNumberQty(100);

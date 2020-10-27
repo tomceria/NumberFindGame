@@ -13,15 +13,16 @@ import java.util.Random;
 import static util.Maths.valueFromTwoRanges;
 
 public class GameBUS implements IChangeListener {
-    // Runtime Components
-    private Game game;
+    private Game_Server game;  // PARENT
 
-    public GameBUS(MatchConfig matchConfig, ArrayList<MatchPlayer> matchPlayers) {
-        this.game = initGame(matchConfig, matchPlayers);
+    public GameBUS(Game_Server game) {
+        this.game = game;
     }
 
-    public Game initGame(MatchConfig matchConfig, ArrayList<MatchPlayer> matchPlayers) {
-        Game game = new Game();
+    public void initGame() {
+        MatchConfig matchConfig = game.getMatchConfig();
+        ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
+
         game.setMatchConfig(matchConfig);
         game.setMatchPlayers(matchPlayers);
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
@@ -32,8 +33,6 @@ public class GameBUS implements IChangeListener {
 
         // Misc: Set IChangeListener
         game.setChangeListener(this); // Hàm này BẮT BUỘC phải đặt sau các hàm khởi tạo bên trên. Tránh việc gọi onChangeHappened() liên tục trong quá trình khởi tạo
-
-        return game;
     }
 
     private ArrayList<LevelNode> generateLevel(int count) {

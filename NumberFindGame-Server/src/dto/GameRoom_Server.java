@@ -10,6 +10,7 @@ import java.util.*;
 public class GameRoom_Server extends GameRoom {
     private GameServer server; // PARENT
     private HashMap<UUID, ClientHandler> playerClients;
+    protected GameRoomBUS gameRoomBUS;
 
     public GameRoom_Server(GameServer server) {
         super(GameRoomBUS.generateRoomId(server.getGameRooms()));
@@ -30,4 +31,9 @@ public class GameRoom_Server extends GameRoom {
     public HashMap<UUID, ClientHandler> getPlayerClients() {
         return playerClients;
     }
+
+    public GameRoomBUS getGameRoomBUS() {
+        return gameRoomBUS;
+    }
+
 }

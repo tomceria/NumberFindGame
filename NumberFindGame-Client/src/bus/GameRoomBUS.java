@@ -31,11 +31,5 @@ public class GameRoomBUS {
         ((GameRoom_Client) gameRoom).setPlayers(response.players);
         gameRoom.setMatchConfig(response.matchConfig);
         gameRoom.setStatus(response.status);
-
-        System.out.println("CLIENT: Updated GameRoom with" +
-                "\nPlayer count: " + ((GameRoom_Client) gameRoom).getPlayers().size() +
-                "\nMatchConfig.maxPlayer: " + gameRoom.getMatchConfig().getMaxPlayer() +
-                "\nStatus: " + gameRoom.getStatus()
-                );
     }
 }

@@ -1,6 +1,5 @@
 package dto;
 
-import java.awt.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -11,14 +10,28 @@ public class Game {
     ArrayList<MatchPlayer> players;
     LocalTime startTime;
 
-    // Client-only Properties
-    MatchPlayer clientPlayer;
+    public Game() {
+    }
 
-    public MatchConfig getMatchSettings() {
+    public Game(MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
+        this.matchConfig = matchConfig;
+        this.players = players;
+    }
+
+    // Privates
+
+    protected void triggerOnChange() {
+        // Empty... should be overriden by Game_Server
+    }
+
+    // Properties
+
+    public MatchConfig getMatchConfig() {
         return matchConfig;
     }
-    public void setMatchSettings(MatchConfig matchConfig) {
+    public void setMatchConfig(MatchConfig matchConfig) {
         this.matchConfig = matchConfig;
+        this.triggerOnChange();
     }
 
     public CurrentLevel getCurrentLevel() {
@@ -33,6 +46,7 @@ public class Game {
         this.currentLevel = new CurrentLevel();
         this.currentLevel.setValue(currentLevelValue);
         this.currentLevel.setTimeStart(LocalTime.now());                                  // Set will also restart timer
+        this.triggerOnChange();
     }
 
     public ArrayList<LevelNode> getLevel() {
@@ -40,27 +54,15 @@ public class Game {
     }
     public void setLevel(ArrayList<LevelNode> level) {
         this.level = level;
+        this.triggerOnChange();
     }
 
     public ArrayList<MatchPlayer> getMatchPlayers() {
         return players;
     }
     public void setMatchPlayers(ArrayList<MatchPlayer> players) {
-        // Set UiColor for MatchPlayers
-        ArrayList<Color> colors = new ArrayList<Color>() {{                                       // TODO: Move to Utils
-            add(Color.decode("#f73378"));
-            add(Color.decode("#ffee33"));
-            add(Color.decode("#33bfff"));
-            add(Color.decode("#33eb91"));
-            add(Color.decode("#ffa733"));
-            add(Color.decode("#834bff"));
-        }};
-        for (int i = 0; i < players.size(); i++) {
-            ((MatchPlayer_Client) players.get(i)).uiColor = colors.get(i);
-        }
-
         this.players = players;
-
+        this.triggerOnChange();
     }
 
     public LocalTime getStartTime() {
@@ -68,13 +70,7 @@ public class Game {
     }
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
-    }
-
-    public MatchPlayer getClientPlayer() {
-        return clientPlayer;
-    }
-    public void setClientPlayer(MatchPlayer clientPlayer) {
-        this.clientPlayer = clientPlayer;
+        this.triggerOnChange();
     }
 
     public class CurrentLevel {
@@ -86,6 +82,7 @@ public class Game {
         }
         protected void setValue(int value) {
             this.value = value;
+            Game.this.triggerOnChange();
         }
 
         public LocalTime getTimeStart() {
@@ -93,6 +90,7 @@ public class Game {
         }
         protected void setTimeStart(LocalTime timeStart) {
             this.timeStart = timeStart;
+            Game.this.triggerOnChange();
         }
     }
 }

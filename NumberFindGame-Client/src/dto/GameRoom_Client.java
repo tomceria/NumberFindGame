@@ -5,12 +5,19 @@ import bus.GameRoomBUS;
 import java.util.ArrayList;
 
 public class GameRoom_Client extends GameRoom {
+    GameRoomBUS gameRoomBUS;
     MatchPlayer clientPlayer;
     ArrayList<MatchPlayer> players;
 
     public GameRoom_Client(int id) {
         super(id);
         this.gameRoomBUS = new GameRoomBUS(this);
+    }
+
+    // Properties
+
+    public GameRoomBUS getGameRoomBUS() {
+        return gameRoomBUS;
     }
 
     public MatchPlayer getClientPlayer() {
