@@ -1,5 +1,1 @@
-{
-  "numberQty": 100,
-  "time": 180000,
-  "maxPlayer": 2
-}
+{"maxPlayer":5,"numberQty":550,"time":180000}

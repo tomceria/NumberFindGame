@@ -2,7 +2,9 @@ package cli;
 
 import Socket.GameServer;
 import Socket.Server;
+import dto.MatchConfig;
 import util.JsonHelper;
+import util.NumberValidException;
 
 import java.util.Scanner;
 import java.util.UUID;
@@ -12,10 +14,12 @@ public class Main {
 	static Server server;
 	static boolean isCommanding = true;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NumberValidException {
 
 		JsonHelper jsonHelper = new JsonHelper();
-		jsonHelper.readFile();
+		MatchConfig matchConfig =  jsonHelper.readConfig();
+		matchConfig.setNumberQty(550);
+		jsonHelper.saveConfig(matchConfig);
 
 		// PlayerBUS playerBus = new PlayerBUS();
 		// System.out.print(playerBus.login("saidan00", "123"));
