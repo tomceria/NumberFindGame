@@ -2,8 +2,11 @@ package dto;
 
 import bus.GameRoomBUS;
 
+import java.util.ArrayList;
+
 public class GameRoom_Client extends GameRoom {
     MatchPlayer clientPlayer;
+    ArrayList<MatchPlayer> players;
 
     public GameRoom_Client(int id) {
         super(id);
@@ -16,5 +19,13 @@ public class GameRoom_Client extends GameRoom {
 
     public void setClientPlayer(MatchPlayer clientPlayer) {
         this.clientPlayer = clientPlayer;
+    }
+
+    public ArrayList<MatchPlayer> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(ArrayList<MatchPlayer> players) {
+        this.players = players;
     }
 }

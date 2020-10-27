@@ -1,6 +1,7 @@
 package bus;
 
 import Socket.GameClient;
+import Socket.Response.SocketResponse_GameRoomProps;
 import Socket.Response.SocketResponse_PlayerJoinRoom;
 import dto.GameRoom;
 import dto.GameRoom_Client;
@@ -24,5 +25,17 @@ public class GameRoomBUS {
         gameClient.getGameRoom().setClientPlayer(
             response.clientPlayer_MatchPlayer
         );
+    }
+
+    public void setGameRoomProps(SocketResponse_GameRoomProps response) {
+        ((GameRoom_Client) gameRoom).setPlayers(response.players);
+        gameRoom.setMatchConfig(response.matchConfig);
+        gameRoom.setStatus(response.status);
+
+        System.out.println("CLIENT: Updated GameRoom with" +
+                "\nPlayer count: " + ((GameRoom_Client) gameRoom).getPlayers().size() +
+                "\nMatchConfig.maxPlayer: " + gameRoom.getMatchConfig().getMaxPlayer() +
+                "\nStatus: " + gameRoom.getStatus()
+                );
     }
 }

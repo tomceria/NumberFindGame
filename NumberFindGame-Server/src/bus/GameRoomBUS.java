@@ -104,8 +104,7 @@ public class GameRoomBUS {
          * 4. Thông báo về cập nhật Game state cho toàn phòng
          * Hành động này phải thực hiện sau bước "2" vì playerClient cần được nhận notifyUpdateGameRoomProps ngay khi vào phòng
          */
-        ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), false);
-        this.notifyUpdateGameRoomProps(matchPlayers, null, null);
+        this.notifyUpdateGameRoomProps(this.getMatchPlayersToSendResponse(), null, null);
 
         // TODO: Change startGame condition
         if (this.gameRoom.getPlayerClients().size() == this.gameRoom.getMatchConfig().getMaxPlayer()) {
@@ -120,6 +119,7 @@ public class GameRoomBUS {
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
         if (this.gameRoom.getPlayerClients().size() > 0) {
             broadcastResponseToRoom( new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())) );
+            this.notifyUpdateGameRoomProps(this.getMatchPlayersToSendResponse(), null, null);
         }
     }
 
@@ -144,6 +144,10 @@ public class GameRoomBUS {
 
     private GameServer getServer() {
         return gameRoom.getServer();
+    }
+
+    private ArrayList<MatchPlayer> getMatchPlayersToSendResponse() {
+        return convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), false);
     }
 
     private ArrayList<MatchPlayer> convertClientHandlersToMatchPlayers(HashMap<UUID, ClientHandler> playerClients, boolean willIncludeMPS) {

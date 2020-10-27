@@ -1,6 +1,7 @@
 package Socket;
 
 import Socket.Response.SocketResponse;
+import Socket.Response.SocketResponse_GameRoomProps;
 import Socket.Response.SocketResponse_PlayerJoinRoom;
 import bus.GameRoomBUS;
 import dto.GameRoom_Client;
@@ -26,10 +27,6 @@ public class ClientSocketProcess extends Thread {
                     System.out.println(String.format("[Server] : %s", resultRaw.getMessage()));
                     break;
                 }
-                case UPDATE_GAMEROOM: {
-                    System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
-                    break;
-                }
                 case UPDATE_PLAYERJOINROOM: {
                     if (((GameClient) client).getGameRoom() != null) {
                         System.out.println("CLIENT: You're already in a room.");
@@ -37,9 +34,18 @@ public class ClientSocketProcess extends Thread {
                     System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
 
                     GameRoomBUS.clientPlayerJoinRoom(
-                            (SocketResponse_PlayerJoinRoom) resultRaw,
-                            ((GameClient) client)
+                        (SocketResponse_PlayerJoinRoom) resultRaw,
+                        (GameClient) client
                     );
+                    break;
+                }
+                case UPDATE_GAMEROOM: {
+                    System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
+
+                    ((GameClient) client).getGameRoom().getGameRoomBUS()
+                        .setGameRoomProps(
+                            (SocketResponse_GameRoomProps) resultRaw
+                        );
                     break;
                 }
                 case NET_CLOSE: {
