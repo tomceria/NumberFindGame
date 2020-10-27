@@ -2,16 +2,18 @@ package Socket;
 
 import Socket.Response.SocketResponse;
 
-import java.io.EOFException;
-import java.io.IOException;
-
 public class ClientSocketProcess extends Thread {
+    Client client;  // PARENT
     boolean isRunning = true;
+
+    public ClientSocketProcess(Client client) {
+        this.client = client;
+    }
 
     @Override
     public void run() {
         while(isRunning) {
-            SocketResponse result = ClientSocket.receiveResponse();
+            SocketResponse result = client.receiveResponse();
             if (result == null) {
                 continue;
             }
@@ -31,7 +33,7 @@ public class ClientSocketProcess extends Thread {
                 }
                 case NET_CLOSE: {
                     System.out.println(result.getMessage());
-                    ClientSocket.close();
+                    client.close();
                     isRunning = false;
                     break;
                 }

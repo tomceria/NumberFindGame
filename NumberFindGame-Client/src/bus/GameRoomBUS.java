@@ -5,7 +5,7 @@ import dto.GameRoom;
 public class GameRoomBUS {
     GameRoom gameRoom;
 
-    public GameRoomBUS() {
-        this.gameRoom = new GameRoom();
+    public GameRoomBUS(int gameRoomId) {
+        this.gameRoom = new GameRoom(gameRoomId);
     }
 }

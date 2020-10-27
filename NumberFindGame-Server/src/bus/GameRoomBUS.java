@@ -113,7 +113,8 @@ public class GameRoomBUS {
     }
 
     public void leaveRoom(ClientHandler playerClient) {
-        this.gameRoom.getPlayerClients().remove(playerClient.getId());
+        this.gameRoom.getPlayerClients().remove(playerClient.getId());                               // Thoát khỏi phòng
+        getServer().getClientManager().getClientConnections().remove(playerClient.getId());            // Đá khỏi server
 
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
         if (this.gameRoom.getPlayerClients().size() > 0) {

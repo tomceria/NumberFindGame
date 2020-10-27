@@ -1,15 +1,17 @@
-import Socket.ClientSocket;
+import Socket.Client;
 import GUI.GameView;
+import Socket.GameClient;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientMain {
     public static String appName = "Number Find Game";
     public static JFrame mainFrame;
+
+    private static Client client;
 
     public static void main (String[] args) throws IOException {
         try {
@@ -35,7 +37,8 @@ public class ClientMain {
                 System.out.print("username: "); String username = scan.nextLine();
                 System.out.print("password: "); String password = scan.nextLine();
                 try {
-                    ClientSocket.connect("127.0.0.1", 54321, username, password);
+                    GameClient gameClient = new GameClient();
+                    gameClient.connect("127.0.0.1", 54321, username, password);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

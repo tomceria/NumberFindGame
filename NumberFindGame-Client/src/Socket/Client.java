@@ -10,12 +10,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ClientSocket {
-    private static Socket socket;                                // Chỉ được tương tác với socket thông qua ClientSocket
+public class Client {
+    private static Socket socket;                                // Chỉ được tương tác với socket thông qua Client
     private static ObjectInputStream input;                   // input và output được đặc static để các hàm BUS truy xuất
     private static ObjectOutputStream output;
 
-    public static void connect(String hostname, int port, String username, String password) throws IOException, ClassNotFoundException {
+    public void connect(String hostname, int port, String username, String password) throws IOException, ClassNotFoundException {
         socket = new Socket(hostname, port);                       // Thực hiện kết nối đến server với hostname xác định
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
@@ -28,7 +28,7 @@ public class ClientSocket {
         switch (authenticationResponse.getStatus()) {
             case SUCCESS: {                                                           // Đăng nhập thành công => Kết nối
                 System.out.println("CLIENT: Logged in successfully.");
-                ClientSocketProcess process = new ClientSocketProcess();
+                ClientSocketProcess process = new ClientSocketProcess(this);
                 process.start();
                 break;
             }
@@ -40,18 +40,18 @@ public class ClientSocket {
         }
     }
 
-    public static void sendRequest(SocketRequest request) {
+    public void sendRequest(SocketRequest request) {
         try {
-            ClientSocket.output.writeObject(request);
+            Client.output.writeObject(request);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    protected static SocketResponse receiveResponse() {
+    protected SocketResponse receiveResponse() {
         SocketResponse response = null;
         try {
-            response = (SocketResponse) ClientSocket.input.readObject();
+            response = (SocketResponse) Client.input.readObject();
         } catch (NullPointerException | EOFException e) {
             // Disconnect
             close();
@@ -61,7 +61,7 @@ public class ClientSocket {
         return response;
     }
 
-    public static void close() {
+    public void close() {
         try {
             if (input != null) {
                 input.close();
