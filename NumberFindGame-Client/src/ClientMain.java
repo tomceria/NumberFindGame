@@ -37,8 +37,11 @@ public class ClientMain {
                 System.out.print("username: "); String username = scan.nextLine();
                 System.out.print("password: "); String password = scan.nextLine();
                 try {
-                    GameClient gameClient = new GameClient();
-                    gameClient.connect("127.0.0.1", 54321, username, password);
+                    GameClient gameClient = new GameClient(
+                            "127.0.0.1",
+                            54321,
+                            username,
+                            password);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

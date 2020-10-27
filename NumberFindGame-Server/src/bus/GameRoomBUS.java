@@ -94,6 +94,7 @@ public class GameRoomBUS {
          */
         sendResponseToPlayer(
             new SocketResponse_PlayerJoinRoom(
+                this.gameRoom.getId(),
                 new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
             ),
             playerClient.getId()

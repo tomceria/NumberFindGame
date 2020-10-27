@@ -1,6 +1,9 @@
 package Socket;
 
 import Socket.Response.SocketResponse;
+import Socket.Response.SocketResponse_PlayerJoinRoom;
+import bus.GameRoomBUS;
+import dto.GameRoom_Client;
 
 public class ClientSocketProcess extends Thread {
     Client client;  // PARENT
@@ -13,26 +16,34 @@ public class ClientSocketProcess extends Thread {
     @Override
     public void run() {
         while(isRunning) {
-            SocketResponse result = client.receiveResponse();
-            if (result == null) {
+            SocketResponse resultRaw = client.receiveResponse();
+            if (resultRaw == null) {
                 continue;
             }
 
-            switch (result.getAction()) {
+            switch (resultRaw.getAction()) {
                 case MSG: {
-                    System.out.println(String.format("[Server] : %s", result.getMessage()));
+                    System.out.println(String.format("[Server] : %s", resultRaw.getMessage()));
                     break;
                 }
                 case UPDATE_GAMEROOM: {
-                    System.out.println("Updating game room props. --- " + result.getMessage()); // TODO: Placeholder
+                    System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
                     break;
                 }
                 case UPDATE_PLAYERJOINROOM: {
-                    System.out.println("You have joined the game. --- " + result.getMessage()); // TODO: Placeholder
+                    if (((GameClient) client).getGameRoom() != null) {
+                        System.out.println("CLIENT: You're already in a room.");
+                    }
+                    System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
+
+                    GameRoomBUS.clientPlayerJoinRoom(
+                            (SocketResponse_PlayerJoinRoom) resultRaw,
+                            ((GameClient) client)
+                    );
                     break;
                 }
                 case NET_CLOSE: {
-                    System.out.println(result.getMessage());
+                    System.out.println(resultRaw.getMessage());
                     client.close();
                     isRunning = false;
                     break;
