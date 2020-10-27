@@ -4,12 +4,21 @@ import bus.GameBUS;
 import bus.GameRoomBUS;
 
 public class GameRoom {
+    private int id;
     protected MatchConfig matchConfig;
     protected GameRoomStatus status;
     protected GameRoomBUS gameRoomBUS;
     private GameBUS gameBUS;
 
+    public GameRoom(int id) {
+        this.id = id;
+    }
+
     // Properties
+    public int getId() {
+        return id;
+    }
+
     public MatchConfig getMatchConfig() {
         return matchConfig;
     }

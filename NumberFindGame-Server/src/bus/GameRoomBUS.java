@@ -9,6 +9,7 @@ import Socket.Response.SocketResponse_PlayerJoinRoom;
 import dto.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -25,6 +26,28 @@ public class GameRoomBUS {
 
         this.gameRoom.setStatus(GameRoomStatus.OPEN);
         this.gameRoom.setGameBUS(null);                                          // Chưa bắt đầu game ngay lúc tạo phòng
+    }
+
+    public static int generateRoomId(ArrayList<GameRoom_Server> gameRooms) {
+        int i = 1;                                                                              // id phòng bắt đầu từ 1
+
+        if (gameRooms.size() == 0) {                                                     // Chưa có phòng nào => KQ là 1
+            return i;
+        }
+
+        /**
+         * Mục tiêu: Tìm id trống, VD [1, 2, 4, 5] thì kết quả là 3
+         */
+        Collections.sort(gameRooms, (o1, o2) -> o1.getId() < o2.getId() ? -1 : 1);           // Sắp xếp tăng dần theo id
+        for (GameRoom gameRoom : gameRooms) {
+            if (gameRoom.getId() == i) {
+                i++;
+            } else {                                                      // Tìm thấy khoảng trống (chính là i) => Ngưng
+                break;
+            }
+        }
+
+        return i;
     }
 
     public void notifyUpdateGameRoomProps(ArrayList<MatchPlayer> matchPlayers, MatchConfig matchConfig, GameRoomStatus status) {
@@ -55,7 +78,11 @@ public class GameRoomBUS {
          * 1. Thông báo về có người chơi mới vào phòng cho cả phòng
          */
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
-        broadcastResponseToRoom( new SocketResponse(SUCCESS, MSG, String.format("%s joined the room.", matchPlayer.getPlayer().getUsername())) );
+        broadcastResponseToRoom(new SocketResponse(
+            SUCCESS,
+            MSG,
+            String.format("%s joined Room %d.", matchPlayer.getPlayer().getUsername(), gameRoom.getId())
+        ));
 
         /**
          * 2. Cho Player mới (playerClient) vào phòng (phía Server)
@@ -66,10 +93,10 @@ public class GameRoomBUS {
          * 3. Cho Player mới (playerClient) vào phòng (phía Client)
          */
         sendResponseToPlayer(
-                new SocketResponse_PlayerJoinRoom(
-                        new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
-                ),
-                playerClient.getId()
+            new SocketResponse_PlayerJoinRoom(
+                new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
+            ),
+            playerClient.getId()
         );
 
         /**
@@ -89,7 +116,9 @@ public class GameRoomBUS {
         this.gameRoom.getPlayerClients().remove(playerClient.getId());
 
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
-        broadcastResponseToRoom( new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())) );
+        if (this.gameRoom.getPlayerClients().size() > 0) {
+            broadcastResponseToRoom( new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())) );
+        }
     }
 
     public void startGame() {

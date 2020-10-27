@@ -101,13 +101,13 @@ public class ClientHandler {
 
     protected void closeSocket() {
         try {
-            if (input != null) {
-                input.close();
-            }
-            if (output != null) {
-                output.close();
-            }
             if (client != null) {
+                if (input != null) {
+                    input.close();
+                }
+                if (output != null) {
+                    output.close();
+                }
                 client.close();
             }
         } catch (IOException e) {
