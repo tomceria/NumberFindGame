@@ -1,8 +1,9 @@
 package dto;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
-public class LevelNode {
+public class LevelNode implements Serializable {
     int value;
     Point2D.Double coord;
     MatchPlayer pickingMatchPlayer;

@@ -1,10 +1,7 @@
 package Socket;
 
-import Socket.Response.SocketResponse;
-import Socket.Response.SocketResponse_GameRoomProps;
-import Socket.Response.SocketResponse_PlayerJoinRoom;
+import Socket.Response.*;
 import bus.GameRoomBUS;
-import dto.GameRoom_Client;
 
 public class ClientSocketProcess extends Thread {
     Client client;  // PARENT
@@ -22,16 +19,16 @@ public class ClientSocketProcess extends Thread {
                 continue;
             }
 
+            System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
             switch (resultRaw.getAction()) {
                 case MSG: {
                     System.out.println(String.format("[Server] : %s", resultRaw.getMessage()));
                     break;
                 }
-                case UPDATE_PLAYERJOINROOM: {
+                case GAMEROOM_PLAYERJOIN: {
                     if (((GameClient) client).getGameRoom() != null) {
                         System.out.println("CLIENT: You're already in a room.");
                     }
-                    System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
 
                     GameRoomBUS.clientPlayerJoinRoom(
                         (SocketResponse_PlayerJoinRoom) resultRaw,
@@ -39,17 +36,19 @@ public class ClientSocketProcess extends Thread {
                     );
                     break;
                 }
-                case UPDATE_GAMEROOM: {
-                    System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
-
+                case GAMEROOM_PROPS: {
                     ((GameClient) client).getGameRoom().getGameRoomBUS()
                         .setGameRoomProps(
                             (SocketResponse_GameRoomProps) resultRaw
                         );
                     break;
                 }
+                case GAME_INIT: {
+                    System.out.println("CLIENT: Game is started.");
+                    System.out.println("time: " + ((SocketResponse_InitGame) resultRaw).game.getStartTime().toString());
+                    break;
+                }
                 case NET_CLOSE: {
-                    System.out.println(resultRaw.getMessage());
                     client.close();
                     isRunning = false;
                     break;

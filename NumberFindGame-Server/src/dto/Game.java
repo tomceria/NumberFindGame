@@ -1,9 +1,10 @@
 package dto;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Game {
+public class Game implements Serializable {
     MatchConfig matchConfig;
     CurrentLevel currentLevel;
     ArrayList<LevelNode> level;
@@ -11,6 +12,28 @@ public class Game {
     LocalTime startTime;
 
     public Game() {
+    }
+
+    /**
+     * Clone instance Game
+     * @param game
+     * @param willIncludeServerRefs BẮT BUỘC phải là FALSE nếu muốn serialize instance Game này
+     */
+    public Game(Game game, boolean willIncludeServerRefs) {
+        this.matchConfig = game.matchConfig;
+        this.currentLevel = game.currentLevel;
+        this.level = game.level;
+        this.players = game.players;
+        this.startTime = game.startTime;
+
+        if (willIncludeServerRefs == false) {
+            this.currentLevel = new CurrentLevel(game.currentLevel);
+            ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
+            for (MatchPlayer matchPlayerWithServerRef : game.players) {
+                matchPlayers.add(new MatchPlayer(matchPlayerWithServerRef));
+            }
+            this.players = matchPlayers;
+        }
     }
 
     public Game(MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
@@ -73,9 +96,16 @@ public class Game {
         this.triggerOnChange();
     }
 
-    public class CurrentLevel {
+    public class CurrentLevel implements Serializable {
         int value;
         LocalTime timeStart;
+
+        public CurrentLevel() {
+        }
+        public CurrentLevel(CurrentLevel currentLevel) {
+            this.value = currentLevel.value;
+            this.timeStart = currentLevel.timeStart;
+        }
 
         public int getValue() {
             return value;

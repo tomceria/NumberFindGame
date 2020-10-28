@@ -3,6 +3,7 @@ package GUI;
 import bus.GameBUS;
 import GUI.Components.LevelNodeButton;
 import dto.LevelNode;
+import dto.LevelNode_Client;
 import dto.MatchPlayer;
 
 import javax.swing.*;
@@ -92,7 +93,7 @@ public class GameView {
                             (btnSize / 2);
 
             LevelNodeButton btn = new LevelNodeButton(levelNode.getValue(), new Point(posX, posY));
-            levelNode.setButton(btn);
+            ((LevelNode_Client) levelNode).setButton(btn);
             btn.addToContainer(gamePane);
             btn.addActionListener(new ActionListener() {
                 @Override

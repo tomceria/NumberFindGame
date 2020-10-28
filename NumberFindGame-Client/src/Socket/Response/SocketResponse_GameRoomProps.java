@@ -12,7 +12,7 @@ public class SocketResponse_GameRoomProps extends SocketResponse {
     public GameRoomStatus status;
 
     public SocketResponse_GameRoomProps(ArrayList<MatchPlayer> players, MatchConfig matchConfig, GameRoomStatus status) {
-        super(Status.SUCCESS, Action.UPDATE_GAMEROOM, "Update Game Room's state");
+        super(Status.SUCCESS, Action.GAMEROOM_PROPS, "Update Game Room's state");
         this.players = players;
         this.matchConfig = matchConfig;
         this.status = status;

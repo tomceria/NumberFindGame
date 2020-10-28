@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.logging.Level;
 
 public class GameBUS {
     // TODO: Placeholder - Dump Players data
@@ -45,10 +46,15 @@ public class GameBUS {
         game.setMatchConfig(loadMatchConfigFromConfigs());                         // TODO: Get settings from Server
 
         // Receive Level info from Server
-        game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));             // TODO: Get level from Server
-        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();     // Also used for placings, by sort order
+        ArrayList<LevelNode_Client> generatedLevel_Client = generateLevel(game.getMatchConfig().getNumberQty()); // TODO: Get from Server
+        ArrayList<LevelNode> generatedLevel = new ArrayList<LevelNode>();
+        for (LevelNode levelNode : generatedLevel_Client) {                           // TODO: Common.ArrayListUtil.Cast
+            generatedLevel.add(levelNode);
+        }
+        game.setLevel(generatedLevel);
 
         // Get Room's players info
+        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();     // Also used for placings, by sort order
         for (PlayerDTO player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
             MatchPlayer matchPlayer = new MatchPlayer_Client(player);
             matchPlayers.add(matchPlayer);
@@ -91,7 +97,7 @@ public class GameBUS {
         for (LevelNode levelNode : game.getLevel()) {
             MatchPlayer pickingMatchPlayer = levelNode.getPickingMatchPlayer();
             if (pickingMatchPlayer != null) {
-                levelNode.getButton().setPicked(pickingMatchPlayer);
+                ((LevelNode_Client) levelNode).getButton().setPicked(pickingMatchPlayer);
             }
         }
 
@@ -148,9 +154,9 @@ public class GameBUS {
         return matchConfig;
     }
 
-    private ArrayList<LevelNode> generateLevel(int count) {                                      // TODO: Move to server
+    private ArrayList<LevelNode_Client> generateLevel(int count) {                                      // TODO: Move to server
         Random rand = new Random();                                                            // TODO: add Seed support
-        ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();
+        ArrayList<LevelNode_Client> levelNodes = new ArrayList<LevelNode_Client>();
 
         ArrayList<Integer> valueList = new ArrayList<Integer>();                      // Danh sách các số từ 1 đến count
         for (int i = 1; i <= count; i++) {                      // TODO: Better algorithm to generate sequential numbers
@@ -170,7 +176,7 @@ public class GameBUS {
 
         for (int i = 0; i < blockPerRow; i++) {
             for (int j = 0; j < blockPerRow; j++) {                  // Lặp tuần tự từ trên xuống dưới, từ trái qua phải
-                LevelNode levelNode = new LevelNode();      // LevelNode chứa thông tin mỗi nút số mà người chơi sẽ chọn
+                LevelNode_Client levelNode = new LevelNode_Client();      // LevelNode chứa thông tin mỗi nút số mà người chơi sẽ chọn
 
                 levelNode.setCoord(new Point2D.Double(
                         (

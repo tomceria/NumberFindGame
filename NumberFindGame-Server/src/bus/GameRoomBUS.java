@@ -5,6 +5,7 @@ import Socket.ClientManager;
 import Socket.GameServer;
 import Socket.Response.SocketResponse;
 import Socket.Response.SocketResponse_GameRoomProps;
+import Socket.Response.SocketResponse_InitGame;
 import Socket.Response.SocketResponse_PlayerJoinRoom;
 import dto.*;
 
@@ -125,8 +126,12 @@ public class GameRoomBUS {
     }
 
     public void startGame() {
+        /**
+         * Thông báo cho mọi người chơi trong phòng rằng Game đang được bắt đầu
+         * Sau khi broadcast, GameRoomBUS sẽ bước vào giai đoạn xử lý
+         */
         this.broadcastResponseToRoom(
-                new SocketResponse(SUCCESS, MSG, "Starting game...")
+            new SocketResponse(SUCCESS, MSG, "Starting game...")
         );
 
         /**
@@ -135,10 +140,18 @@ public class GameRoomBUS {
          */
         MatchConfig matchConfig = this.gameRoom.getMatchConfig();
         ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), true);
-
         this.gameRoom.setStatus(PLAYING);
         this.gameRoom.setGame(new Game_Server(matchConfig, matchPlayers));
         this.getGame().getGameBUS().initGame();
+
+
+        /**
+         * Xử lý hoàn tất, broadcast thông tin về Game vừa được tạo
+         */
+        Game gameSerializable = new Game(this.getGame(), false);
+        this.broadcastResponseToRoom(
+            new SocketResponse_InitGame(gameSerializable)
+        );
     }
 
     public MatchConfig getDefaultMatchConfig() {    // FUTURE-PROOF, sau này có thể cấu hình cho Player thay đổi Config

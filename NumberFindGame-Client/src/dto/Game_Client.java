@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Game_Client extends Game {
     MatchPlayer clientPlayer;
+    ArrayList<LevelNode_Client> level;
 
     public MatchPlayer getClientPlayer() {
         return clientPlayer;

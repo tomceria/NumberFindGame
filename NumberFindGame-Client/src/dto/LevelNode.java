@@ -1,15 +1,12 @@
 package dto;
 
-import GUI.Components.LevelNodeButton;
-
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
-public class LevelNode {
+public class LevelNode implements Serializable {
     int value;
     Point2D.Double coord;
     MatchPlayer pickingMatchPlayer;
-    // Client-only properties
-    LevelNodeButton button;
 
     public LevelNode() {
 
@@ -33,9 +30,6 @@ public class LevelNode {
     public void setCoord(Point2D.Double coord) {
         this.coord = coord;
     }
-
-    public LevelNodeButton getButton() { return button; }
-    public void setButton(LevelNodeButton button) { this.button = button; }
 
     public MatchPlayer getPickingMatchPlayer() {
         return pickingMatchPlayer;
