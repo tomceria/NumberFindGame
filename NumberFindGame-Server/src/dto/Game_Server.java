@@ -10,7 +10,7 @@ public class Game_Server extends Game {
 
     private IChangeListener changeListener;  // Transient Properties
 
-    public Game_Server(MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
+    public Game_Server(GameRoom gameRoom, MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
         super(matchConfig, players);
         this.gameBUS = new GameBUS(this);
     }

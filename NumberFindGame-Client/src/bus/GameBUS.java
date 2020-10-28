@@ -2,6 +2,7 @@ package bus;
 
 import Common.ViewBinder;
 import GUI.Components.MatchPlayerCellRenderer;
+import Socket.Request.SocketRequest_SubmitLevelNode;
 import dto.*;
 
 import javax.swing.*;
@@ -63,11 +64,24 @@ public class GameBUS {
     }
 
     public void action_ClientChooseLevelNode(LevelNode levelNode) {
+        /**
+         * Client-side Validation
+         */
+        if (levelNode.getValue() != game.getCurrentLevelNodeValue()) {
+            System.out.println("Wrong number.");
+            return;
+        }
         if (game.getLevel().indexOf(levelNode) < 0) {
             throw new IllegalArgumentException("Selected LevelNode does not belong to this Game's context");
         }
 
-//        boolean result = sendLevelNodeForValidation(levelNode, game.getClientPlayer());
+        /**
+         * Kiểm tra hoàn tất => Gửi đến Server để xác nhận
+         */
+        LevelNode levelNodeSerializable = new LevelNode(levelNode);
+        this.game.getClient().sendRequest(
+            new SocketRequest_SubmitLevelNode(levelNodeSerializable, game.getClientPlayer())
+        );
 
         // TODO: Receive new Data from Server
 //        this.listen_GameUpdated();

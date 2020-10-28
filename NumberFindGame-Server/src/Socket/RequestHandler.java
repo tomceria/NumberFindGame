@@ -1,10 +1,7 @@
 package Socket;
 
 import Socket.Request.SocketRequest;
-import Socket.Response.SocketResponse;
-
-import java.util.HashMap;
-import java.util.UUID;
+import Socket.Request.SocketRequest_SubmitLevelNode;
 
 public class RequestHandler {
     Thread requestHandleThread;
@@ -20,14 +17,14 @@ public class RequestHandler {
             @Override
             public void run() {
                 switch (requestRaw.getAction()) {
-                    case MESSAGE: {
+                    case MSG: {
                         System.out.println("Received message: " + requestRaw.getMessage());
-//                        GameServer server = ((GameServer) (clientHandler.getClientManager().getServer()));
-//                        HashMap<UUID, ClientHandler> playerClients = server.getGameRooms().get(0).getPlayerClients();
-//
-//                        SocketResponse response = new SocketResponse(SocketResponse.Status.SUCCESS, "Current players count: " + playerClients.size());
-//                        server.broadcast(response);
                         break;
+                    }
+                    case GAME_SUBMITLEVELNODE: {
+                        System.out.println("Incoming: " + requestRaw.getMessage());
+                        SocketRequest_SubmitLevelNode result = ((SocketRequest_SubmitLevelNode) requestRaw);
+                        System.out.println(result.levelNode.getValue());
                     }
                 }
             }

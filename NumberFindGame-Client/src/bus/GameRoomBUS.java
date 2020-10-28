@@ -7,7 +7,7 @@ import Socket.Response.SocketResponse_PlayerJoinRoom;
 import dto.*;
 
 public class GameRoomBUS {
-    GameRoom gameRoom;
+    GameRoom gameRoom; // PARENT
 
     public GameRoomBUS(GameRoom gameRoom) {
         this.gameRoom = gameRoom;
@@ -20,7 +20,7 @@ public class GameRoomBUS {
      */
     public static void clientPlayerJoinRoom(SocketResponse_PlayerJoinRoom response, GameClient gameClient) {
         gameClient.setGameRoom(
-            new GameRoom_Client(response.gameRoomId)
+            new GameRoom_Client(response.gameRoomId, gameClient)
         );
         gameClient.getGameRoom().setClientPlayer(
             response.clientPlayer_MatchPlayer
@@ -37,7 +37,7 @@ public class GameRoomBUS {
         MatchPlayer clientPlayer = ((GameRoom_Client) gameRoom).getClientPlayer();
 
         this.gameRoom.setGame(
-            new Game_Client(response.game, clientPlayer)
+            new Game_Client(response.game, this.getGameRoom().getClient(), clientPlayer)
         );
         this.getGame().getGameBUS().initGame();
     }
@@ -46,5 +46,9 @@ public class GameRoomBUS {
 
     private Game_Client getGame() {
         return (Game_Client) this.gameRoom.getGame();
+    }
+
+    private GameRoom_Client getGameRoom() {
+        return ((GameRoom_Client) this.gameRoom);
     }
 }

@@ -5,13 +5,21 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Game implements Serializable {
+    // Game does not and should not acknowledge GameRoom
     MatchConfig matchConfig;
     CurrentLevel currentLevel;
     ArrayList<LevelNode> level;
     ArrayList<MatchPlayer> players;
     LocalTime startTime;
 
-    public Game() {
+    /**
+     * True Initializer
+     * @param matchConfig
+     * @param players
+     */
+    public Game(MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
+        this.matchConfig = matchConfig;
+        this.players = players;
     }
 
     /**
@@ -34,11 +42,6 @@ public class Game implements Serializable {
             }
             this.players = matchPlayers;
         }
-    }
-
-    public Game(MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
-        this.matchConfig = matchConfig;
-        this.players = players;
     }
 
     // Privates
