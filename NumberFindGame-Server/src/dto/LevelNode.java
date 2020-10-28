@@ -9,7 +9,12 @@ public class LevelNode implements Serializable {
     MatchPlayer pickingMatchPlayer;
 
     public LevelNode() {
+    }
 
+    public LevelNode(LevelNode levelNode) {
+        this.value = levelNode.value;
+        this.coord = levelNode.coord;
+        this.pickingMatchPlayer = levelNode.pickingMatchPlayer;
     }
 
     public LevelNode(int value, Point2D.Double coord) {

@@ -2,9 +2,9 @@ package bus;
 
 import Socket.GameClient;
 import Socket.Response.SocketResponse_GameRoomProps;
+import Socket.Response.SocketResponse_InitGame;
 import Socket.Response.SocketResponse_PlayerJoinRoom;
-import dto.GameRoom;
-import dto.GameRoom_Client;
+import dto.*;
 
 public class GameRoomBUS {
     GameRoom gameRoom;
@@ -28,8 +28,23 @@ public class GameRoomBUS {
     }
 
     public void setGameRoomProps(SocketResponse_GameRoomProps response) {
-        ((GameRoom_Client) gameRoom).setPlayers(response.players);
-        gameRoom.setMatchConfig(response.matchConfig);
-        gameRoom.setStatus(response.status);
+        ((GameRoom_Client) this.gameRoom).setPlayers(response.players);
+        this.gameRoom.setMatchConfig(response.matchConfig);
+        this.gameRoom.setStatus(response.status);
+    }
+
+    public void startGame(SocketResponse_InitGame response) {
+        MatchPlayer clientPlayer = ((GameRoom_Client) gameRoom).getClientPlayer();
+
+        this.gameRoom.setGame(
+            new Game_Client(response.game, clientPlayer)
+        );
+        this.getGame().getGameBUS().initGame();
+    }
+
+    // Privates
+
+    private Game_Client getGame() {
+        return (Game_Client) this.gameRoom.getGame();
     }
 }

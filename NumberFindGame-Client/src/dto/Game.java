@@ -17,16 +17,16 @@ public class Game implements Serializable {
     /**
      * Clone instance Game
      * @param game
-     * @param willIncludeServerRefs BẮT BUỘC phải là TRUE nếu muốn serialize instance Game này
+     * @param willClearServerRefs BẮT BUỘC phải là TRUE nếu muốn serialize instance Game này
      */
-    public Game(Game game, boolean willIncludeServerRefs) {
+    public Game(Game game, boolean willClearServerRefs) {
         this.matchConfig = game.matchConfig;
         this.currentLevel = game.currentLevel;
         this.level = game.level;
         this.players = game.players;
         this.startTime = game.startTime;
 
-        if (willIncludeServerRefs == true) {
+        if (willClearServerRefs == true) {
             this.currentLevel = new CurrentLevel(game.currentLevel);
             ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
             for (MatchPlayer matchPlayerWithServerRef : game.players) {

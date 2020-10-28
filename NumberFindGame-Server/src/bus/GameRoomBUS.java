@@ -148,7 +148,7 @@ public class GameRoomBUS {
         /**
          * Xử lý hoàn tất, broadcast thông tin về Game vừa được tạo
          */
-        Game gameSerializable = new Game(this.getGame(), false);
+        Game gameSerializable = new Game(this.getGame(), true);
         this.broadcastResponseToRoom(
             new SocketResponse_InitGame(gameSerializable)
         );
@@ -159,7 +159,7 @@ public class GameRoomBUS {
         MatchConfig matchConfig = new MatchConfig();
         matchConfig.setNumberQty(100);
         matchConfig.setTime(180000);
-        matchConfig.setMaxPlayer(4);
+        matchConfig.setMaxPlayer(1);
         return matchConfig;
     }
 

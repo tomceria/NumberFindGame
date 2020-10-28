@@ -1,6 +1,9 @@
+package Run;
+
 import Socket.Client;
 import GUI.GameView;
 import Socket.GameClient;
+import bus.GameBUS;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,12 +30,6 @@ public class ClientMain {
         scan.nextLine();
 
         switch (choose) {
-            case 1: {
-                mainFrame = new JFrame(appName);
-                configureWindow(mainFrame);
-                gotoGameView(mainFrame);
-                break;
-            }
             case 2: {
                 System.out.print("username: "); String username = scan.nextLine();
                 System.out.print("password: "); String password = scan.nextLine();
@@ -60,8 +57,8 @@ public class ClientMain {
                 dim.height/2-mainFrame.getSize().height/2);
     }
 
-    public static void gotoGameView(JFrame mainFrame) {
-        mainFrame.setContentPane(new GameView().contentPane);
+    public static void gotoGameView(JFrame mainFrame, GameBUS gameBUS) {
+        mainFrame.setContentPane(new GameView(gameBUS).contentPane);
         mainFrame.setVisible(true);
     }
 }

@@ -25,7 +25,9 @@ public class GameView {
 
     private GameBUS gameBUS;
 
-    public GameView() {
+    public GameView(GameBUS gameBUS) {
+        this.gameBUS = gameBUS;
+
         $$$setupUI$$$();
         customizeComponents();
         bindListeners();
@@ -40,11 +42,10 @@ public class GameView {
             @Override
             public void ancestorAdded(AncestorEvent event) {                       // Trigger when game screen is loaded
                 // Start game
-                gameBUS = new GameBUS();
-                gameBUS.viewBinder.lblFindThis = lblFindThis;
-                gameBUS.viewBinder.lblTimer = lblTimer;
-                gameBUS.viewBinder.listPlayers = listPlayers;
-                gameBUS.viewBinder.update();
+                GameView.this.gameBUS.viewBinder.lblFindThis = lblFindThis;
+                GameView.this.gameBUS.viewBinder.lblTimer = lblTimer;
+                GameView.this.gameBUS.viewBinder.listPlayers = listPlayers;
+                GameView.this.gameBUS.viewBinder.update();
                 renderLevel();
             }
 

@@ -1,7 +1,15 @@
 package Socket;
 
+import Run.ClientMain;
 import Socket.Response.*;
+import bus.GameBUS;
 import bus.GameRoomBUS;
+import dto.Game;
+import dto.GameRoom;
+import dto.GameRoom_Client;
+import dto.Game_Client;
+
+import javax.swing.*;
 
 public class ClientSocketProcess extends Thread {
     Client client;  // PARENT
@@ -41,11 +49,21 @@ public class ClientSocketProcess extends Thread {
                         .setGameRoomProps(
                             (SocketResponse_GameRoomProps) resultRaw
                         );
+
                     break;
                 }
                 case GAME_INIT: {
                     System.out.println("CLIENT: Game is started.");
-                    System.out.println("time: " + ((SocketResponse_InitGame) resultRaw).game.getStartTime().toString());
+                    GameRoom_Client gameRoom = ((GameClient) client).getGameRoom();
+
+                    gameRoom.getGameRoomBUS()
+                        .startGame((SocketResponse_InitGame) resultRaw);
+                    GameBUS gameBUS = ((Game_Client) gameRoom.getGame()).getGameBUS();
+
+                    ClientMain.mainFrame = new JFrame(ClientMain.appName);
+                    ClientMain.configureWindow(ClientMain.mainFrame);
+                    ClientMain.gotoGameView(ClientMain.mainFrame, gameBUS);
+
                     break;
                 }
                 case NET_CLOSE: {
