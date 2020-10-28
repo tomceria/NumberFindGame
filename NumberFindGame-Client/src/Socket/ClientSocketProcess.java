@@ -1,11 +1,10 @@
 package Socket;
 
-import Run.ClientMain;
+import Run.GameMain;
 import Socket.Response.*;
 import bus.GameBUS;
 import bus.GameRoomBUS;
-import dto.Game;
-import dto.GameRoom;
+import bus.ViewBUS;
 import dto.GameRoom_Client;
 import dto.Game_Client;
 
@@ -60,9 +59,7 @@ public class ClientSocketProcess extends Thread {
                         .startGame((SocketResponse_InitGame) resultRaw);
                     GameBUS gameBUS = ((Game_Client) gameRoom.getGame()).getGameBUS();
 
-                    ClientMain.mainFrame = new JFrame(ClientMain.appName);
-                    ClientMain.configureWindow(ClientMain.mainFrame);
-                    ClientMain.gotoGameView(ClientMain.mainFrame, gameBUS);
+                    ViewBUS.gotoGameView(gameBUS);
 
                     break;
                 }

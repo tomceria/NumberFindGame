@@ -15,7 +15,7 @@ public class Client {
     private static ObjectInputStream input;                   // input và output được đặc static để các hàm BUS truy xuất
     private static ObjectOutputStream output;
 
-    public Client(String hostname, int port, String username, String password) throws IOException, ClassNotFoundException {
+    public void start(String hostname, int port, String username, String password) throws IOException {
         socket = new Socket(hostname, port);                       // Thực hiện kết nối đến server với hostname xác định
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());

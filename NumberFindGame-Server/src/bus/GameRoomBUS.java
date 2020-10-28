@@ -159,7 +159,7 @@ public class GameRoomBUS {
         MatchConfig matchConfig = new MatchConfig();
         matchConfig.setNumberQty(100);
         matchConfig.setTime(180000);
-        matchConfig.setMaxPlayer(1);
+        matchConfig.setMaxPlayer(2);
         return matchConfig;
     }
 
