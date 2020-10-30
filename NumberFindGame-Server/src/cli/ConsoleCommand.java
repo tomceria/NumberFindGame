@@ -14,8 +14,11 @@ import Socket.ClientHandler;
 import Socket.Server;
 import bus.PlayerBUS;
 import dto.MatchPlayer;
+import dto.MatchConfig;
 import dto.PlayerDTO;
 import util.Display;
+import util.JsonHelper;
+import util.NumberValidException;
 
 public class ConsoleCommand {
 
@@ -26,8 +29,8 @@ public class ConsoleCommand {
 	Display tableDisplay = new Display();
 
 	private String command;
-	private String option1;
-	private String option2;
+	private String option;
+	private String value;
 
 	public ConsoleCommand(Server server) {
 		this.server = server;
@@ -35,24 +38,24 @@ public class ConsoleCommand {
 	}
 
 	public void handleCommand(String inputCommand) {
-		this.option1 = "";
-		this.option2 = "";
+		this.option = "";
+		this.value = "";
 		String s[] = inputCommand.trim().split(" ");
 		// TODO check null
 		this.command = s[0];
 		if (s.length >= 2) {
-			option1 = s[1];
+			option = s[1];
 		}
 		if (s.length >= 3) {
-			option2 = s[2];
+			value = s[2];
 		}
 	}
 
-	public void init() {
+	public void init() throws NumberValidException {
 		boolean isCommanding = true;
 
 		do {
-			System.out.print("Input: ");
+			System.out.print("\nInput: ");
 			String inputCommand = scan.nextLine();
 			handleCommand(inputCommand);
 			switch (command) {
@@ -75,6 +78,7 @@ public class ConsoleCommand {
 			}
 			default: {
 				System.out.println("Syntax error");
+				System.out.println("Command: list <option>\n" + "\t config <option> <value>\t");
 				break;
 			}
 			}
@@ -82,7 +86,7 @@ public class ConsoleCommand {
 	}
 
 	public void list() {
-		switch (option1) {
+		switch (option) {
 		case "user": {
 			getUsers();
 			break;
@@ -92,35 +96,124 @@ public class ConsoleCommand {
 			break;
 		}
 		default: {
-			System.out.println("Command: list <option>\n" + "\t user\t Show list of registered users\n"
+			System.out.println("Syntax: list <option>\n" + "\t user\t Show list of registered users\n"
 					+ "\t online\t Show list of active users");
 			break;
 		}
 		}
 	}
 
-	public void config() {
-		switch (option1) {
-		case "numberQty": {
+	/**
+	 * @throws NumberValidException @
+	 */
+	public void config() throws NumberValidException {
+		MatchConfig matchConfig = new MatchConfig();
+		JsonHelper jsonHelper = new JsonHelper();
+		matchConfig = jsonHelper.readConfig();
+		int val = 0;
 
+		if (value.equals("")) {
+			if (!option.equals("show")) {
+				System.out.println("Value can not be empty");
+				//option = "";
+				return;
+			}
+		} else {
+			try {
+				val = Integer.parseInt(value);
+				// System.out.print(n);
+
+			} catch (NumberFormatException e) {
+				System.out.println("Value must be integer");
+				//option = "";
+				return;
+			}
+		}
+
+		switch (option) {
+		case "numberQty": {
+			numberQtyConfig(val);
 			break;
 		}
 		case "time": {
-
+			timeConfig(val);
 			break;
 		}
 		case "maxPlayer": {
-
+			maxPlayerConfig(val);
+			break;
+		}
+		case "show": {
+			readConfig();
 			break;
 		}
 		default: {
 			System.out.println(
-					"Command: config <option> <value>\n" + "\t numberQty <1-900>\t Config game number quantity\n"
-							+ "\t time <1000-3600000>\t Config game time"
-							+ "\t maxPlayer <2-8>\t Config game max number of player");
+					"Syntax: config <option> <value>\n" + "\t numberQty <1-900>\t Config game number quantity\n"
+							+ "\t time <1000-3600000>\t Config game time\n"
+							+ "\t maxPlayer <2-8>\t Config game max number of player\n"
+							+ "\t show\t\t\t Show current game config\n");
 			break;
 		}
 		}
+	}
+
+	public void numberQtyConfig(int value) throws NumberValidException {
+		MatchConfig matchConfig = new MatchConfig();
+		JsonHelper jsonHelper = new JsonHelper();
+		matchConfig = jsonHelper.readConfig();
+
+		if (value < 1 || value > 900) {
+			System.out.println("Failed");
+			System.out.println("Value must be in range [1,900]");
+			return;
+		}
+		matchConfig.setNumberQty(value);
+		jsonHelper.saveConfig(matchConfig);
+		System.out.println("\nSuccessfully change game's number quantity\n");
+		readConfig();
+	}
+
+	public void timeConfig(int value) throws NumberValidException {
+		MatchConfig matchConfig = new MatchConfig();
+		JsonHelper jsonHelper = new JsonHelper();
+		matchConfig = jsonHelper.readConfig();
+
+		if (value < 1000 || value > 3600000) {
+			System.out.println("Failed");
+			System.out.println("Value must be in range [1000,3600000]");
+			return;
+		}
+		matchConfig.setTime(value);
+		jsonHelper.saveConfig(matchConfig);
+		System.out.println("\nSuccessfully change game's time\n");
+		readConfig();
+	}
+
+	public void maxPlayerConfig(int value) throws NumberValidException {
+		MatchConfig matchConfig = new MatchConfig();
+		JsonHelper jsonHelper = new JsonHelper();
+		matchConfig = jsonHelper.readConfig();
+
+		if (value < 2 || value > 8) {
+			System.out.println("Failed");
+			System.out.println("Value must be in range [2,8]");
+			return;
+		}
+		matchConfig.setMaxPlayer(value);
+		jsonHelper.saveConfig(matchConfig);
+		System.out.println("\nSuccessfully change game's max player\n");
+		readConfig();
+	}
+
+	public void readConfig() {
+		MatchConfig matchConfig = new MatchConfig();
+		JsonHelper jsonHelper = new JsonHelper();
+		matchConfig = jsonHelper.readConfig();
+
+		System.out.printf("numberQty  : %s\n", matchConfig.getNumberQty());
+		System.out.printf("time       : %,d miliseconds\n", matchConfig.getTime());
+		System.out.printf("maxPlayer  : %s player\n", matchConfig.getMaxPlayer());
 	}
 
 	public void getUsers() {
