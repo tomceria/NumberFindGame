@@ -1,18 +1,17 @@
 package bus;
 
+import Socket.ClientManager;
+import Socket.GameServer;
+import Socket.Response.SocketResponse;
 import dto.*;
-import util.IChangeListener;
 
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 import static util.Maths.valueFromTwoRanges;
 
-public class GameBUS implements IChangeListener {
+public class GameBUS {
     private Game_Server game;  // PARENT
 
     public GameBUS(Game_Server game) {
@@ -30,16 +29,13 @@ public class GameBUS implements IChangeListener {
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
         game.setCurrentLevel(1);                                                    // also reset timer for CurrentLevel
-
-        // Misc: Set IChangeListener
-        game.setChangeListener(this); // Hàm này BẮT BUỘC phải đặt sau các hàm khởi tạo bên trên. Tránh việc gọi onChangeHappened() liên tục trong quá trình khởi tạo
     }
 
     public boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
         Game.CurrentLevel currentLevel = game.getCurrentLevel();
         boolean accept = false;
 
-        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
+        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
             accept = true;
 
             // TODO: Set score, avgTime for sendingPlayer
@@ -55,13 +51,34 @@ public class GameBUS implements IChangeListener {
             game.setCurrentLevel(currentLevel.getValue() + 1);
 
             // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
-            System.out.println("RECEIVED");
+            broadcastResponseToPlayers(
+                    new SocketResponse(
+                            SocketResponse.Status.SUCCESS,
+                            SocketResponse.Action.MSG,
+                            "New Level!!!")
+            );
         }
 
         return accept;
     }
 
+    private void sendResponseToPlayer(SocketResponse response, UUID clientHandlerId) {
+        ClientManager clientManager = this.getServer().getClientManager();
+        clientManager.sendResponseToClient(clientHandlerId, response);
+    }
+
+    private void broadcastResponseToPlayers(SocketResponse response) {
+        ClientManager clientManager = this.getServer().getClientManager();
+        clientManager.sendResponseToBulkClients(
+            ((Game_Server) this.getGame()).getPlayerClients(),
+            response);
+    }
+
     // Privates
+
+    private GameServer getServer() {
+        return this.game.getServer();
+    }
 
     private ArrayList<LevelNode> generateLevel(int count) {
         Random rand = new Random();                                                            // TODO: add Seed support
@@ -168,13 +185,6 @@ public class GameBUS implements IChangeListener {
             sortingMatchPlayers.get(i).setPlacing(newPlacing);
         }
 
-    }
-
-    // Overrides
-
-    @Override
-    public void onChangeHappened() {
-        // TODO: Broadcast new Game states to all players
     }
 
     // Properties

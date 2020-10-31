@@ -44,12 +44,6 @@ public class Game implements Serializable {
         }
     }
 
-    // Privates
-
-    protected void triggerOnChange() {
-        // Empty... should be overriden by Game_Server
-    }
-
     // Properties
 
     public MatchConfig getMatchConfig() {
@@ -57,7 +51,6 @@ public class Game implements Serializable {
     }
     public void setMatchConfig(MatchConfig matchConfig) {
         this.matchConfig = matchConfig;
-        this.triggerOnChange();
     }
 
     public CurrentLevel getCurrentLevel() {
@@ -72,7 +65,6 @@ public class Game implements Serializable {
         this.currentLevel = new CurrentLevel();
         this.currentLevel.setValue(currentLevelValue);
         this.currentLevel.setTimeStart(LocalTime.now());                                  // Set will also restart timer
-        this.triggerOnChange();
     }
 
     public ArrayList<LevelNode> getLevel() {
@@ -80,7 +72,6 @@ public class Game implements Serializable {
     }
     public void setLevel(ArrayList<LevelNode> level) {
         this.level = level;
-        this.triggerOnChange();
     }
 
     public ArrayList<MatchPlayer> getMatchPlayers() {
@@ -88,7 +79,6 @@ public class Game implements Serializable {
     }
     public void setMatchPlayers(ArrayList<MatchPlayer> players) {
         this.players = players;
-        this.triggerOnChange();
     }
 
     public LocalTime getStartTime() {
@@ -96,7 +86,6 @@ public class Game implements Serializable {
     }
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
-        this.triggerOnChange();
     }
 
     public class CurrentLevel implements Serializable {
@@ -115,7 +104,6 @@ public class Game implements Serializable {
         }
         protected void setValue(int value) {
             this.value = value;
-            Game.this.triggerOnChange();
         }
 
         public LocalTime getTimeStart() {
@@ -123,7 +111,6 @@ public class Game implements Serializable {
         }
         protected void setTimeStart(LocalTime timeStart) {
             this.timeStart = timeStart;
-            Game.this.triggerOnChange();
         }
     }
 }

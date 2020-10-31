@@ -1,36 +1,37 @@
 package dto;
 
+import Socket.ClientHandler;
+import Socket.GameServer;
 import bus.GameBUS;
-import util.IChangeListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Game_Server extends Game {
-    GameBUS gameBUS;
+    private GameServer server;
+    private HashMap<UUID, ClientHandler> playerClients;
+    private GameBUS gameBUS;
 
-    private IChangeListener changeListener;  // Transient Properties
-
-    public Game_Server(GameRoom gameRoom, MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
+    public Game_Server(GameServer server, HashMap<UUID, ClientHandler> playerClients, MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
         super(matchConfig, players);
         this.gameBUS = new GameBUS(this);
-    }
 
-    // Overrides
-    @Override
-    protected void triggerOnChange() {
-        super.triggerOnChange();
-        if (changeListener != null) {
-            changeListener.onChangeHappened();
-        }
+        this.server = server;
+        this.playerClients = playerClients;
     }
 
     // Properties
 
-    public GameBUS getGameBUS() {
-        return gameBUS;
+    public GameServer getServer() {
+        return server;
     }
 
-    public void setChangeListener(IChangeListener changeListener) {
-        this.changeListener = changeListener;
+    public HashMap<UUID, ClientHandler> getPlayerClients() {
+        return playerClients;
+    }
+
+    public GameBUS getGameBUS() {
+        return gameBUS;
     }
 }

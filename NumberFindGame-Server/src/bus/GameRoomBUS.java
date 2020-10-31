@@ -147,10 +147,13 @@ public class GameRoomBUS {
         ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), true);
         this.gameRoom.setStatus(PLAYING);
         this.gameRoom.setGame(
-            new Game_Server(this.gameRoom, matchConfig, matchPlayers)
+            new Game_Server(
+                    this.getServer(),
+                    gameRoom.getPlayerClients(),
+                    matchConfig,
+                    matchPlayers)
         );
         this.getGame().getGameBUS().initGame();
-
 
         /**
          * Xử lý hoàn tất, broadcast thông tin về Game vừa được tạo
