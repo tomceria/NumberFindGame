@@ -108,6 +108,11 @@ public class GameRoomBUS {
          */
         this.notifyUpdateGameRoomProps(this.getMatchPlayersInRoomToSendResponse(), null, null);
 
+        /**
+         * Gán GameRoomBUS cho ClientIdentifier
+         */
+        ((MatchPlayer_Server) playerClient.getClientIdentifier()).setGameRoomBUS(this);
+
         // TODO: Change startGame condition
         if (this.gameRoom.getPlayerClients().size() == this.gameRoom.getMatchConfig().getMaxPlayer()) {
             this.startGame();
@@ -154,6 +159,16 @@ public class GameRoomBUS {
         this.broadcastResponseToRoom(
             new SocketResponse_InitGame(gameSerializable)
         );
+
+        /**
+         * Gán GameBUS cho mọi MatchPlayer_Server (IClientIdentifier) trong phòng
+         * => Để tiện "liên lạc" sau này (RequestHandler gọi BUS thông qua MatchPlayer_Server)
+         * (BẮT BUỘC phải được thực hiện sau this.gameRoom.setGame())
+         */
+        for (ClientHandler playerClient : this.gameRoom.getPlayerClients().values()) {
+            MatchPlayer_Server matchPlayer = (MatchPlayer_Server) playerClient.getClientIdentifier();
+            matchPlayer.setGameBUS(this.getGame().getGameBUS());
+        }
     }
 
     public MatchConfig getDefaultMatchConfig() {    // FUTURE-PROOF, sau này có thể cấu hình cho Player thay đổi Config

@@ -34,33 +34,33 @@ public class ClientHandler {
         this.clientHandleThread = new ClientThread() {
             @Override
             public void doRun() {
-                try {
-                    while (true) {
-                        SocketRequest requestRaw = receiveRequest();
-                        if (isLoggedIn == false) {
-                            if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
-                                if (performValidateClient(requestRaw)) {
-                                    isLoggedIn = true;
-                                    sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.MSG, "Logged in."));
-                                    onSuccessConnection();
-                                } else {
-                                    sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid login credentials."));
-                                }
+            try {
+                while (true) {
+                    SocketRequest requestRaw = receiveRequest();
+                    if (isLoggedIn == false) {
+                        if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
+                            if (performValidateClient(requestRaw)) {
+                                isLoggedIn = true;
+                                sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.MSG, "Logged in."));
+                                onSuccessConnection();
                             } else {
-                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));
-                                break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
+                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid login credentials."));
                             }
-                        } else if (isLoggedIn && clientIdentifier != null) {        // Đã đăng nhập => Xử lý MỌI yêu cầu
-                            new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init();  // RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
+                        } else {
+                            sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));
+                            break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
                         }
+                    } else if (isLoggedIn && clientIdentifier != null) {        // Đã đăng nhập => Xử lý MỌI yêu cầu
+                        new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init();  // RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
                     }
-                } catch (EOFException | SocketException e) {
-                    // Disconnect
-                    System.out.println(String.format("Client '%s' disconnected.", ClientHandler.this.id));
-                    closeSocket();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
+            } catch (EOFException | SocketException e) {
+                // Disconnect
+                System.out.println(String.format("Client '%s' disconnected.", ClientHandler.this.id));
+                closeSocket();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             }
         };
         this.clientHandleThread.setUuid(id);

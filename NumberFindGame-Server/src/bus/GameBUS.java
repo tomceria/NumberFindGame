@@ -35,6 +35,34 @@ public class GameBUS implements IChangeListener {
         game.setChangeListener(this); // Hàm này BẮT BUỘC phải đặt sau các hàm khởi tạo bên trên. Tránh việc gọi onChangeHappened() liên tục trong quá trình khởi tạo
     }
 
+    public boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
+        Game.CurrentLevel currentLevel = game.getCurrentLevel();
+        boolean accept = false;
+
+        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
+            accept = true;
+
+            // TODO: Set score, avgTime for sendingPlayer
+            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
+
+            // TODO: Set picker=sendingPlayer for levelNode
+            levelNode.setPickingMatchPlayer(sendingPlayer);
+
+            // TODO: Set placing for Players
+            this.performPlacingPlayers();
+
+            // Increase currentLevel (also reset timer, done in model)
+            game.setCurrentLevel(currentLevel.getValue() + 1);
+
+            // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
+            System.out.println("RECEIVED");
+        }
+
+        return accept;
+    }
+
+    // Privates
+
     private ArrayList<LevelNode> generateLevel(int count) {
         Random rand = new Random();                                                            // TODO: add Seed support
         ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();
@@ -98,31 +126,6 @@ public class GameBUS implements IChangeListener {
         }
 
         return levelNodes;
-    }
-
-    private boolean sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {
-        Game.CurrentLevel currentLevel = game.getCurrentLevel();
-        boolean accept = false;
-
-        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
-            accept = true;
-
-            // TODO: Set score, avgTime for sendingPlayer
-            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
-
-            // TODO: Set picker=sendingPlayer for levelNode
-            levelNode.setPickingMatchPlayer(sendingPlayer);
-
-            // TODO: Set placing for Players
-            this.performPlacingPlayers();
-
-            // Increase currentLevel (also reset timer, done in model)
-            game.setCurrentLevel(currentLevel.getValue() + 1);
-
-            // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
-        }
-
-        return accept;
     }
 
     private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart) {
