@@ -18,7 +18,7 @@ public class GameRoomBUS {
      * @param response SocketResponse nhận từ ClientSocketProcess
      * @param gameClient Nhận gameClient để có khả năng getGameRoom, setGameRoom. GameClient một lúc chỉ có thể có một GameRoom
      */
-    public static void clientPlayerJoinRoom(SocketResponse_PlayerJoinRoom response, GameClient gameClient) {
+    public static void listen_clientPlayerJoinRoom(SocketResponse_PlayerJoinRoom response, GameClient gameClient) {
         gameClient.setGameRoom(
             new GameRoom_Client(response.gameRoomId, gameClient)
         );
@@ -27,13 +27,13 @@ public class GameRoomBUS {
         );
     }
 
-    public void setGameRoomProps(SocketResponse_GameRoomProps response) {
+    public void listen_setGameRoomProps(SocketResponse_GameRoomProps response) {
         ((GameRoom_Client) this.gameRoom).setPlayers(response.players);
         this.gameRoom.setMatchConfig(response.matchConfig);
         this.gameRoom.setStatus(response.status);
     }
 
-    public void startGame(SocketResponse_InitGame response) {
+    public void listen_startGame(SocketResponse_InitGame response) {
         MatchPlayer clientPlayer = ((GameRoom_Client) gameRoom).getClientPlayer();
 
         this.gameRoom.setGame(

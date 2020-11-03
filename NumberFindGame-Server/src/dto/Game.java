@@ -61,6 +61,9 @@ public class Game implements Serializable {
                 .get(currentLevel.value - 1)
                 .getValue();
     }
+    public void setCurrentLevel(CurrentLevel currentLevel) {
+        this.currentLevel = currentLevel;
+    }
     public void setCurrentLevel(int currentLevelValue) {
         this.currentLevel = new CurrentLevel();
         this.currentLevel.setValue(currentLevelValue);

@@ -7,9 +7,9 @@ import dto.MatchPlayer;
 import java.util.ArrayList;
 
 public class SocketResponse_GameProps extends SocketResponse {
-    CurrentLevel currentLevel;
-    ArrayList<LevelNode> level;
-    ArrayList<MatchPlayer> players;
+    public CurrentLevel currentLevel;
+    public ArrayList<LevelNode> level;
+    public ArrayList<MatchPlayer> players;
 
     public SocketResponse_GameProps(CurrentLevel currentLevel, ArrayList<LevelNode> level, ArrayList<MatchPlayer> players) {
         super(Status.SUCCESS, Action.GAME_PROPS, "Update Game Room's state");

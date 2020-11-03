@@ -1,14 +1,11 @@
 package Socket;
 
-import Run.GameMain;
 import Socket.Response.*;
 import bus.GameBUS;
 import bus.GameRoomBUS;
 import bus.ViewBUS;
 import dto.GameRoom_Client;
 import dto.Game_Client;
-
-import javax.swing.*;
 
 public class ClientSocketProcess extends Thread {
     Client client;  // PARENT
@@ -36,7 +33,7 @@ public class ClientSocketProcess extends Thread {
                         System.out.println("CLIENT: You're already in a room.");
                     }
 
-                    GameRoomBUS.clientPlayerJoinRoom(
+                    GameRoomBUS.listen_clientPlayerJoinRoom(
                         (SocketResponse_PlayerJoinRoom) resultRaw,
                         (GameClient) client
                     );
@@ -44,7 +41,7 @@ public class ClientSocketProcess extends Thread {
                 }
                 case GAMEROOM_PROPS: {
                     ((GameClient) client).getGameRoom().getGameRoomBUS()
-                        .setGameRoomProps(
+                        .listen_setGameRoomProps(
                             (SocketResponse_GameRoomProps) resultRaw
                         );
 
@@ -54,7 +51,7 @@ public class ClientSocketProcess extends Thread {
                     GameRoom_Client gameRoom = ((GameClient) client).getGameRoom();
 
                     gameRoom.getGameRoomBUS()
-                        .startGame((SocketResponse_InitGame) resultRaw);
+                        .listen_startGame((SocketResponse_InitGame) resultRaw);
                     GameBUS gameBUS = ((Game_Client) gameRoom.getGame()).getGameBUS();
 
                     ViewBUS.gotoGameView(gameBUS);
@@ -62,8 +59,13 @@ public class ClientSocketProcess extends Thread {
                     break;
                 }
                 case GAME_PROPS: {
-                    SocketResponse_GameProps result = (SocketResponse_GameProps) resultRaw;
-                    System.out.println("Hello there");
+                    GameRoom_Client gameRoom = ((GameClient) client).getGameRoom();
+                    GameBUS gameBUS = ((Game_Client) gameRoom.getGame()).getGameBUS();
+
+                    gameBUS.listen_GameUpdated(
+                            (SocketResponse_GameProps) resultRaw
+                    );
+                    break;
                 }
                 case NET_CLOSE: {
                     client.close();

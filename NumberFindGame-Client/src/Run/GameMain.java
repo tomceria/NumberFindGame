@@ -32,7 +32,7 @@ public class GameMain {
         String password = scan.nextLine();
         try {
             new GameClient().start(
-                "127.0.0.1",
+                "192.168.1.101",
                 54321,
                 username,
                 password);

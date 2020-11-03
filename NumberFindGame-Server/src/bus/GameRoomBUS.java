@@ -177,7 +177,7 @@ public class GameRoomBUS {
     public MatchConfig getDefaultMatchConfig() {    // FUTURE-PROOF, sau này có thể cấu hình cho Player thay đổi Config
         // TODO: Read from config.json
         MatchConfig matchConfig = new MatchConfig();
-        matchConfig.setNumberQty(100);
+        matchConfig.setNumberQty(50);
         matchConfig.setTime(180000);
         matchConfig.setMaxPlayer(2);
         return matchConfig;

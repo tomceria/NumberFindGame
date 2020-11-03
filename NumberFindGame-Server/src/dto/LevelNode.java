@@ -17,11 +17,11 @@ public class LevelNode implements Serializable {
         this.pickingMatchPlayer = levelNode.pickingMatchPlayer;
     }
 
-    public LevelNode(LevelNode levelNode, boolean willCleanse) {
+    public LevelNode(LevelNode levelNode, boolean willClearServerRefs) {
         this.value = levelNode.value;
         this.coord = levelNode.coord;
         if (levelNode.pickingMatchPlayer != null) {
-            if (willCleanse == true) {
+            if (willClearServerRefs == true) {
                 this.pickingMatchPlayer = new MatchPlayer(levelNode.pickingMatchPlayer);
             } else {
                 this.pickingMatchPlayer = levelNode.pickingMatchPlayer;
