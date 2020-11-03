@@ -17,6 +17,18 @@ public class LevelNode implements Serializable {
         this.pickingMatchPlayer = levelNode.pickingMatchPlayer;
     }
 
+    public LevelNode(LevelNode levelNode, boolean willCleanse) {
+        this.value = levelNode.value;
+        this.coord = levelNode.coord;
+        if (levelNode.pickingMatchPlayer != null) {
+            if (willCleanse == true) {
+                this.pickingMatchPlayer = new MatchPlayer(levelNode.pickingMatchPlayer);
+            } else {
+                this.pickingMatchPlayer = levelNode.pickingMatchPlayer;
+            }
+        }
+    }
+
     public LevelNode(int value, Point2D.Double coord) {
         this.value = value;
         this.coord = coord;

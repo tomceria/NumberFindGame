@@ -17,20 +17,20 @@ public class RequestHandler {
         this.requestHandleThread = new Thread() {
             @Override
             public void run() {
-            switch (requestRaw.getAction()) {
-                case MSG: {
-                    System.out.println("Received message: " + requestRaw.getMessage());
-                    break;
-                }
-                case GAME_SUBMITLEVELNODE: {
-                    SocketRequest_SubmitLevelNode result = ((SocketRequest_SubmitLevelNode) requestRaw);
-                    MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
+                switch (requestRaw.getAction()) {
+                    case MSG: {
+                        System.out.println("Received message: " + requestRaw.getMessage());
+                        break;
+                    }
+                    case GAME_SUBMITLEVELNODE: {
+                        SocketRequest_SubmitLevelNode result = ((SocketRequest_SubmitLevelNode) requestRaw);
+                        MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
 
-                    matchPlayer.getGameBUS().req_sendLevelNodeForValidation(
+                        matchPlayer.getGameBUS().req_sendLevelNodeForValidation(
                             result.levelNode, matchPlayer
-                    );
+                        );
+                    }
                 }
-            }
             }
         };
     }

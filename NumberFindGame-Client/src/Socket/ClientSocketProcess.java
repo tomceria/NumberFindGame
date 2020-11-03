@@ -26,7 +26,6 @@ public class ClientSocketProcess extends Thread {
                 continue;
             }
 
-            System.out.println("SERVER: " + resultRaw.getMessage()); // TODO: Placeholder
             switch (resultRaw.getAction()) {
                 case MSG: {
                     System.out.println(String.format("[Server] : %s", resultRaw.getMessage()));
@@ -52,7 +51,6 @@ public class ClientSocketProcess extends Thread {
                     break;
                 }
                 case GAME_INIT: {
-                    System.out.println("CLIENT: Game is started.");
                     GameRoom_Client gameRoom = ((GameClient) client).getGameRoom();
 
                     gameRoom.getGameRoomBUS()
@@ -62,6 +60,10 @@ public class ClientSocketProcess extends Thread {
                     ViewBUS.gotoGameView(gameBUS);
 
                     break;
+                }
+                case GAME_PROPS: {
+                    SocketResponse_GameProps result = (SocketResponse_GameProps) resultRaw;
+                    System.out.println("Hello there");
                 }
                 case NET_CLOSE: {
                     client.close();

@@ -12,7 +12,8 @@ public class SocketResponse implements Serializable {
         NET_CLOSE,
         GAMEROOM_PROPS,
         GAMEROOM_PLAYERJOIN,
-        GAME_INIT
+        GAME_INIT,
+        GAME_PROPS
     }
 
     Status status;

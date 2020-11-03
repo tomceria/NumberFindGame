@@ -6,6 +6,8 @@ import bus.GameBUS;
 import bus.GameRoomBUS;
 import bus.GameServerBUS;
 
+import java.util.UUID;
+
 public class MatchPlayer_Server extends MatchPlayer implements IClientIdentifier {
     GameServerBUS serverBUS;
     GameRoomBUS gameRoomBUS;
@@ -13,6 +15,13 @@ public class MatchPlayer_Server extends MatchPlayer implements IClientIdentifier
 
     public MatchPlayer_Server(PlayerDTO player) {
         super(player);
+    }
+
+    // Overrides
+
+    @Override
+    public UUID getClientHandlerId() {
+        return null;
     }
 
     // Properties

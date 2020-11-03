@@ -16,8 +16,8 @@ public class GameServer extends Server {
         super(port);
         // TODO: Game business Logic: Create a room upon server starting
         this.gameRooms = new ArrayList<GameRoom_Server>();
-        this.gameRooms.add(new GameRoom_Server(GameServer.this));
-        this.gameServerBUS = new GameServerBUS();
+        this.gameRooms.add(new GameRoom_Server(this));
+        this.gameServerBUS = new GameServerBUS(this);
     }
 
     public ArrayList<GameRoom_Server> getGameRooms() {
@@ -31,6 +31,6 @@ public class GameServer extends Server {
          */
         ((MatchPlayer_Server) playerClient.getClientIdentifier()).setServerBUS(this.gameServerBUS);  // TODO: GameServerBUS
         GameRoom_Server defaultGameRoom = gameRooms.get(0);
-        defaultGameRoom.getGameRoomBUS().joinRoom(playerClient);
+        defaultGameRoom.getGameRoomBUS().joinRoom(playerClient);   // TODO: Phòng đầy. đá Client ra thì Client đi đâu???
     }
 }

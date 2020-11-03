@@ -3,11 +3,13 @@ package bus;
 import Socket.ClientManager;
 import Socket.GameServer;
 import Socket.Response.SocketResponse;
+import Socket.Response.SocketResponse_GameProps;
 import dto.*;
 
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static util.Maths.valueFromTwoRanges;
 
@@ -19,11 +21,11 @@ public class GameBUS {
     }
 
     public void initGame() {
-        MatchConfig matchConfig = game.getMatchConfig();
-        ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
+//        MatchConfig matchConfig = game.getMatchConfig();
+//        ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
 
-        game.setMatchConfig(matchConfig);
-        game.setMatchPlayers(matchPlayers);
+//        game.setMatchConfig(matchConfig);
+//        game.setMatchPlayers(matchPlayers);
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
@@ -32,7 +34,7 @@ public class GameBUS {
     }
 
     public boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
-        Game.CurrentLevel currentLevel = game.getCurrentLevel();
+        CurrentLevel currentLevel = game.getCurrentLevel();
         boolean accept = false;
 
         if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
@@ -42,7 +44,12 @@ public class GameBUS {
             this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
 
             // TODO: Set picker=sendingPlayer for levelNode
-            levelNode.setPickingMatchPlayer(sendingPlayer);
+//            levelNode.setPickingMatchPlayer(sendingPlayer);
+            this.getGame().getLevel()
+                    .stream().filter(level -> levelNode.getValue() == level.getValue())
+                    .collect(Collectors.toList())
+                    .get(0)
+                    .setPickingMatchPlayer(sendingPlayer);
 
             // TODO: Set placing for Players
             this.performPlacingPlayers();
@@ -52,15 +59,49 @@ public class GameBUS {
 
             // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
             broadcastResponseToPlayers(
-                    new SocketResponse(
-                            SocketResponse.Status.SUCCESS,
-                            SocketResponse.Action.MSG,
-                            "New Level!!!")
+                    new SocketResponse_GameProps(
+                            new CurrentLevel(this.getGame().getCurrentLevel()),
+                            cleanseLevelForTransfer(this.getGame().getLevel()),
+                            cleanseMatchPlayersForTransfer(this.getGame().getMatchPlayers())
+                    )
             );
         }
 
         return accept;
     }
+
+    // Privates
+
+    private GameServer getServer() {
+        return this.game.getServer();
+    }
+
+    /**
+     * Trong Level có pickingMatchPlayer, prop đó có thể là MatchPlayer_Server => Clone object mới ko có ref đó
+     * @param level Danh sách Level gốc (có thể chứa pickingMatchPlayer là MatchPlayer_Server)
+     * @return Danh sách LevelNode đã được "thanh tẩy"
+     */
+    private ArrayList<LevelNode> cleanseLevelForTransfer(ArrayList<LevelNode> level) {
+        ArrayList<LevelNode> newLevel = new ArrayList<LevelNode>();
+        for (LevelNode lN : level) {
+            newLevel.add(new LevelNode(lN, true));
+        }
+        return newLevel;
+    }
+    /**
+     * Ép MatchPlayer_Server về MatchPlayers (Không có reference gì đến ClientHandler) để có thể chuyển gói dữ liệu về cho Client
+     * @param matchPlayers Danh sách MatchPlayer gốc (là MatchPlayer_Server)
+     * @return Danh sách MatchPlayer đã được "thanh tẩy"
+     */
+    private ArrayList<MatchPlayer> cleanseMatchPlayersForTransfer(ArrayList<MatchPlayer> matchPlayers) {
+        ArrayList<MatchPlayer> newMatchPlayers = new ArrayList<MatchPlayer>();
+        for (MatchPlayer mP : matchPlayers) {
+            newMatchPlayers.add(new MatchPlayer(mP));
+        }
+        return newMatchPlayers;
+    }
+
+    // Privates CONNECTION Methods
 
     private void sendResponseToPlayer(SocketResponse response, UUID clientHandlerId) {
         ClientManager clientManager = this.getServer().getClientManager();
@@ -70,15 +111,11 @@ public class GameBUS {
     private void broadcastResponseToPlayers(SocketResponse response) {
         ClientManager clientManager = this.getServer().getClientManager();
         clientManager.sendResponseToBulkClients(
-            ((Game_Server) this.getGame()).getPlayerClients(),
-            response);
+                ((Game_Server) this.getGame()).getPlayerClients(),
+                response);
     }
 
-    // Privates
-
-    private GameServer getServer() {
-        return this.game.getServer();
-    }
+    // Private BUSINESS Methods
 
     private ArrayList<LevelNode> generateLevel(int count) {
         Random rand = new Random();                                                            // TODO: add Seed support
