@@ -63,7 +63,10 @@ public class GameBUS {
             System.out.println("Wrong number.");
             return;
         }
-        if (game.getLevel().indexOf(levelNode) < 0) {
+        if (game.getLevel().stream()
+                .filter(lN -> lN.getValue() == levelNode.getValue())
+                .collect(Collectors.toList()).size() <= 0
+        ) {
             throw new IllegalArgumentException("Selected LevelNode does not belong to this Game's context");
         }
 
@@ -143,9 +146,41 @@ public class GameBUS {
         for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
                 listModel.addElement(matchPlayer);
         }
-            list.setModel(listModel);
-            list.setCellRenderer(new MatchPlayerCellRenderer());
+        list.setModel(listModel);
+        list.setCellRenderer(new MatchPlayerCellRenderer());
     }
+
+    // Privates
+
+    private ArrayList<MatchPlayer> convertMatchPlayersToMatchPlayerClients(ArrayList<MatchPlayer> matchPlayers) {
+        ArrayList<MatchPlayer> newMatchPlayers = new ArrayList<MatchPlayer>();
+
+        for (MatchPlayer matchPlayer : matchPlayers) {
+            MatchPlayer_Client matchPlayerClient = new MatchPlayer_Client(matchPlayer);
+            newMatchPlayers.add(matchPlayerClient);
+        }
+
+        return newMatchPlayers;
+    }
+
+    private ArrayList<LevelNode> convertLevelNodesToLevelNodeClients(ArrayList<LevelNode> levelNodes) {
+        ArrayList<LevelNode> newLevelNodes = new ArrayList<LevelNode>();
+
+        for (LevelNode levelNode : levelNodes) {
+            LevelNode_Client levelNodeClient = new LevelNode_Client(levelNode);
+            newLevelNodes.add(levelNodeClient);
+        }
+
+        return newLevelNodes;
+    }
+
+    // Properties
+
+    public Game_Client getGame() {
+        return game;
+    }
+
+    // Inner Classes
 
     public class GameBUS_ViewBinder extends ViewBinder {
         public JLabel lblFindThis;
@@ -171,36 +206,6 @@ public class GameBUS {
                 }
             }
         }
-    }
-
-    // Privates
-
-    private ArrayList<MatchPlayer> convertMatchPlayersToMatchPlayerClients(ArrayList<MatchPlayer> matchPlayers) {
-        ArrayList<MatchPlayer> newMatchPlayers = new ArrayList<MatchPlayer>();
-
-        for (MatchPlayer matchPlayer : matchPlayers) {
-            MatchPlayer_Client matchPlayerClient = new MatchPlayer_Client(matchPlayer.getPlayer());
-            newMatchPlayers.add(matchPlayerClient);
-        }
-
-        return newMatchPlayers;
-    }
-
-    private ArrayList<LevelNode> convertLevelNodesToLevelNodeClients(ArrayList<LevelNode> levelNodes) {
-        ArrayList<LevelNode> newLevelNodes = new ArrayList<LevelNode>();
-
-        for (LevelNode levelNode : levelNodes) {
-            LevelNode_Client levelNodeClient = new LevelNode_Client(levelNode);
-            newLevelNodes.add(levelNodeClient);
-        }
-
-        return newLevelNodes;
-    }
-
-    // Properties
-
-    public Game_Client getGame() {
-        return game;
     }
 
 }

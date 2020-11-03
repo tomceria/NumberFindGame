@@ -10,6 +10,10 @@ public class MatchPlayer_Client extends MatchPlayer {
         super(player);
     }
 
+    public MatchPlayer_Client(MatchPlayer matchPlayer) {
+        super(matchPlayer);
+    }
+
     public Color getUiColor() {
         return uiColor;
     }
