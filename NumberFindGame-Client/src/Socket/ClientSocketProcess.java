@@ -1,9 +1,7 @@
 package Socket;
 
 import Socket.Response.*;
-import bus.GameBUS;
-import bus.GameRoomBUS;
-import bus.ViewBUS;
+import bus.*;
 import dto.GameRoom_Client;
 import dto.Game_Client;
 

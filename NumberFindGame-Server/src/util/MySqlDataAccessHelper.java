@@ -24,16 +24,7 @@ public class MySqlDataAccessHelper {
 //		this.UserName = "root";
 //		this.Password = "passne";
 //		this.DataBase = "numberfindgame";
-		/* HOÀNG */
-//		this.Host = "localhost:9001";
-//		this.UserName = "root";
-//		this.Password = "CaraCara123123";
-//		this.DataBase = "NumberFindGameDB";
-//		this.Host = "localhost";
-//		this.UserName = "root";
-//		this.Password = "passne";
-//		this.DataBase = "numberfindgame";
-//		/* HOÃ€NG */
+		/* HOANG */
 //		this.Host = "localhost:9001";
 //		this.UserName = "root";
 //		this.Password = "CaraCara123123";

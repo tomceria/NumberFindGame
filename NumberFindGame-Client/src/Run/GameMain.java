@@ -1,14 +1,9 @@
 package Run;
 
-import Socket.Client;
-import GUI.GameView;
 import Socket.GameClient;
-import bus.GameBUS;
 import bus.ViewBUS;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class GameMain {
