@@ -1,6 +1,7 @@
 package bus;
 
 import GUI.GameView;
+import GUI.LoginView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +21,13 @@ public class ViewBUS {
         ViewBUS.setMainFrame(mainFrame);
     }
 
+    public static void gotoLoginView() {
+        mainFrame.setContentPane(new LoginView().getContentPane());
+        mainFrame.setVisible(true);
+    }
+
     public static void gotoGameView(GameBUS gameBUS) {
         mainFrame.setContentPane(new GameView(gameBUS).contentPane);
-        mainFrame.setVisible(true);
     }
 
     private static void setMainFrame(JFrame mainFrame) {

@@ -17,6 +17,7 @@ public class GameMain {
         }
 
         ViewBUS.configureWindow(new JFrame(this.appName));
+        ViewBUS.gotoLoginView();
 
         // TODO: Migrate to GUI
 
