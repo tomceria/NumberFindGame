@@ -23,6 +23,11 @@ public class MatchPlayer_Client extends MatchPlayer {
 
     // Functions
 
+    /**
+     * Cast danh sách MatchPlayer[] chứa các MatchPlayer_Client về MatchPlayer_Client[]
+     * @param matchPlayers PHẢI ĐẢM BẢO là MatchPlayer_Client
+     * @return danh sách MatchPlayer_Client[]
+     */
     public static ArrayList<MatchPlayer_Client> castToMatchPlayerClients(ArrayList<MatchPlayer> matchPlayers) {
         ArrayList<MatchPlayer_Client> matchPlayerClients = new ArrayList<MatchPlayer_Client>();
         for (MatchPlayer lN : matchPlayers) {
@@ -32,6 +37,12 @@ public class MatchPlayer_Client extends MatchPlayer {
         return matchPlayerClients;
     }
 
+    /**
+     * Khác với cast, ép về MatchPlayer[chứa MatchPlayer_Client] để có thể gán setMatchPlayers()
+     * Dùng để biến đổi danh sách MatchPlayer[] nhận được từ Server để có thể thực hiện các thao tác Client
+     * @param _matchPlayers Danh sách MatchPlayer[] lấy từ Server
+     * @return Danh sách MatchPlayer[] chứa các MatchPlayer_Client
+     */
     public static ArrayList<MatchPlayer> convertMatchPlayersToMatchPlayerClients(ArrayList<MatchPlayer> _matchPlayers) {
         ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();
 
@@ -43,6 +54,12 @@ public class MatchPlayer_Client extends MatchPlayer {
         return matchPlayers;
     }
 
+    /**
+     * Gộp dữ liệu MatchPlayer[] mới và dữ liệu MatchPlayer_Client[] hiện tại
+     * @param _matchPlayers MatchPlayer[] lấy từ Server
+     * @param matchPlayers_OG MatchPlayer_Client[] lúc bấy giờ của Client (có các dữ liệu về UI)
+     * @return MatchPlayer[] đã gộp dữ liệu
+     */
     public static ArrayList<MatchPlayer> mergeMatchPlayersAndMatchPlayerClients(ArrayList<MatchPlayer> _matchPlayers, ArrayList<MatchPlayer_Client> matchPlayers_OG) {
         ArrayList<MatchPlayer> matchPlayers = convertMatchPlayersToMatchPlayerClients(_matchPlayers);
         for (int i = 0; i < matchPlayers.size(); i++) {
