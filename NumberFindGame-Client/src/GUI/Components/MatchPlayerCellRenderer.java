@@ -1,7 +1,8 @@
 package GUI.Components;
 
-import Models.MatchPlayer;
-import Models.Player;
+import dto.MatchPlayer;
+import dto.MatchPlayer_Client;
+import dto.PlayerDTO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,9 +68,10 @@ public class MatchPlayerCellRenderer extends JPanel implements ListCellRenderer<
      */
     @Override
     public Component getListCellRendererComponent(JList<? extends MatchPlayer> list, MatchPlayer value, int index, boolean isSelected, boolean cellHasFocus) {
-        Player player = value.getPlayer();
+        MatchPlayer_Client matchPlayer = (MatchPlayer_Client) value;
+        PlayerDTO player = value.getPlayer();
 
-        paneAvatar.setBackground(value.getUiColor());
+        paneAvatar.setBackground(matchPlayer.getUiColor());
 
         lblNameInitial.setText(String.format(
                 "%c%c",

@@ -7,15 +7,6 @@ public class MatchConfig implements Serializable {
     private int time;
     private int maxPlayer;
 
-    /**
-     * Init default values
-     */
-    public MatchConfig() {
-        numberQty = 100;
-        time = 180000;
-        maxPlayer = 3;
-    }
-
     public int getNumberQty() {
         return numberQty;
     }

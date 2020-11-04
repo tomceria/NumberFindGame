@@ -1,11 +1,10 @@
 package dto;
 
-import Socket.IClientIdentifier;
+import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalTime;
 
-public class MatchPlayer implements IClientIdentifier {
-//	private int playerId;
-//	private int matchId;
-
+public class MatchPlayer implements Serializable {
     private PlayerDTO player;
     private MatchDTO match;
 	private int score = 0;
@@ -14,6 +13,14 @@ public class MatchPlayer implements IClientIdentifier {
 
 	public MatchPlayer(PlayerDTO player) {
 		this.player = player;
+	}
+
+	public MatchPlayer(MatchPlayer matchPlayer) {
+		this.player = matchPlayer.player;
+		this.match = matchPlayer.match;
+		this.score = matchPlayer.score;
+		this.placing = matchPlayer.placing;
+		this.avgTime = matchPlayer.avgTime;
 	}
 
 	public PlayerDTO getPlayer() {
@@ -29,34 +36,6 @@ public class MatchPlayer implements IClientIdentifier {
 	public void setMatch(MatchDTO match) {
 		this.match = match;
 	}
-
-//	/**
-//	 * @return the playerId
-//	 */
-//	public int getPlayerId() {
-//		return playerId;
-//	}
-//
-//	/**
-//	 * @param playerId the playerId to set
-//	 */
-//	public void setPlayerId(int playerId) {
-//		this.playerId = playerId;
-//	}
-//
-//	/**
-//	 * @return the matchId
-//	 */
-//	public int getMatchId() {
-//		return matchId;
-//	}
-//
-//	/**
-//	 * @param matchId the matchId to set
-//	 */
-//	public void setMatchId(int matchId) {
-//		this.matchId = matchId;
-//	}
 
 	/**
 	 * @return the score
@@ -94,10 +73,12 @@ public class MatchPlayer implements IClientIdentifier {
 	}
 
 	/**
-	 * @param avgTime the avgTime to set
+	 * avgTime cannot be set manually, but instead has to go through this method to assign average time value
+	 * @param timeStart The starting time for CurrentLevel
 	 */
-	public void setAvgTime(double avgTime) {
-		this.avgTime = avgTime;
+	public void newAvgTime(LocalTime timeStart) {
+		double time = Duration.between(timeStart, LocalTime.now()).toMillis() * 1.0 / 1000;
+		this.avgTime = avgTime <= 0 ? time : (double)(time + avgTime) / 2;
 	}
 
 }

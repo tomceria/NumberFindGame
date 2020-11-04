@@ -5,6 +5,7 @@ import Socket.Request.SocketRequest_Login;
 import Socket.Response.SocketResponse;
 import bus.PlayerBUS;
 import dto.MatchPlayer;
+import dto.MatchPlayer_Server;
 import dto.PlayerDTO;
 import util.NotifyingThread;
 
@@ -33,31 +34,33 @@ public class ClientHandler {
         this.clientHandleThread = new ClientThread() {
             @Override
             public void doRun() {
-                try {
-                    while (true) {
-                        SocketRequest requestRaw = (SocketRequest) input.readObject();
-                        if (isLoggedIn == false) {
-                            if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
-                                if (performValidateClient(requestRaw)) {
-                                    isLoggedIn = true;
-                                    sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, "Logged in."));
-                                    onSuccessConnection();
-                                } else {
-                                    sendResponse(new SocketResponse(SocketResponse.Status.FAILED, "Invalid login credentials."));
-                                }
+            try {
+                while (true) {
+                    SocketRequest requestRaw = receiveRequest();
+                    if (isLoggedIn == false) {
+                        if (requestRaw.getAction().equals(SocketRequest.Action.LOGIN)) {
+                            if (performValidateClient(requestRaw)) {
+                                isLoggedIn = true;
+                                sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.MSG, "Logged in."));
+                                onSuccessConnection();
                             } else {
-                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, "Invalid access request."));
-                                break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
+                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid login credentials."));
                             }
-                        } else if (isLoggedIn && clientIdentifier != null) {                  // Đã đăng nhập => Xử lý MỌI yêu cầu
-                            new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init();  // RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
+                        } else {
+                            sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));
+                            break;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
                         }
+                    } else if (isLoggedIn && clientIdentifier != null) {        // Đã đăng nhập => Xử lý MỌI yêu cầu
+                        new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init();  // RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
                     }
-                } catch (EOFException | SocketException e) {
-                    System.out.println(String.format("Client '%s' disconnected.", ClientHandler.this.id));
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
+            } catch (EOFException | SocketException e) {
+                // Disconnect
+                System.out.println(String.format("Client '%s' disconnected.", ClientHandler.this.id));
+                closeSocket();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             }
         };
         this.clientHandleThread.setUuid(id);
@@ -82,14 +85,36 @@ public class ClientHandler {
 
     // Client Socket functions
 
-    public void sendResponse(SocketResponse response) throws IOException {
-        output.writeObject(response);
+    protected void sendResponse(SocketResponse response) {
+        try {
+            output.writeObject(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void closeSocket() throws IOException {
-        output.close();
-        input.close();
-        client.close();
+    protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException {
+        SocketRequest request = null;
+        request = (SocketRequest) input.readObject();
+        return request;
+    }
+
+    protected void closeSocket() {
+        try {
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.close();
+            }
+            if (client != null) {
+                client.close();
+            }
+        } catch (SocketException e) {
+            System.out.println("Socket already closed.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //
@@ -106,7 +131,7 @@ public class ClientHandler {
         PlayerBUS playerBUS = new PlayerBUS();
         if (playerBUS.login(request.username, request.password)) {
             PlayerDTO player = playerBUS.getOneByUsername(request.username);
-            ClientHandler.this.clientIdentifier = new MatchPlayer(player);
+            ClientHandler.this.clientIdentifier = new MatchPlayer_Server(player);
             isValidated = true;
         }
 
@@ -114,7 +139,7 @@ public class ClientHandler {
     }
 
     private void onSuccessConnection() {
-        ((GameServer) clientManager.getServer()).getGameRooms().get(0).joinRoom(this);  // TODO: Game business logic => Join room upon joining server
+        ((GameServer) clientManager.getServer()).joinGame(this);
     }
 
     abstract class ClientThread extends NotifyingThread {

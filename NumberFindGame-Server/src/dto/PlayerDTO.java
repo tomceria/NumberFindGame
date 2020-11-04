@@ -1,8 +1,8 @@
 package dto;
 
-import Socket.IClientIdentifier;
+import java.io.Serializable;
 
-public class PlayerDTO {
+public class PlayerDTO implements Serializable {
 	private int id;
 	private String username;
 	private String password;

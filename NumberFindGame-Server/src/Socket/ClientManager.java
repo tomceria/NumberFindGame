@@ -1,9 +1,14 @@
 package Socket;
 
+import Socket.Request.SocketRequest;
+import Socket.Response.SocketResponse;
+import dto.GameRoom;
+import dto.GameRoom_Server;
 import util.IThreadCompleteListener;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -16,6 +21,22 @@ public class ClientManager implements IThreadCompleteListener {
     }
 
     // Methods
+
+
+    public void sendResponseToClient(UUID clientHandlerId, SocketResponse response) {
+        ClientHandler clientHandler = clientConnections.get(clientHandlerId);
+        clientHandler.sendResponse(response);
+    }
+
+    public void sendResponseToBulkClients(HashMap<UUID, ClientHandler> clientConnections, SocketResponse response) {
+        for (ClientHandler clientHandler : clientConnections.values()) {
+            clientHandler.sendResponse(response);
+        }
+    }
+
+    public void broadcastResponse(SocketResponse response) {
+        sendResponseToBulkClients(this.clientConnections, response);
+    }
 
     protected void addAndStartClient(Socket client) {   // Nhận tham biến là Socket client được Server instance accept()
 
@@ -31,9 +52,36 @@ public class ClientManager implements IThreadCompleteListener {
     }
 
     protected void disconnectClient(UUID clientHandlerId) {
-        clientConnections.remove(clientHandlerId);                // Xoá khỏi danh sách người chơi hiện tại trong SERVER
-        ((GameServer) server).getGameRooms().get(0).getPlayerClients().remove(clientHandlerId); // Xoá khỏi danh sách người chơi hiện tại trong PHÒNG
+        /**
+         * Duyệt tất cả các GameRoom trong server
+         */
+        ArrayList<GameRoom_Server> gameRooms = ((GameServer) server).getGameRooms();
+        for (GameRoom_Server gameRoom : gameRooms) {
+            ClientHandler playerClient = gameRoom.getPlayerClients().get(clientHandlerId);
+            if (playerClient != null) {
+                gameRoom.getGameRoomBUS().leaveRoom(playerClient);  // Về mặt lý thuyết, Client không ở trong nhiều phòng cùng 1 lúc
+                break;
+            }
+        }
+
+        /**
+         * Xoá khỏi danh sách người chơi hiện tại trong SERVER
+         */
+        clientConnections.remove(clientHandlerId);
     }
+
+    protected SocketRequest receiveRequestFromClient(UUID clientHandlerId) {
+        ClientHandler clientHandler = clientConnections.get(clientHandlerId);
+        SocketRequest request = null;
+        try {
+            request = clientHandler.receiveRequest();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return request;
+    }
+
+    // Overrides
 
     @Override
     public void notifyOfThreadComplete(Runnable thread) {  // Chạy khi ClientHandler.clientHandleThread hoàn tất công việc run()

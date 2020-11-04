@@ -1,151 +1,99 @@
-package BUS;
+package bus;
 
-import Common.ViewBinder;
-import GUI.Components.MatchPlayerCellRenderer;
-import Models.*;
+import Socket.ClientManager;
+import Socket.GameServer;
+import Socket.Response.SocketResponse;
+import Socket.Response.SocketResponse_GameProps;
+import dto.*;
 
-import javax.swing.*;
 import java.awt.geom.Point2D;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.Timer;
+import java.util.stream.Collectors;
+
+import static util.Maths.valueFromTwoRanges;
 
 public class GameBUS {
-    // TODO: Placeholder - Dump Players data
-    private ArrayList<Player> DUMPPLAYERS = new ArrayList<Player>() {
-        {
-            this.add(new Player(1, "luuminhhoang", "lala@gmail.com", "Hoàng", "Lưu"));
-            this.add(new Player(2, "vohoanghuy", "lala2@gmail.com", "Huy", "Võ"));
-            this.add(new Player(3, "huathianhngan", "lala3@gmail.com", "Ngân", "Hứa"));
-            this.add(new Player(4, "tranthuythuyan", "lala4@gmail.com", "An", "Trần"));
-        }
-    };
+    private Game_Server game;  // PARENT
 
-    // Runtime Components
-    private Game game;
-    private HashMap<String, String> settings;
-
-    public GameBUS_ViewBinder viewBinder = new GameBUS_ViewBinder();                       // TODO: Client-only Property
-
-    public GameBUS() {
-        this.game = initGame(1);                                 // TODO: get ClientPlayer from somewhere...
+    public GameBUS(Game_Server game) {
+        this.game = game;
     }
 
-    public Game getGame() {
-        return game;
-    }
-
-    private Game initGame(int clientPlayerId) {
-        Game game = new Game();
-        MatchPlayer clientPlayer = null;
-
-        // Receive Game Settings from Server
-        game.setMatchSettings(loadMatchSettingsFromConfigs());                         // TODO: Get settings from Server
-
-        // Receive Level info from Server
-        game.setLevel(generateLevel(game.getMatchSettings().getNumberQty()));             // TODO: Get level from Server
-        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>();     // Also used for placings, by sort order
-
-        // Get Room's players info
-        for (Player player : getPlayersInRoom()) {                                // TODO: Get room's player from Server
-            MatchPlayer matchPlayer = new MatchPlayer(player);
-            matchPlayers.add(matchPlayer);
-            if (player.getId() == clientPlayerId) {
-                clientPlayer = matchPlayer;
-            }
-        }
-        game.setMatchPlayers(matchPlayers);
-
-        // Set Client Player
-        if (clientPlayer == null) {
-            throw new RuntimeException("Player ID mismatch");
-        }
-        game.setClientPlayer(clientPlayer);
-
-        // TODO: Server-side Actions
+    public void initGame() {
+        game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
-        game.setCurrentLevel(1);                                                    // also reset timer for CurrentLevel
-
-        this.viewBinder.startUpdatePeriod();
-
-        return game;
+        game.setCurrentLevelAndResetTimer(1);                                                    // also reset timer for CurrentLevel
     }
 
-    public void action_ClientChooseLevelNode(LevelNode levelNode) {
-        if (game.getLevel().indexOf(levelNode) < 0) {
-            throw new IllegalArgumentException("Selected LevelNode does not belong to this Game's context");
+    /**
+     * Client gửi số Đã chọn đúng. Phải là synchronized tránh 2 player gửi 1 số cùng lúc
+     * @param levelNode
+     * @param sendingPlayer
+     * @return
+     */
+    public synchronized boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
+        boolean accept = false;
+
+        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
+            accept = true;
+
+            performGoNextLevel(levelNode, sendingPlayer);
         }
 
-        boolean result = sendLevelNodeForValidation(levelNode, game.getClientPlayer());
-
-        // TODO: Receive new Data from Server
-        this.listen_GameUpdated();
+        return accept;
     }
 
-    public void listen_GameUpdated() {
-        // Update colors of LevelNodeButtons
-        for (LevelNode levelNode : game.getLevel()) {
-            MatchPlayer pickingMatchPlayer = levelNode.getPickingMatchPlayer();
-            if (pickingMatchPlayer != null) {
-                levelNode.getButton().setPicked(pickingMatchPlayer);
-            }
+    // Privates
+
+    private GameServer getServer() {
+        return this.game.getServer();
+    }
+
+    /**
+     * Trong Level có pickingMatchPlayer, prop đó có thể là MatchPlayer_Server => Clone object mới ko có ref đó
+     * @param level Danh sách Level gốc (có thể chứa pickingMatchPlayer là MatchPlayer_Server)
+     * @return Danh sách LevelNode đã được "thanh tẩy"
+     */
+    private ArrayList<LevelNode> cleanseLevelForTransfer(ArrayList<LevelNode> level) {
+        ArrayList<LevelNode> newLevel = new ArrayList<LevelNode>();
+        for (LevelNode lN : level) {
+            newLevel.add(new LevelNode(lN, true));
         }
-
-        this.viewBinder.update();
+        return newLevel;
     }
-
-    public String ui_getTimerClock() {
-        int timeInMillis = game.getMatchSettings().getTimeInMillis();
-        LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
-        LocalTime timeDiff = timeEnd.minusNanos(LocalTime.now().toNanoOfDay());
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("mm:ss");
-
-        return timeDiff.format(dtf);
-    }
-
-    public void ui_initPlayerList(JList list) {
-        DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
-        for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
-                listModel.addElement(matchPlayer);
+    /**
+     * Ép MatchPlayer_Server về MatchPlayers (Không có reference gì đến ClientHandler) để có thể chuyển gói dữ liệu về cho Client
+     * @param matchPlayers Danh sách MatchPlayer gốc (là MatchPlayer_Server)
+     * @return Danh sách MatchPlayer đã được "thanh tẩy"
+     */
+    private ArrayList<MatchPlayer> cleanseMatchPlayersForTransfer(ArrayList<MatchPlayer> matchPlayers) {
+        ArrayList<MatchPlayer> newMatchPlayers = new ArrayList<MatchPlayer>();
+        for (MatchPlayer mP : matchPlayers) {
+            newMatchPlayers.add(new MatchPlayer(mP));
         }
-            list.setModel(listModel);
-            list.setCellRenderer(new MatchPlayerCellRenderer());
+        return newMatchPlayers;
     }
 
-    public class GameBUS_ViewBinder extends ViewBinder {
-        public JLabel lblFindThis;
-        public JLabel lblTimer;
-        public JList listPlayers;
+    // Privates CONNECTION Methods
 
-        @Override
-        public void startUpdatePeriod() {
-            super.startUpdatePeriod();
-
-        }
-
-        public void update() {
-            if (game != null) {
-                lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
-                lblTimer.setText(ui_getTimerClock());
-                ui_initPlayerList(listPlayers);
-            }
-        }
+    private void sendResponseToPlayer(SocketResponse response, UUID clientHandlerId) {
+        ClientManager clientManager = this.getServer().getClientManager();
+        clientManager.sendResponseToClient(clientHandlerId, response);
     }
 
-    // TODO: SERVER-SIDE
-
-    private MatchSettings loadMatchSettingsFromConfigs() {
-        // TODO: Load from Config file
-        MatchSettings matchSettings = new MatchSettings(100, 180000, 4);
-        return matchSettings;
+    private void broadcastResponseToPlayers(SocketResponse response) {
+        ClientManager clientManager = this.getServer().getClientManager();
+        clientManager.sendResponseToBulkClients(
+                ((Game_Server) this.getGame()).getPlayerClients(),
+                response);
     }
 
-    private ArrayList<LevelNode> generateLevel(int count) {                                      // TODO: Move to server
+    // Private BUSINESS Methods
+
+    private ArrayList<LevelNode> generateLevel(int count) {
         Random rand = new Random();                                                            // TODO: add Seed support
         ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();
 
@@ -210,33 +158,40 @@ public class GameBUS {
         return levelNodes;
     }
 
-    private ArrayList<Player> getPlayersInRoom() {
-        return DUMPPLAYERS;
-    }
+    private void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
+        /**
+         * Tăng điểm cho sendingPlayer
+         */
+        this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
 
-    private boolean sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {
-        Game.CurrentLevel currentLevel = game.getCurrentLevel();
-        boolean accept = false;
+        /**
+         * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
+         */
+        this.getGame().getLevel()
+                .stream().filter(level -> levelNode.getValue() == level.getValue())
+                .collect(Collectors.toList()).get(0)
+                .setPickingMatchPlayer(sendingPlayer);
 
-        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Correctly selecting a LevelNode => Increase one level for everyone
-            accept = true;
+        /**
+         * Gán thứ hạng mới cho các player
+         */
+        this.performPlacingPlayers();
 
-            // TODO: Set score, avgTime for sendingPlayer
-            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
+        /**
+         * Tăng Level cho Game
+         */
+        game.setCurrentLevelAndResetTimer(game.getCurrentLevelNodeValue() + 1);
 
-            // TODO: Set picker=sendingPlayer for levelNode
-            levelNode.setPickingMatchPlayer(sendingPlayer);
-
-            // TODO: Set placing for Players
-            this.performPlacingPlayers();
-
-            // Increase currentLevel (also reset timer, done in model)
-            game.setCurrentLevel(currentLevel.getValue() + 1);
-
-            // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
-        }
-
-        return accept;
+        /**
+         * CUỐI CÙNG: Thông báo cho TẤT CẢ người chơi với dữ liệu Game mới
+         */
+        broadcastResponseToPlayers(
+                new SocketResponse_GameProps(
+                        new CurrentLevel(this.getGame().getCurrentLevel()),
+                        cleanseLevelForTransfer(this.getGame().getLevel()),
+                        cleanseMatchPlayersForTransfer(this.getGame().getMatchPlayers())
+                )
+        );
     }
 
     private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart) {
@@ -281,21 +236,10 @@ public class GameBUS {
 
     }
 
-    // TODO: Utils
+    // Properties
 
-    private double valueFromTwoRanges(double value, double minA, double maxA, double minB, double maxB) {
-        // Từ một value nằm trong khoảng (minA,maxA), cho ra giá trị tỉ lệ tương ứng trong khoảng (minB, maxB)
-        double percent = ((value - minA) * 100) / (maxA - minA);
-
-        if (percent < 0) {
-            percent = 0;
-        } else if (percent > 100) {
-            percent = 100;
-        }
-
-        double result = ((percent * (maxB - minB)) / 100) + minB;
-
-        return result;
+    public Game getGame() {
+        return game;
     }
 
 }

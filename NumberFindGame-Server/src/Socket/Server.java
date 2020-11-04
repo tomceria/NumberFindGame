@@ -47,7 +47,7 @@ public class Server {
     }
 
     public void halt() {
-        broadcastResponse(new SocketResponse(SocketResponse.Status.END, "Server closed."));
+        this.clientManager.broadcastResponse(new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.NET_CLOSE, "Server closed."));
 
         this.isRunning = false;
         HashMap<UUID, ClientHandler> clientConnections = this.clientManager.getClientConnections();
@@ -64,14 +64,4 @@ public class Server {
         }
     }
 
-    public void broadcastResponse(SocketResponse response) {
-        HashMap<UUID, ClientHandler> clientConnections = this.clientManager.getClientConnections();
-        try {
-            for (ClientHandler clientHandler : clientConnections.values()) {
-                clientHandler.sendResponse(response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

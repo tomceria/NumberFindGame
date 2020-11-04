@@ -1,9 +1,10 @@
 package GUI;
 
-import BUS.GameBUS;
+import bus.GameBUS;
 import GUI.Components.LevelNodeButton;
-import Models.LevelNode;
-import Models.MatchPlayer;
+import dto.LevelNode;
+import dto.LevelNode_Client;
+import dto.MatchPlayer;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -24,7 +25,9 @@ public class GameView {
 
     private GameBUS gameBUS;
 
-    public GameView() {
+    public GameView(GameBUS gameBUS) {
+        this.gameBUS = gameBUS;
+
         $$$setupUI$$$();
         customizeComponents();
         bindListeners();
@@ -39,11 +42,10 @@ public class GameView {
             @Override
             public void ancestorAdded(AncestorEvent event) {                       // Trigger when game screen is loaded
                 // Start game
-                gameBUS = new GameBUS();
-                gameBUS.viewBinder.lblFindThis = lblFindThis;
-                gameBUS.viewBinder.lblTimer = lblTimer;
-                gameBUS.viewBinder.listPlayers = listPlayers;
-                gameBUS.viewBinder.update();
+                GameView.this.gameBUS.viewBinder.lblFindThis = lblFindThis;
+                GameView.this.gameBUS.viewBinder.lblTimer = lblTimer;
+                GameView.this.gameBUS.viewBinder.listPlayers = listPlayers;
+                GameView.this.gameBUS.viewBinder.update();
                 renderLevel();
             }
 
@@ -92,7 +94,7 @@ public class GameView {
                             (btnSize / 2);
 
             LevelNodeButton btn = new LevelNodeButton(levelNode.getValue(), new Point(posX, posY));
-            levelNode.setButton(btn);
+            ((LevelNode_Client) levelNode).setButton(btn);
             btn.addToContainer(gamePane);
             btn.addActionListener(new ActionListener() {
                 @Override
