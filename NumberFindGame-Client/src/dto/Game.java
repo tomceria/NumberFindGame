@@ -64,11 +64,6 @@ public class Game implements Serializable {
     public void setCurrentLevel(CurrentLevel currentLevel) {
         this.currentLevel = currentLevel;
     }
-    public void setCurrentLevel(int currentLevelValue) {
-        this.currentLevel = new CurrentLevel();
-        this.currentLevel.setValue(currentLevelValue);
-        this.currentLevel.setTimeStart(LocalTime.now());                                  // Set will also restart timer
-    }
 
     public ArrayList<LevelNode> getLevel() {
         return level;

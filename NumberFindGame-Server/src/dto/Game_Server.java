@@ -4,6 +4,7 @@ import Socket.ClientHandler;
 import Socket.GameServer;
 import bus.GameBUS;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -19,6 +20,14 @@ public class Game_Server extends Game {
 
         this.server = server;
         this.playerClients = playerClients;
+    }
+
+    // Additional functions
+
+    public void setCurrentLevelAndResetTimer(int currentLevelValue) {
+        this.currentLevel = new CurrentLevel();
+        this.currentLevel.setValue(currentLevelValue);
+        this.currentLevel.setTimeStart(LocalTime.now());                                  // Set will also restart timer
     }
 
     // Properties

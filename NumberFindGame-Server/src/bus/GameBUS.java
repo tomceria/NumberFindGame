@@ -21,50 +21,26 @@ public class GameBUS {
     }
 
     public void initGame() {
-//        MatchConfig matchConfig = game.getMatchConfig();
-//        ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
-
-//        game.setMatchConfig(matchConfig);
-//        game.setMatchPlayers(matchPlayers);
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
-        game.setCurrentLevel(1);                                                    // also reset timer for CurrentLevel
+        game.setCurrentLevelAndResetTimer(1);                                                    // also reset timer for CurrentLevel
     }
 
-    public boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
-        CurrentLevel currentLevel = game.getCurrentLevel();
+    /**
+     * Client gửi số Đã chọn đúng. Phải là synchronized tránh 2 player gửi 1 số cùng lúc
+     * @param levelNode
+     * @param sendingPlayer
+     * @return
+     */
+    public synchronized boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
         boolean accept = false;
 
         if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
             accept = true;
 
-            // TODO: Set score, avgTime for sendingPlayer
-            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
-
-            // TODO: Set picker=sendingPlayer for levelNode
-//            levelNode.setPickingMatchPlayer(sendingPlayer);
-            this.getGame().getLevel()
-                    .stream().filter(level -> levelNode.getValue() == level.getValue())
-                    .collect(Collectors.toList())
-                    .get(0)
-                    .setPickingMatchPlayer(sendingPlayer);
-
-            // TODO: Set placing for Players
-            this.performPlacingPlayers();
-
-            // Increase currentLevel (also reset timer, done in model)
-            game.setCurrentLevel(currentLevel.getValue() + 1);
-
-            // TODO: Server notify ALL PLAYERS with new Game data (BACK TO CLIENT)
-            broadcastResponseToPlayers(
-                    new SocketResponse_GameProps(
-                            new CurrentLevel(this.getGame().getCurrentLevel()),
-                            cleanseLevelForTransfer(this.getGame().getLevel()),
-                            cleanseMatchPlayersForTransfer(this.getGame().getMatchPlayers())
-                    )
-            );
+            performGoNextLevel(levelNode, sendingPlayer);
         }
 
         return accept;
@@ -180,6 +156,42 @@ public class GameBUS {
         }
 
         return levelNodes;
+    }
+
+    private void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
+        /**
+         * Tăng điểm cho sendingPlayer
+         */
+        this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
+
+        /**
+         * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
+         */
+        this.getGame().getLevel()
+                .stream().filter(level -> levelNode.getValue() == level.getValue())
+                .collect(Collectors.toList()).get(0)
+                .setPickingMatchPlayer(sendingPlayer);
+
+        /**
+         * Gán thứ hạng mới cho các player
+         */
+        this.performPlacingPlayers();
+
+        /**
+         * Tăng Level cho Game
+         */
+        game.setCurrentLevelAndResetTimer(game.getCurrentLevelNodeValue() + 1);
+
+        /**
+         * CUỐI CÙNG: Thông báo cho TẤT CẢ người chơi với dữ liệu Game mới
+         */
+        broadcastResponseToPlayers(
+                new SocketResponse_GameProps(
+                        new CurrentLevel(this.getGame().getCurrentLevel()),
+                        cleanseLevelForTransfer(this.getGame().getLevel()),
+                        cleanseMatchPlayersForTransfer(this.getGame().getMatchPlayers())
+                )
+        );
     }
 
     private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart) {
