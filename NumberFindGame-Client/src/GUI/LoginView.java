@@ -18,6 +18,7 @@ public class LoginView {
     private JButton btnSubmit;
     private JLabel lblUsername;
     private JLabel lblPassword;
+    private JPanel formPane;
 
     private LoginBUS loginBUS;
 
@@ -83,14 +84,14 @@ public class LoginView {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 0, 16, 0);
         contentPane.add(lblTitle, gbc);
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridBagLayout());
-        panel1.setBackground(new Color(-14208619));
+        formPane = new JPanel();
+        formPane.setLayout(new GridBagLayout());
+        formPane.setBackground(new Color(-14142061));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        contentPane.add(panel1, gbc);
+        contentPane.add(formPane, gbc);
         btnSubmit = new JButton();
         btnSubmit.setText("Login");
         gbc = new GridBagConstraints();
@@ -101,7 +102,7 @@ public class LoginView {
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(16, 0, 0, 0);
-        panel1.add(btnSubmit, gbc);
+        formPane.add(btnSubmit, gbc);
         lblUsername = new JLabel();
         lblUsername.setForeground(new Color(-1));
         lblUsername.setText("Username");
@@ -112,7 +113,7 @@ public class LoginView {
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(0, 0, 8, 8);
-        panel1.add(lblUsername, gbc);
+        formPane.add(lblUsername, gbc);
         lblPassword = new JLabel();
         lblPassword.setForeground(new Color(-1));
         lblPassword.setText("Password");
@@ -123,7 +124,7 @@ public class LoginView {
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(0, 0, 0, 8);
-        panel1.add(lblPassword, gbc);
+        formPane.add(lblPassword, gbc);
         txtUsername = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
@@ -133,7 +134,7 @@ public class LoginView {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 8, 0);
-        panel1.add(txtUsername, gbc);
+        formPane.add(txtUsername, gbc);
         txtPassword = new JPasswordField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
@@ -143,7 +144,7 @@ public class LoginView {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.ipadx = 100;
-        panel1.add(txtPassword, gbc);
+        formPane.add(txtPassword, gbc);
     }
 
     /**

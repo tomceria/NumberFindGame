@@ -1,12 +1,16 @@
 package bus;
 
 import Common.ViewBinder;
+import GUI.Components.LevelNodeButton;
 import GUI.Components.MatchPlayerCellRenderer;
 import Socket.Request.SocketRequest_SubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -45,6 +49,46 @@ public class GameBUS {
         game.setMatchPlayers(matchPlayers);
 
         this.viewBinder.startUpdatePeriod();
+    }
+
+    public void renderLevel(JPanel gamePane) {
+        int btnSize = 30;                                                              // Kích thước của Button hiển thị
+        int screenMargin = 15;     // Margin của Màn hình trận đấu, giúp cho Nút không bị che khuất bởi phạm vi hiển thị
+
+        Rectangle gameRect = new Rectangle();  // gameRect lưu trữ vị trí, kích thước của khung MÀN HÌNH TRẬN ĐẤU lúc bấy giờ => Không cho phép resize
+        gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
+
+        for (LevelNode levelNode : this.game.getLevel()) {
+            int posX =     // Vị trí mà LevelNode được đặt trên màn hình tương ứng với tỉ lệ của LevelNode.coord ([0,1])
+                    (int) (
+                            (levelNode.getCoord().x                    // coord.x là vị trí x của LevelNode, nằm trong [0,1]
+                                    * (gameRect.width - screenMargin * 2))       // Chiều rộng màn hình trừ margin trái phải
+                                    +
+                                    (gameRect.x + screenMargin)  // Cộng với vị trí TopLeft của Màn hình trận đầu, Cộng với Margin trái
+                    )
+                            -
+                            (btnSize / 2);  // Việc trừ cho nửa kích thước Button hiển thị giúp cho Button hiển thị đúng ở Center thay vì ở TopLeft
+            int posY =
+                    (int) (
+                            (levelNode.getCoord().y
+                                    * (gameRect.height - screenMargin * 2))
+                                    +
+                                    (gameRect.y + screenMargin)
+                    )
+                            -
+                            (btnSize / 2);
+
+            LevelNodeButton btn = new LevelNodeButton(levelNode.getValue(), new Point(posX, posY));
+            ((LevelNode_Client) levelNode).setButton(btn);
+            btn.addToContainer(gamePane);
+            btn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    action_ClientChooseLevelNode(levelNode);
+                }
+            });
+        }
+        gamePane.repaint();
     }
 
     public void action_ClientChooseLevelNode(LevelNode levelNode) {

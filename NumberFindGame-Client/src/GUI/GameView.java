@@ -1,14 +1,12 @@
 package GUI;
 
-import bus.GameBUS;
 import GUI.Components.LevelNodeButton;
+import bus.GameBUS;
 import dto.LevelNode;
 import dto.LevelNode_Client;
 import dto.MatchPlayer;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,83 +31,27 @@ public class GameView {
         bindListeners();
     }
 
+    public void init() {
+        this.gameBUS.viewBinder.lblFindThis = lblFindThis;
+        this.gameBUS.viewBinder.lblTimer = lblTimer;
+        this.gameBUS.viewBinder.listPlayers = listPlayers;
+        this.gameBUS.viewBinder.update();           // Force update
+        this.gameBUS.renderLevel(this.gamePane);    // GameBUS.initGame() must be called prior
+    }
+
+    // Privates
+
     private void customizeComponents() {
         gamePane.setLayout(null);
     }
 
     private void bindListeners() {
-        gamePane.addAncestorListener(new AncestorListener() {
-            @Override
-            public void ancestorAdded(AncestorEvent event) {                       // Trigger when game screen is loaded
-                // Start game
-                GameView.this.gameBUS.viewBinder.lblFindThis = lblFindThis;
-                GameView.this.gameBUS.viewBinder.lblTimer = lblTimer;
-                GameView.this.gameBUS.viewBinder.listPlayers = listPlayers;
-                GameView.this.gameBUS.viewBinder.update();
-                renderLevel();
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {
-            }
-
-            @Override
-            public void ancestorMoved(AncestorEvent event) {
-            }
-        });
-
         btnQuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("NotImplemented: Quit Game");
             }
         });
-    }
-
-    private void renderLevel() {
-        int btnSize = 30;                                                              // Kích thước của Button hiển thị
-        int screenMargin = 15;     // Margin của Màn hình trận đấu, giúp cho Nút không bị che khuất bởi phạm vi hiển thị
-
-        Rectangle gameRect = new Rectangle();  // gameRect lưu trữ vị trí, kích thước của khung MÀN HÌNH TRẬN ĐẤU lúc bấy giờ => Không cho phép resize
-        gameRect.setRect(gamePane.getX(), gamePane.getY(), gamePane.getWidth(), gamePane.getHeight());
-
-        for (LevelNode levelNode : gameBUS.getGame().getLevel()) {
-            int posX =     // Vị trí mà LevelNode được đặt trên màn hình tương ứng với tỉ lệ của LevelNode.coord ([0,1])
-                    (int) (
-                            (levelNode.getCoord().x                    // coord.x là vị trí x của LevelNode, nằm trong [0,1]
-                                    * (gameRect.width - screenMargin * 2))       // Chiều rộng màn hình trừ margin trái phải
-                                    +
-                                    (gameRect.x + screenMargin)  // Cộng với vị trí TopLeft của Màn hình trận đầu, Cộng với Margin trái
-                    )
-                            -
-                            (btnSize / 2);  // Việc trừ cho nửa kích thước Button hiển thị giúp cho Button hiển thị đúng ở Center thay vì ở TopLeft
-            int posY =
-                    (int) (
-                            (levelNode.getCoord().y
-                                    * (gameRect.height - screenMargin * 2))
-                                    +
-                                    (gameRect.y + screenMargin)
-                    )
-                            -
-                            (btnSize / 2);
-
-            LevelNodeButton btn = new LevelNodeButton(levelNode.getValue(), new Point(posX, posY));
-            ((LevelNode_Client) levelNode).setButton(btn);
-            btn.addToContainer(gamePane);
-            btn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    handle_OnClick_NodeLevelButton(levelNode);
-                }
-            });
-        }
-        gamePane.repaint();
-    }
-
-    // Event Handlers
-
-    private void handle_OnClick_NodeLevelButton(LevelNode levelNode) {
-        gameBUS.action_ClientChooseLevelNode(levelNode);
     }
 
     /**

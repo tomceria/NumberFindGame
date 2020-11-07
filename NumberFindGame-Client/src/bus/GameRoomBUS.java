@@ -36,10 +36,11 @@ public class GameRoomBUS {
     public void listen_startGame(SocketResponse_InitGame response) {
         MatchPlayer clientPlayer = ((GameRoom_Client) gameRoom).getClientPlayer();
 
-        this.gameRoom.setGame(
-            new Game_Client(response.game, this.getGameRoom().getClient(), clientPlayer)
-        );
-        this.getGame().getGameBUS().initGame();
+        Game_Client game = new Game_Client(response.game, this.getGameRoom().getClient(), clientPlayer);
+        this.gameRoom.setGame(game);
+        game.getGameBUS().initGame();
+
+        ViewBUS.gotoGameView(game.getGameBUS());
     }
 
     // Privates

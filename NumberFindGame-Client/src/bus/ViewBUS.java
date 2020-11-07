@@ -22,12 +22,16 @@ public class ViewBUS {
     }
 
     public static void gotoLoginView(LoginBUS loginBUS) {
-        mainFrame.setContentPane(new LoginView(loginBUS).getContentPane());
+        LoginView loginView = new LoginView(loginBUS);
+        mainFrame.setContentPane(loginView.getContentPane());
         mainFrame.setVisible(true);
     }
 
     public static void gotoGameView(GameBUS gameBUS) {
-        mainFrame.setContentPane(new GameView(gameBUS).contentPane);
+        GameView gameView = new GameView(gameBUS);
+        mainFrame.setContentPane(gameView.contentPane);
+
+        gameView.init();
     }
 
     private static void setMainFrame(JFrame mainFrame) {
