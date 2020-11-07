@@ -149,7 +149,6 @@ public class GameBUS {
         @Override
         public void startUpdatePeriod() {
             super.startUpdatePeriod();
-
         }
 
         public void update() {

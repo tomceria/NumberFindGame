@@ -7,7 +7,15 @@ import javax.swing.*;
 import java.util.Scanner;
 
 public class GameMain {
-    public static String appName = "Number Find Game";
+    private String netHostname;
+    private int netPort;
+
+    public GameMain() {
+        this.netHostname = "127.0.0.1";
+        this.netPort = 54321;
+    }
+
+    // Functions
 
     protected void init() {
         try {
@@ -16,7 +24,7 @@ public class GameMain {
             e.printStackTrace();
         }
 
-        ViewBUS.configureWindow(new JFrame(this.appName));
+        ViewBUS.configureWindow(new JFrame(ClientMain.APP_NAME));
         ViewBUS.gotoLoginView();
 
         // TODO: Migrate to GUI
@@ -28,7 +36,7 @@ public class GameMain {
         String password = scan.nextLine();
         try {
             new GameClient().start(
-                "127.0.0.1",
+                this.netHostname,
                 54321,
                 username,
                 password);
@@ -37,4 +45,12 @@ public class GameMain {
         }
     }
 
+    // Properties
+
+    public String getNetHostname() {
+        return netHostname;
+    }
+    public void setNetHostname(String netHostname) {
+        this.netHostname = netHostname;
+    }
 }
