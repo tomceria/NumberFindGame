@@ -1,5 +1,6 @@
 package GUI;
 
+import Run.GameMain;
 import bus.LoginBUS;
 
 import javax.swing.*;
@@ -20,8 +21,8 @@ public class LoginView {
 
     private LoginBUS loginBUS;
 
-    public LoginView() {
-        this.loginBUS = new LoginBUS();
+    public LoginView(LoginBUS loginBUS) {
+        this.loginBUS = loginBUS;
 
         $$$setupUI$$$();
         customizeComponents();

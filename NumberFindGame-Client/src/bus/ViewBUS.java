@@ -21,8 +21,8 @@ public class ViewBUS {
         ViewBUS.setMainFrame(mainFrame);
     }
 
-    public static void gotoLoginView() {
-        mainFrame.setContentPane(new LoginView().getContentPane());
+    public static void gotoLoginView(LoginBUS loginBUS) {
+        mainFrame.setContentPane(new LoginView(loginBUS).getContentPane());
         mainFrame.setVisible(true);
     }
 
