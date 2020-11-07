@@ -4,6 +4,8 @@ import Run.GameMain;
 import bus.LoginBUS;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,13 +14,17 @@ public class LoginView {
 
     // LoginView.form's Components
     private JPanel contentPane;
-    private JLabel lblTitle;
     private JTextField txtUsername;
     private JPasswordField txtPassword;
+    private JTextField txtNetIp;
     private JButton btnSubmit;
+    private JLabel lblTitle;
     private JLabel lblUsername;
     private JLabel lblPassword;
+    private JLabel lblNetIp;
     private JPanel formPane;
+    private JPanel netPane;
+    private JPanel mainPane;
 
     private LoginBUS loginBUS;
 
@@ -38,11 +44,9 @@ public class LoginView {
     }
 
     private void bindListeners() {
-
         btnSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Submitting...");
                 LoginView.this.loginBUS.action_LoginSubmit();
             }
         });
@@ -51,6 +55,7 @@ public class LoginView {
     private void initViewBinder() {
         LoginView.this.loginBUS.viewBinder.txtUsername = txtUsername;
         LoginView.this.loginBUS.viewBinder.txtPassword = txtPassword;
+        LoginView.this.loginBUS.viewBinder.txtNetIp = txtNetIp;
     }
 
     // Properties
@@ -71,27 +76,25 @@ public class LoginView {
         contentPane.setLayout(new GridBagLayout());
         contentPane.setBackground(new Color(-14142061));
         contentPane.setPreferredSize(new Dimension(1024, 768));
-        lblTitle = new JLabel();
-        lblTitle.setFocusCycleRoot(true);
-        Font lblTitleFont = this.$$$getFont$$$("Fira Code", Font.BOLD, 32, lblTitle.getFont());
-        if (lblTitleFont != null) lblTitle.setFont(lblTitleFont);
-        lblTitle.setForeground(new Color(-1));
-        lblTitle.setText("NumberFindGame");
+        mainPane = new JPanel();
+        mainPane.setLayout(new GridBagLayout());
+        mainPane.setBackground(new Color(-14142061));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 16, 0);
-        contentPane.add(lblTitle, gbc);
+        gbc.weighty = 1.0;
+        contentPane.add(mainPane, gbc);
         formPane = new JPanel();
         formPane.setLayout(new GridBagLayout());
         formPane.setBackground(new Color(-14142061));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        contentPane.add(formPane, gbc);
+        mainPane.add(formPane, gbc);
         btnSubmit = new JButton();
         btnSubmit.setText("Login");
         gbc = new GridBagConstraints();
@@ -101,7 +104,7 @@ public class LoginView {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(16, 0, 0, 0);
+        gbc.insets = new Insets(8, 0, 0, 0);
         formPane.add(btnSubmit, gbc);
         lblUsername = new JLabel();
         lblUsername.setForeground(new Color(-1));
@@ -123,18 +126,8 @@ public class LoginView {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.EAST;
-        gbc.insets = new Insets(0, 0, 0, 8);
+        gbc.insets = new Insets(0, 0, 8, 8);
         formPane.add(lblPassword, gbc);
-        txtUsername = new JTextField();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 0, 8, 0);
-        formPane.add(txtUsername, gbc);
         txtPassword = new JPasswordField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
@@ -143,8 +136,66 @@ public class LoginView {
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 100;
+        gbc.ipadx = 120;
+        gbc.insets = new Insets(0, 0, 8, 0);
         formPane.add(txtPassword, gbc);
+        txtUsername = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 120;
+        gbc.insets = new Insets(0, 0, 8, 0);
+        formPane.add(txtUsername, gbc);
+        lblTitle = new JLabel();
+        lblTitle.setFocusCycleRoot(true);
+        Font lblTitleFont = this.$$$getFont$$$("Fira Code", Font.BOLD, 32, lblTitle.getFont());
+        if (lblTitleFont != null) lblTitle.setFont(lblTitleFont);
+        lblTitle.setForeground(new Color(-1));
+        lblTitle.setText("NumberFindGame");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        mainPane.add(lblTitle, gbc);
+        netPane = new JPanel();
+        netPane.setLayout(new GridBagLayout());
+        netPane.setBackground(new Color(-14142061));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.ipady = 10;
+        contentPane.add(netPane, gbc);
+        lblNetIp = new JLabel();
+        Font lblNetIpFont = this.$$$getFont$$$(null, -1, 10, lblNetIp.getFont());
+        if (lblNetIpFont != null) lblNetIp.setFont(lblNetIpFont);
+        lblNetIp.setForeground(new Color(-1));
+        lblNetIp.setText("Server Hostname");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 8);
+        netPane.add(lblNetIp, gbc);
+        txtNetIp = new JTextField();
+        Font txtNetIpFont = this.$$$getFont$$$(null, -1, 10, txtNetIp.getFont());
+        if (txtNetIpFont != null) txtNetIp.setFont(txtNetIpFont);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 100;
+        netPane.add(txtNetIp, gbc);
     }
 
     /**

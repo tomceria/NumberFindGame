@@ -190,11 +190,6 @@ public class GameBUS {
         public JLabel lblTimer;
         public JList listPlayers;
 
-        @Override
-        public void startUpdatePeriod() {
-            super.startUpdatePeriod();
-        }
-
         public void update() {
             if (game != null) {
                 if (lblFindThis != null) {

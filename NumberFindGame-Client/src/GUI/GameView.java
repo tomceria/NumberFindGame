@@ -1,9 +1,6 @@
 package GUI;
 
-import GUI.Components.LevelNodeButton;
 import bus.GameBUS;
-import dto.LevelNode;
-import dto.LevelNode_Client;
 import dto.MatchPlayer;
 
 import javax.swing.*;
