@@ -38,7 +38,7 @@ public class ConsoleCommand {
 	public ConsoleCommand(Server server) {
 		this.server = server;
 	}
-	
+
 	/**
 	 * 
 	 * @param inputCommand: the input string from user
@@ -58,12 +58,13 @@ public class ConsoleCommand {
 	}
 
 	/**
-	 * Initiate server cli 
+	 * Initiate server cli
+	 * 
 	 * @throws NumberValidException
 	 */
 	public void init() throws NumberValidException {
 		boolean isCommanding = true;
-
+		showCommand("command");
 		do {
 			System.out.print("\nInput: ");
 			String inputCommand = scan.nextLine();
@@ -83,12 +84,12 @@ public class ConsoleCommand {
 				break;
 			}
 			case "command": {
-				System.out.println("Command: list <option>\n" + "\t config <option> <value>\t");
+				showCommand("command");
 				break;
 			}
 			default: {
-				System.out.println("Syntax error");
-				System.out.println("Command: list <option>\n" + "\t config <option> <value>\t");
+				System.out.println("Command not found");
+				showCommand("command");
 				break;
 			}
 			}
@@ -109,8 +110,8 @@ public class ConsoleCommand {
 			break;
 		}
 		default: {
-			System.out.println("Syntax: list <option>\n" + "\t user\t Show list of registered users\n"
-					+ "\t online\t Show list of active users");
+			System.out.println("Command not found");
+			showCommand("list");
 			break;
 		}
 		}
@@ -126,19 +127,23 @@ public class ConsoleCommand {
 		int val = 0;
 
 		if (value.equals("")) {
-			if (!option.equals("show")) {
-				System.out.println("Value can not be empty");
-				//option = "";
+//			if (option.equals("")) {
+//				option =" ";
+//			}
+			if (!option.equals("show") && !option.equals("")) {
+				System.out.println("Error. Value can not be empty");
+				// option = "";
 				return;
 			}
+
 		} else {
 			try {
 				val = Integer.parseInt(value);
 				// System.out.print(n);
 
 			} catch (NumberFormatException e) {
-				System.out.println("Value must be integer");
-				//option = "";
+				System.out.println("Error. Value must be integer");
+				// option = "";
 				return;
 			}
 		}
@@ -161,11 +166,8 @@ public class ConsoleCommand {
 			break;
 		}
 		default: {
-			System.out.println(
-					"Syntax: config <option> <value>\n" + "\t numberQty <1-900>\t Config game number quantity\n"
-							+ "\t time <1000-3600000>\t Config game time\n"
-							+ "\t maxPlayer <2-8>\t Config game max number of player\n"
-							+ "\t show\t\t\t Show current game config\n");
+			System.out.println("Command not found");
+			showCommand("config");
 			break;
 		}
 		}
@@ -173,6 +175,7 @@ public class ConsoleCommand {
 
 	/**
 	 * Config number quantity
+	 * 
 	 * @param value: the value to set number quantity
 	 * @throws NumberValidException
 	 */
@@ -182,7 +185,7 @@ public class ConsoleCommand {
 		matchConfig = jsonHelper.readConfig();
 
 		if (value < 1 || value > 900) {
-			System.out.println("Failed");
+			System.out.println("Error");
 			System.out.println("Value must be in range [1,900]");
 			return;
 		}
@@ -194,6 +197,7 @@ public class ConsoleCommand {
 
 	/**
 	 * Config time
+	 * 
 	 * @param value: the value to set time
 	 * @throws NumberValidException
 	 */
@@ -203,7 +207,7 @@ public class ConsoleCommand {
 		matchConfig = jsonHelper.readConfig();
 
 		if (value < 1000 || value > 3600000) {
-			System.out.println("Failed");
+			System.out.println("Error");
 			System.out.println("Value must be in range [1000,3600000]");
 			return;
 		}
@@ -215,6 +219,7 @@ public class ConsoleCommand {
 
 	/**
 	 * Config max player
+	 * 
 	 * @param value: the value to set max player
 	 * @throws NumberValidException
 	 */
@@ -224,7 +229,7 @@ public class ConsoleCommand {
 		matchConfig = jsonHelper.readConfig();
 
 		if (value < 2 || value > 8) {
-			System.out.println("Failed");
+			System.out.println("Error");
 			System.out.println("Value must be in range [2,8]");
 			return;
 		}
@@ -299,4 +304,28 @@ public class ConsoleCommand {
 		tableDisplay.tableDisplay(tableList);
 	}
 
+	/**
+	 * Show commands
+	 * @param s: string s define case to show command
+	 */
+	public void showCommand(String s) {
+		switch (s) {
+		case "command":
+			System.out.print("Command:\n\tcommand \t\t\tshow all command\n" + "\tlist <option> \t\t\tlist users\n"
+					+ "\tconfig <option> <value> \tconfig game\n" + "\texit \t\t\t\tshut down server\n");
+			break;
+		case "list":
+			System.out.print("Command: list <option>\n" + "\t user\t Show list of registered users\n"
+					+ "\t online\t Show list of active users\n");
+			break;
+		case "config":
+			System.out.print(
+					"Syntax: config <option> <value>\n" + "\t numberQty <1-900>\t Config game number quantity\n"
+							+ "\t time <1000-3600000>\t Config game time\n"
+							+ "\t maxPlayer <2-8>\t Config game max number of player\n"
+							+ "\t show\t\t\t Show current game config\n");
+			break;
+		}
+		System.out.println();
+	}
 }
