@@ -30,7 +30,7 @@ public class JsonHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public void saveConfig(MatchConfig matchConfig) throws NumberValidException {
+    public void saveConfig(MatchConfig matchConfig) {
         try (FileWriter fileWriter = new FileWriter(configFile)) {
             JSONObject obj = new JSONObject();
 

@@ -28,6 +28,7 @@ public class GameMain {
         try {
             new GameClient().start(
                 "127.0.0.1",
+            	//"192.168.43.149",
                 54321,
                 username,
                 password);
