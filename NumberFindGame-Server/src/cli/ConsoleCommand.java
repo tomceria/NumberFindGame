@@ -62,9 +62,9 @@ public class ConsoleCommand {
 	 * 
 	 * @throws NumberValidException
 	 */
-	public void init() throws NumberValidException {
+	public void init() {
 		boolean isCommanding = true;
-		showCommand("command");
+		showCommand("help");
 		do {
 			System.out.print("\nInput: ");
 			String inputCommand = scan.nextLine();
@@ -83,13 +83,13 @@ public class ConsoleCommand {
 				isCommanding = false;
 				break;
 			}
-			case "command": {
-				showCommand("command");
+			case "help": {
+				showCommand("help");
 				break;
 			}
 			default: {
-				System.out.println("Command not found");
-				showCommand("command");
+				System.out.println("Command not found. Commands are case-sensitive");
+				showCommand("help");
 				break;
 			}
 			}
@@ -110,7 +110,7 @@ public class ConsoleCommand {
 			break;
 		}
 		default: {
-			System.out.println("Command not found");
+			System.out.println("Command not found. Commands are case-sensitive");
 			showCommand("list");
 			break;
 		}
@@ -127,23 +127,18 @@ public class ConsoleCommand {
 		int val = 0;
 
 		if (value.equals("")) {
-//			if (option.equals("")) {
-//				option =" ";
-//			}
 			if (!option.equals("show") && !option.equals("")) {
 				System.out.println("Error. Value can not be empty");
-				// option = "";
+
 				return;
 			}
 
 		} else {
 			try {
 				val = Integer.parseInt(value);
-				// System.out.print(n);
 
 			} catch (NumberFormatException e) {
 				System.out.println("Error. Value must be integer");
-				// option = "";
 				return;
 			}
 		}
@@ -166,7 +161,7 @@ public class ConsoleCommand {
 			break;
 		}
 		default: {
-			System.out.println("Command not found");
+			System.out.println("Command not found. Commands are case-sensitive");
 			showCommand("config");
 			break;
 		}
@@ -310,8 +305,8 @@ public class ConsoleCommand {
 	 */
 	public void showCommand(String s) {
 		switch (s) {
-		case "command":
-			System.out.print("Command:\n\tcommand \t\t\tshow all command\n" + "\tlist <option> \t\t\tlist users\n"
+		case "help":
+			System.out.print("Command:\n\thelp \t\t\t\tshow all commands\n" + "\tlist <option> \t\t\tlist users\n"
 					+ "\tconfig <option> <value> \tconfig game\n" + "\texit \t\t\t\tshut down server\n");
 			break;
 		case "list":
