@@ -4,6 +4,7 @@ import Socket.Request.SocketRequest;
 import Socket.Request.SocketRequest_Login;
 import Socket.Response.SocketResponse;
 
+import javax.security.sasl.AuthenticationException;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,7 +36,7 @@ public class Client {
             case FAILED: {
                 System.out.println("CLIENT: Disconnected.");
                 close();
-                return;
+                throw new AuthenticationException(authenticationResponse.getMessage());
             }
         }
     }

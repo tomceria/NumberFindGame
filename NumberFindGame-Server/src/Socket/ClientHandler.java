@@ -44,7 +44,7 @@ public class ClientHandler {
                                 sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.MSG, "Logged in."));
                                 onSuccessConnection();
                             } else {
-                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid login credentials."));
+                                sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid username or password."));
                             }
                         } else {
                             sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));

@@ -9,15 +9,23 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.ConnectException;
 
 public class LoginView {
 
-    // LoginView.form's Components
+    /*
+      LoginView.form's Components
+     */
+    // ViewBinder's components
     private JPanel contentPane;
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JTextField txtNetIp;
     private JButton btnSubmit;
+    // Others
     private JLabel lblTitle;
     private JLabel lblUsername;
     private JLabel lblPassword;
@@ -25,6 +33,7 @@ public class LoginView {
     private JPanel formPane;
     private JPanel netPane;
     private JPanel mainPane;
+    private JLabel lnkGotoRegister;
 
     private LoginBUS loginBUS;
 
@@ -40,14 +49,53 @@ public class LoginView {
     // Functions
 
     private void customizeComponents() {
-        return;
+        lnkGotoRegister.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     private void bindListeners() {
         btnSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LoginView.this.loginBUS.action_LoginSubmit();
+                try {
+                    LoginView.this.loginBUS.action_LoginSubmit();
+                } catch (IOException exception) {
+                    String message = exception.getMessage();
+                    if (message.equals("Connection refused (Connection refused)")) {
+                        message = "Game server is currently unavailable.";
+                    }
+
+                    JOptionPane.showMessageDialog(
+                            LoginView.this.contentPane,
+                            message,
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+
+        lnkGotoRegister.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // TODO: Goto RegisterView
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                lnkGotoRegister.setText("<html><a href='' style='color: white'>Create a new account...</a></html>");
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                lnkGotoRegister.setText("Create a new account...");
             }
         });
     }
@@ -150,6 +198,16 @@ public class LoginView {
         gbc.ipadx = 120;
         gbc.insets = new Insets(0, 0, 8, 0);
         formPane.add(txtUsername, gbc);
+        lnkGotoRegister = new JLabel();
+        lnkGotoRegister.setForeground(new Color(-1));
+        lnkGotoRegister.setText("Create a new account...");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(8, 0, 0, 0);
+        formPane.add(lnkGotoRegister, gbc);
         lblTitle = new JLabel();
         lblTitle.setFocusCycleRoot(true);
         Font lblTitleFont = this.$$$getFont$$$("Fira Code", Font.BOLD, 32, lblTitle.getFont());
@@ -162,6 +220,7 @@ public class LoginView {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 16, 0);
         mainPane.add(lblTitle, gbc);
         netPane = new JPanel();
         netPane.setLayout(new GridBagLayout());

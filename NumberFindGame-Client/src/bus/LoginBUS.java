@@ -3,6 +3,7 @@ package bus;
 import Common.ViewBinder;
 import Run.GameMain;
 
+import javax.security.sasl.AuthenticationException;
 import javax.swing.*;
 import java.io.IOException;
 
@@ -19,16 +20,12 @@ public class LoginBUS {
 
     // Functions
 
-    public void action_LoginSubmit() {
+    public void action_LoginSubmit() throws IOException {
         String username = this.viewBinder.txtUsername.getText();
         String password = new String(this.viewBinder.txtPassword.getPassword());
         String hostname = this.viewBinder.txtNetIp.getText();
 
-        try {
-            this.performConnectToServer(hostname, username, password);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.performConnectToServer(hostname, username, password);
     }
 
     // Private BUSINESS functions
