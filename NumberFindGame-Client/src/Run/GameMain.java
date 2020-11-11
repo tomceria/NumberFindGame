@@ -22,6 +22,6 @@ public class GameMain {
         GameMain.client = new GameClient();
 
         ViewBUS.configureWindow(new JFrame(ClientMain.APP_NAME));
-        ViewBUS.gotoLoginView(new LoginBUS());
+        ViewBUS.gotoLoginView();
     }
 }

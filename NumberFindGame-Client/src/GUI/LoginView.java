@@ -15,20 +15,19 @@ import java.io.IOException;
 import java.net.ConnectException;
 
 public class LoginView {
-
     /*
       LoginView.form's Components
      */
-    // ViewBinder's components
     private JPanel contentPane;
+    // ViewBinder's components
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JTextField txtNetIp;
-    private JButton btnSubmit;
     // Others
     private JLabel lblTitle;
     private JLabel lblUsername;
     private JLabel lblPassword;
+    private JButton btnSubmit;
     private JLabel lblNetIp;
     private JPanel formPane;
     private JPanel netPane;
@@ -77,7 +76,7 @@ public class LoginView {
         lnkGotoRegister.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // TODO: Goto RegisterView
+                LoginView.this.loginBUS.action_GotoRegisterView();
             }
 
             @Override

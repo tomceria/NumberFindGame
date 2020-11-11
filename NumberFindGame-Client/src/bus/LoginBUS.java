@@ -28,6 +28,10 @@ public class LoginBUS {
         this.performConnectToServer(hostname, username, password);
     }
 
+    public void action_GotoRegisterView() {
+        ViewBUS.gotoRegisterView();
+    }
+
     // Private BUSINESS functions
 
     private void performConnectToServer(String hostname, String username, String password) throws IOException {
