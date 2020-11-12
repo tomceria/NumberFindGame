@@ -1,7 +1,8 @@
 package Socket;
 
 import Socket.Request.SocketRequest;
-import Socket.Request.SocketRequest_Login;
+import Socket.Request.SocketRequest_AccessLogin;
+import Socket.Request.SocketRequest_AccessRegister;
 import Socket.Response.SocketResponse;
 
 import javax.security.sasl.AuthenticationException;
@@ -16,12 +17,10 @@ public class Client {
     private static ObjectInputStream input;                   // input và output được đặc static để các hàm BUS truy xuất
     private static ObjectOutputStream output;
 
-    public void start(String hostname, int port, String username, String password) throws IOException {
-        socket = new Socket(hostname, port);                       // Thực hiện kết nối đến server với hostname xác định
-        output = new ObjectOutputStream(socket.getOutputStream());
-        input = new ObjectInputStream(socket.getInputStream());
+    public void performPersistSocketConnection(String hostname, int port, String username, String password) throws IOException {
+        this.start(hostname, port);
 
-        SocketRequest_Login authenticationRequest = new SocketRequest_Login(username, password);
+        SocketRequest_AccessLogin authenticationRequest = new SocketRequest_AccessLogin(username, password);
         sendRequest(authenticationRequest);                                          // Gửi thông tin đăng nhập để server duyệt
         SocketResponse authenticationResponse = receiveResponse();
         System.out.println("SERVER AUTH MESSAGE: " + authenticationResponse.getMessage());
@@ -35,13 +34,30 @@ public class Client {
             }
             case FAILED: {
                 System.out.println("CLIENT: Disconnected.");
-                close();
+                this.close();
                 throw new AuthenticationException(authenticationResponse.getMessage());
             }
         }
     }
 
+    public void performOneTimeSocketRequest(String hostname, int port, SocketRequest requestRaw) throws IOException {
+        this.start(hostname, port);
+
+        switch (requestRaw.getAction()) {
+            // Sử dụng case cho các ACTION có xử lý đặc biệt. Hiện tại thì không có
+            default: {
+                sendRequest(requestRaw);
+            }
+        }
+
+        this.close();
+    }
+
     public void sendRequest(SocketRequest request) {
+        if (this.isInitiated() == false) {
+            throw new RuntimeException("Client has not connected to server.");
+        }
+
         try {
             Client.output.writeObject(request);
         } catch (IOException e) {
@@ -50,6 +66,10 @@ public class Client {
     }
 
     protected SocketResponse receiveResponse() {
+        if (this.isInitiated() == false) {
+            throw new RuntimeException("Client has not connected to server.");
+        }
+
         SocketResponse response = null;
         try {
             response = (SocketResponse) Client.input.readObject();
@@ -64,6 +84,8 @@ public class Client {
 
     public void close() {
         try {
+            // TODO: Terminal ClientSocketProcess
+
             if (input != null) {
                 input.close();
             }
@@ -81,4 +103,27 @@ public class Client {
         }
     }
 
+    // Privates
+
+    private void start(String hostname, int port) throws IOException {
+        if (this.isInitiated()) {
+            throw new RuntimeException("Client has already been initiated");
+        }
+
+        socket = new Socket(hostname, port);                       // Thực hiện kết nối đến server với hostname xác định
+        output = new ObjectOutputStream(socket.getOutputStream());
+        input = new ObjectInputStream(socket.getInputStream());
+    }
+
+    private boolean isInitiated() {
+        boolean result = true;
+
+        if (socket == null && input == null && output == null) {
+            result = false;
+        } else if (socket == null || input == null || output == null) {
+            throw new RuntimeException("One of the socket's properties is destructed. This should not happen.");
+        }
+
+        return result;
+    }
 }

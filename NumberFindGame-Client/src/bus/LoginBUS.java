@@ -3,7 +3,6 @@ package bus;
 import Common.ViewBinder;
 import Run.GameMain;
 
-import javax.security.sasl.AuthenticationException;
 import javax.swing.*;
 import java.io.IOException;
 
@@ -29,13 +28,16 @@ public class LoginBUS {
     }
 
     public void action_GotoRegisterView() {
-        ViewBUS.gotoRegisterView();
+        ViewBUS.gotoRegisterView(
+                this.viewBinder.txtNetIp.getText(),
+                this.netPort
+        );
     }
 
     // Private BUSINESS functions
 
     private void performConnectToServer(String hostname, String username, String password) throws IOException {
-        GameMain.client.start(hostname, this.netPort, username, password);
+        GameMain.client.performPersistSocketConnection(hostname, this.netPort, username, password);
     }
 
     // Properties

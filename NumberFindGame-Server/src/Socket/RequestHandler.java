@@ -1,8 +1,9 @@
 package Socket;
 
 import Socket.Request.SocketRequest;
-import Socket.Request.SocketRequest_Login;
-import Socket.Request.SocketRequest_SubmitLevelNode;
+import Socket.Request.SocketRequest_AccessLogin;
+import Socket.Request.SocketRequest_AccessRegister;
+import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse;
 import bus.PlayerBUS;
 import dto.MatchPlayer_Server;
@@ -10,57 +11,61 @@ import dto.PlayerDTO;
 
 public class RequestHandler {
     Thread requestHandleThread;
-    IClientIdentifier clientIdentifier;
     ClientHandler clientHandler;
     SocketRequest requestRaw;
 
     public RequestHandler(SocketRequest requestRaw, IClientIdentifier clientIdentifier, ClientHandler clientHandler) {
         this.requestRaw = requestRaw;
-        this.clientIdentifier = clientIdentifier;
         this.clientHandler = clientHandler;
         this.requestHandleThread = new Thread() {
             @Override
             public void run() {
-                if (RequestHandler.this.clientHandler.isLoggedIn == false) {
+                ClientHandler thisClientHandler = RequestHandler.this.clientHandler;
+
+                if (thisClientHandler.isLoggedIn == false) {
                     switch (requestRaw.getAction()) {
                         case ACCESS_LOGIN: {
-                            if (requestRaw.getAction().equals(SocketRequest.Action.ACCESS_LOGIN)) {
-                                if (performValidateClient(requestRaw)) {
-                                    RequestHandler.this.clientHandler.isLoggedIn = true;
-                                    RequestHandler.this.clientHandler.sendResponse(new SocketResponse(
-                                            SocketResponse.Status.SUCCESS,
-                                            SocketResponse.Action.MSG,
-                                            "Logged in.")
-                                    );
-                                    onSuccessConnection();
-                                } else {
-                                    RequestHandler.this.clientHandler.sendResponse(new SocketResponse(
-                                            SocketResponse.Status.FAILED,
-                                            SocketResponse.Action.MSG,
-                                            "Invalid username or password.")
-                                    );
-                                    RequestHandler.this.clientHandler.isRunning = false;
-                                }
+                            if (performValidateClient(requestRaw)) {
+                                thisClientHandler.isLoggedIn = true;
+                                thisClientHandler.sendResponse(new SocketResponse(
+                                        SocketResponse.Status.SUCCESS,
+                                        SocketResponse.Action.MSG,
+                                        "Logged in.")
+                                );
+                                onSuccessConnection();
                             } else {
-                                RequestHandler.this.clientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));
-                                RequestHandler.this.clientHandler.isRunning = false;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
+                                thisClientHandler.sendResponse(new SocketResponse(
+                                        SocketResponse.Status.FAILED,
+                                        SocketResponse.Action.MSG,
+                                        "Invalid username or password.")
+                                );
+                                thisClientHandler.isRunning = false;
                             }
                             break;
                         }
+                        case ACCESS_REGISTER: {
+                            SocketRequest_AccessRegister request = ((SocketRequest_AccessRegister) requestRaw);
+                            System.out.println(request.getMessage());
+                        }
+                        default: {
+                            thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));
+                            thisClientHandler.isRunning = false;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
+                            break;
+                        }
                     }
-                } else if (RequestHandler.this.clientHandler.isLoggedIn &&
-                        RequestHandler.this.clientIdentifier != null) {
+                } else if (thisClientHandler.isLoggedIn &&
+                        thisClientHandler.clientIdentifier != null) {
                     switch (requestRaw.getAction()) {
                         case MSG: {
                             System.out.println("Received message: " + requestRaw.getMessage());
                             break;
                         }
                         case GAME_SUBMITLEVELNODE: {
-                            SocketRequest_SubmitLevelNode result = ((SocketRequest_SubmitLevelNode) requestRaw);
+                            SocketRequest_GameSubmitLevelNode request = ((SocketRequest_GameSubmitLevelNode) requestRaw);
                             MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
 
                             matchPlayer.getGameBUS().req_sendLevelNodeForValidation(
-                                    result.levelNode, matchPlayer
+                                    request.levelNode, matchPlayer
                             );
                             break;
                         }
@@ -78,9 +83,8 @@ public class RequestHandler {
 
     private boolean performValidateClient(SocketRequest requestRaw) {
         boolean isValidated = false;
-        SocketRequest_Login request = (SocketRequest_Login) requestRaw;
+        SocketRequest_AccessLogin request = (SocketRequest_AccessLogin) requestRaw;
 
-        // TODO: BUSINESS LOGIC
         PlayerBUS playerBUS = new PlayerBUS();
         if (playerBUS.login(request.username, request.password)) {
             PlayerDTO player = playerBUS.getOneByUsername(request.username);

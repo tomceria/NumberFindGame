@@ -33,7 +33,7 @@ public class ClientSocketProcess extends Thread {
 
                     GameRoomBUS
                             .listen_clientPlayerJoinRoom(
-                                    (SocketResponse_PlayerJoinRoom) resultRaw,
+                                    (SocketResponse_GameRoomPlayerJoin) resultRaw,
                                     (GameClient) client
                             );
                     break;
@@ -51,7 +51,7 @@ public class ClientSocketProcess extends Thread {
 
                     gameRoom.getGameRoomBUS()
                             .listen_startGame(
-                                    (SocketResponse_InitGame) resultRaw
+                                    (SocketResponse_GameInit) resultRaw
                             );
 
                     break;

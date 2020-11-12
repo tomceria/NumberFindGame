@@ -26,8 +26,10 @@ public class ViewBUS {
         mainFrame.setVisible(true);
     }
 
-    public static void gotoRegisterView() {
-        RegisterView registerView = new RegisterView(new RegisterBUS());
+    public static void gotoRegisterView(String hostname, int netPort) {
+        RegisterView registerView = new RegisterView(
+                new RegisterBUS(hostname, netPort)
+        );
         mainFrame.setContentPane(registerView.getContentPane());
         mainFrame.setVisible(true);
     }

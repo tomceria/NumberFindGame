@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class RegisterView {
 
@@ -16,6 +17,7 @@ public class RegisterView {
     private JPanel contentPane;
     // ViewBinder's components
     private JTextField txtUsername;
+    private JPasswordField txtPassword;
     private JTextField txtFirstName;
     private JTextField txtLastName;
     private JTextField txtEmail;
@@ -24,7 +26,6 @@ public class RegisterView {
     private JButton btnNavBack;
     private JPanel formPane;
     private JLabel lblUsername;
-    private JPasswordField txtPassword;
     private JLabel lblPassword;
     private JLabel lblFirstName;
     private JLabel lblLastName;
@@ -39,6 +40,7 @@ public class RegisterView {
 
         $$$setupUI$$$();
         bindListeners();
+        initViewBinder();
     }
 
     private void bindListeners() {
@@ -48,6 +50,24 @@ public class RegisterView {
                 ViewBUS.gotoLoginView();
             }
         });
+        btnSubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    RegisterView.this.registerBUS.action_RegisterSubmit();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void initViewBinder() {
+        RegisterView.this.registerBUS.viewBinder.txtUsername = txtUsername;
+        RegisterView.this.registerBUS.viewBinder.txtPassword = txtPassword;
+        RegisterView.this.registerBUS.viewBinder.txtFirstName = txtFirstName;
+        RegisterView.this.registerBUS.viewBinder.txtLastName = txtLastName;
+        RegisterView.this.registerBUS.viewBinder.txtEmail = txtEmail;
     }
 
     public JPanel getContentPane() {

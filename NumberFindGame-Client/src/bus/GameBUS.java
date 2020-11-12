@@ -3,7 +3,7 @@ package bus;
 import Common.ViewBinder;
 import GUI.Components.LevelNodeButton;
 import GUI.Components.MatchPlayerCellRenderer;
-import Socket.Request.SocketRequest_SubmitLevelNode;
+import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
 
@@ -111,7 +111,7 @@ public class GameBUS {
          */
         LevelNode levelNodeSerializable = new LevelNode(levelNode);
         this.game.getClient().sendRequest(
-            new SocketRequest_SubmitLevelNode(levelNodeSerializable, game.getClientPlayer())
+            new SocketRequest_GameSubmitLevelNode(levelNodeSerializable, game.getClientPlayer())
         );
 
     }

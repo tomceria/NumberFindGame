@@ -5,8 +5,8 @@ import Socket.ClientManager;
 import Socket.GameServer;
 import Socket.Response.SocketResponse;
 import Socket.Response.SocketResponse_GameRoomProps;
-import Socket.Response.SocketResponse_InitGame;
-import Socket.Response.SocketResponse_PlayerJoinRoom;
+import Socket.Response.SocketResponse_GameInit;
+import Socket.Response.SocketResponse_GameRoomPlayerJoin;
 import dto.*;
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class GameRoomBUS {
          * 3. Cho Player mới (playerClient) vào phòng (phía Client)
          */
         sendResponseToPlayer(
-            new SocketResponse_PlayerJoinRoom(
+            new SocketResponse_GameRoomPlayerJoin(
                 this.gameRoom.getId(),
                 new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
             ),
@@ -160,7 +160,7 @@ public class GameRoomBUS {
          */
         Game gameSerializable = new Game(this.getGame(), true);
         this.broadcastResponseToRoom(
-            new SocketResponse_InitGame(gameSerializable)
+            new SocketResponse_GameInit(gameSerializable)
         );
 
         /**
