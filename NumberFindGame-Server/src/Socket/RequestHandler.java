@@ -1,34 +1,94 @@
 package Socket;
 
 import Socket.Request.SocketRequest;
-import Socket.Request.SocketRequest_SubmitLevelNode;
+import Socket.Request.SocketRequest_AccessLogin;
+import Socket.Request.SocketRequest_AccessRegister;
+import Socket.Request.SocketRequest_GameSubmitLevelNode;
+import Socket.Response.SocketResponse;
+import bus.IdentityBUS;
 import dto.MatchPlayer_Server;
 
 public class RequestHandler {
     Thread requestHandleThread;
-    IClientIdentifier clientIdentifier;
     ClientHandler clientHandler;
     SocketRequest requestRaw;
 
     public RequestHandler(SocketRequest requestRaw, IClientIdentifier clientIdentifier, ClientHandler clientHandler) {
         this.requestRaw = requestRaw;
-        this.clientIdentifier = clientIdentifier;
         this.clientHandler = clientHandler;
         this.requestHandleThread = new Thread() {
             @Override
             public void run() {
-                switch (requestRaw.getAction()) {
-                    case MSG: {
-                        System.out.println("Received message: " + requestRaw.getMessage());
-                        break;
-                    }
-                    case GAME_SUBMITLEVELNODE: {
-                        SocketRequest_SubmitLevelNode result = ((SocketRequest_SubmitLevelNode) requestRaw);
-                        MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
+                ClientHandler thisClientHandler = RequestHandler.this.clientHandler;
 
-                        matchPlayer.getGameBUS().req_sendLevelNodeForValidation(
-                            result.levelNode, matchPlayer
-                        );
+                if (thisClientHandler.isLoggedIn == false) {
+                    IdentityBUS identityBUS = new IdentityBUS(thisClientHandler);
+
+                    switch (requestRaw.getAction()) {
+                        case ACCESS_LOGIN: {
+                            boolean result = identityBUS.performLogin(
+                                    (SocketRequest_AccessLogin) requestRaw
+                            );
+
+                            if (result == true) {
+                                RequestHandler.this.onSuccessConnection();
+                            } else {
+                                thisClientHandler.isRunning = false;
+                            }
+
+                            break;
+                        }
+                        case ACCESS_REGISTER: {
+                            SocketRequest_AccessRegister request = ((SocketRequest_AccessRegister) requestRaw);
+                            boolean result = identityBUS.performRegister(request);
+
+                            if (result == true) {
+                                thisClientHandler.sendResponse(
+                                        new SocketResponse(
+                                                SocketResponse.Status.SUCCESS,
+                                                SocketResponse.Action.MSG,
+                                                "Your account has been created."
+                                        )
+                                );
+                            } else {
+                                thisClientHandler.sendResponse(
+                                        new SocketResponse(
+                                                SocketResponse.Status.FAILED,
+                                                SocketResponse.Action.MSG,
+                                                "Register failed."
+                                        )
+                                );
+                            }
+
+                            break;
+                        }
+                        default: {
+                            thisClientHandler.sendResponse(
+                                    new SocketResponse(
+                                            SocketResponse.Status.FAILED,
+                                            SocketResponse.Action.MSG,
+                                            "Invalid access request."
+                                    )
+                            );
+                            thisClientHandler.isRunning = false;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
+                            break;
+                        }
+                    }
+                } else if (thisClientHandler.isLoggedIn && thisClientHandler.clientIdentifier != null) {
+                    switch (requestRaw.getAction()) {
+                        case MSG: {
+                            System.out.println("Received message: " + requestRaw.getMessage());
+                            break;
+                        }
+                        case GAME_SUBMITLEVELNODE: {
+                            SocketRequest_GameSubmitLevelNode request = ((SocketRequest_GameSubmitLevelNode) requestRaw);
+                            MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
+
+                            matchPlayer.getGameBUS().req_sendLevelNodeForValidation(
+                                    request.levelNode, matchPlayer
+                            );
+                            break;
+                        }
                     }
                 }
             }
@@ -38,4 +98,12 @@ public class RequestHandler {
     public void init() {
         requestHandleThread.start();
     }
+
+    // Privates
+
+    private void onSuccessConnection() {
+        ((GameServer) this.clientHandler.clientManager.server)
+                .joinGame(this.clientHandler);
+    }
+
 }

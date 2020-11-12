@@ -1,6 +1,6 @@
 package bus;
 
-import GUI.GameView;
+import GUI.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +20,25 @@ public class ViewBUS {
         ViewBUS.setMainFrame(mainFrame);
     }
 
-    public static void gotoGameView(GameBUS gameBUS) {
-        mainFrame.setContentPane(new GameView(gameBUS).contentPane);
+    public static void gotoLoginView() {
+        LoginView loginView = new LoginView(new LoginBUS());
+        mainFrame.setContentPane(loginView.getContentPane());
         mainFrame.setVisible(true);
+    }
+
+    public static void gotoRegisterView(String hostname, int netPort) {
+        RegisterView registerView = new RegisterView(
+                new RegisterBUS(hostname, netPort)
+        );
+        mainFrame.setContentPane(registerView.getContentPane());
+        mainFrame.setVisible(true);
+    }
+
+    public static void gotoGameView(GameBUS gameBUS) {
+        GameView gameView = new GameView(gameBUS);
+        mainFrame.setContentPane(gameView.contentPane);
+
+        gameView.init();
     }
 
     private static void setMainFrame(JFrame mainFrame) {
