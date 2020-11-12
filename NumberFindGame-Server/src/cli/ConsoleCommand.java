@@ -32,11 +32,17 @@ public class ConsoleCommand {
 	private String option;
 	private String value;
 
+	/**
+	 * @param server : the server to set
+	 */
 	public ConsoleCommand(Server server) {
 		this.server = server;
-
 	}
 
+	/**
+	 * 
+	 * @param inputCommand: the input string from user
+	 */
 	public void handleCommand(String inputCommand) {
 		this.option = "";
 		this.value = "";
@@ -51,9 +57,14 @@ public class ConsoleCommand {
 		}
 	}
 
-	public void init() throws NumberValidException {
+	/**
+	 * Initiate server cli
+	 * 
+	 * @throws NumberValidException
+	 */
+	public void init() {
 		boolean isCommanding = true;
-
+		showCommand("help");
 		do {
 			System.out.print("\nInput: ");
 			String inputCommand = scan.nextLine();
@@ -72,19 +83,22 @@ public class ConsoleCommand {
 				isCommanding = false;
 				break;
 			}
-			case "command": {
-				System.out.println("Command: list <option>\n" + "\t config <option> <value>\t");
+			case "help": {
+				showCommand("help");
 				break;
 			}
 			default: {
-				System.out.println("Syntax error");
-				System.out.println("Command: list <option>\n" + "\t config <option> <value>\t");
+				System.out.println("Command not found. Commands are case-sensitive");
+				showCommand("help");
 				break;
 			}
 			}
 		} while (isCommanding);
 	}
 
+	/**
+	 * Method for 'list' commands
+	 */
 	public void list() {
 		switch (option) {
 		case "user": {
@@ -96,36 +110,35 @@ public class ConsoleCommand {
 			break;
 		}
 		default: {
-			System.out.println("Syntax: list <option>\n" + "\t user\t Show list of registered users\n"
-					+ "\t online\t Show list of active users");
+			System.out.println("Command not found. Commands are case-sensitive");
+			showCommand("list");
 			break;
 		}
 		}
 	}
 
 	/**
-	 * @throws NumberValidException @
+	 * Method for 'config' commands
 	 */
-	public void config() throws NumberValidException {
+	public void config() {
 		MatchConfig matchConfig = new MatchConfig();
 		JsonHelper jsonHelper = new JsonHelper();
 		matchConfig = jsonHelper.readConfig();
 		int val = 0;
 
 		if (value.equals("")) {
-			if (!option.equals("show")) {
-				System.out.println("Value can not be empty");
-				//option = "";
+			if (!option.equals("show") && !option.equals("")) {
+				System.out.println("Error. Value can not be empty");
+
 				return;
 			}
+
 		} else {
 			try {
 				val = Integer.parseInt(value);
-				// System.out.print(n);
 
 			} catch (NumberFormatException e) {
-				System.out.println("Value must be integer");
-				//option = "";
+				System.out.println("Error. Value must be integer");
 				return;
 			}
 		}
@@ -148,23 +161,26 @@ public class ConsoleCommand {
 			break;
 		}
 		default: {
-			System.out.println(
-					"Syntax: config <option> <value>\n" + "\t numberQty <1-900>\t Config game number quantity\n"
-							+ "\t time <1000-3600000>\t Config game time\n"
-							+ "\t maxPlayer <2-8>\t Config game max number of player\n"
-							+ "\t show\t\t\t Show current game config\n");
+			System.out.println("Command not found. Commands are case-sensitive");
+			showCommand("config");
 			break;
 		}
 		}
 	}
 
-	public void numberQtyConfig(int value) throws NumberValidException {
+	/**
+	 * Config number quantity
+	 * 
+	 * @param value: the value to set number quantity
+	 * @throws NumberValidException
+	 */
+	public void numberQtyConfig(int value) {
 		MatchConfig matchConfig = new MatchConfig();
 		JsonHelper jsonHelper = new JsonHelper();
 		matchConfig = jsonHelper.readConfig();
 
 		if (value < 1 || value > 900) {
-			System.out.println("Failed");
+			System.out.println("Error");
 			System.out.println("Value must be in range [1,900]");
 			return;
 		}
@@ -174,13 +190,19 @@ public class ConsoleCommand {
 		readConfig();
 	}
 
-	public void timeConfig(int value) throws NumberValidException {
+	/**
+	 * Config time
+	 * 
+	 * @param value: the value to set time
+	 * @throws NumberValidException
+	 */
+	public void timeConfig(int value) {
 		MatchConfig matchConfig = new MatchConfig();
 		JsonHelper jsonHelper = new JsonHelper();
 		matchConfig = jsonHelper.readConfig();
 
 		if (value < 1000 || value > 3600000) {
-			System.out.println("Failed");
+			System.out.println("Error");
 			System.out.println("Value must be in range [1000,3600000]");
 			return;
 		}
@@ -190,13 +212,19 @@ public class ConsoleCommand {
 		readConfig();
 	}
 
-	public void maxPlayerConfig(int value) throws NumberValidException {
+	/**
+	 * Config max player
+	 * 
+	 * @param value: the value to set max player
+	 * @throws NumberValidException
+	 */
+	public void maxPlayerConfig(int value) {
 		MatchConfig matchConfig = new MatchConfig();
 		JsonHelper jsonHelper = new JsonHelper();
 		matchConfig = jsonHelper.readConfig();
 
 		if (value < 2 || value > 8) {
-			System.out.println("Failed");
+			System.out.println("Error");
 			System.out.println("Value must be in range [2,8]");
 			return;
 		}
@@ -206,6 +234,9 @@ public class ConsoleCommand {
 		readConfig();
 	}
 
+	/**
+	 * Get file config
+	 */
 	public void readConfig() {
 		MatchConfig matchConfig = new MatchConfig();
 		JsonHelper jsonHelper = new JsonHelper();
@@ -216,6 +247,9 @@ public class ConsoleCommand {
 		System.out.printf("maxPlayer  : %s player\n", matchConfig.getMaxPlayer());
 	}
 
+	/**
+	 * List users
+	 */
 	public void getUsers() {
 		PlayerBUS playerBus = new PlayerBUS();
 		ArrayList<PlayerDTO> players = new ArrayList<PlayerDTO>();
@@ -237,6 +271,9 @@ public class ConsoleCommand {
 
 	}
 
+	/**
+	 * list online users
+	 */
 	public void getOnlineUsers() {
 
 		HashMap<UUID, ClientHandler> clientConections = this.server.getClientManager().getClientConnections();
@@ -262,4 +299,28 @@ public class ConsoleCommand {
 		tableDisplay.tableDisplay(tableList);
 	}
 
+	/**
+	 * Show commands
+	 * @param s: string s define case to show command
+	 */
+	public void showCommand(String s) {
+		switch (s) {
+		case "help":
+			System.out.print("Command:\n\thelp \t\t\t\tshow all commands\n" + "\tlist <option> \t\t\tlist users\n"
+					+ "\tconfig <option> <value> \tconfig game\n" + "\texit \t\t\t\tshut down server\n");
+			break;
+		case "list":
+			System.out.print("Command: list <option>\n" + "\t user\t Show list of registered users\n"
+					+ "\t online\t Show list of active users\n");
+			break;
+		case "config":
+			System.out.print(
+					"Syntax: config <option> <value>\n" + "\t numberQty <1-900>\t Config game number quantity\n"
+							+ "\t time <1000-3600000>\t Config game time\n"
+							+ "\t maxPlayer <2-8>\t Config game max number of player\n"
+							+ "\t show\t\t\t Show current game config\n");
+			break;
+		}
+		System.out.println();
+	}
 }
