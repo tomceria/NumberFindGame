@@ -54,9 +54,31 @@ public class RegisterView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    RegisterView.this.registerBUS.action_RegisterSubmit();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                    boolean result = RegisterView.this.registerBUS
+                            .action_RegisterSubmit();
+                    if (result == true) {
+                        ViewBUS.gotoLoginView();
+                        JOptionPane.showMessageDialog(
+                                RegisterView.this.contentPane,
+                                "Your account has been created.",
+                                "Information",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                RegisterView.this.contentPane,
+                                "Unknown register error",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                } catch (IOException exception) {
+                    JOptionPane.showMessageDialog(
+                            RegisterView.this.contentPane,
+                            exception.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
                 }
             }
         });

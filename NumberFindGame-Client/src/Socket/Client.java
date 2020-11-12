@@ -40,17 +40,44 @@ public class Client {
         }
     }
 
-    public void performOneTimeSocketRequest(String hostname, int port, SocketRequest requestRaw) throws IOException {
+    public Object performOneTimeSocketRequest(String hostname, int port, SocketRequest requestRaw) throws IOException {
         this.start(hostname, port);
+
+        Object result = null;
 
         switch (requestRaw.getAction()) {
             // Sử dụng case cho các ACTION có xử lý đặc biệt. Hiện tại thì không có
             default: {
                 sendRequest(requestRaw);
+
+                SocketResponse resultRaw = this.receiveResponse();
+                if (resultRaw == null) {
+                    result = false;
+                    break;
+                }
+
+                switch (resultRaw.getAction()) {
+                    case MSG: {
+                        switch (resultRaw.getStatus()) {
+                            case SUCCESS: {
+                                result = true;
+                                break;
+                            }
+                            case FAILED: {
+                                this.close();
+                                throw new AuthenticationException(resultRaw.getMessage());
+                            }
+                        }
+                        break;
+                    }
+                }
+                break;
             }
         }
 
         this.close();
+
+        return result;
     }
 
     public void sendRequest(SocketRequest request) {

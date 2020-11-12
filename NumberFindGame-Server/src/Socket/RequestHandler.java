@@ -5,9 +5,8 @@ import Socket.Request.SocketRequest_AccessLogin;
 import Socket.Request.SocketRequest_AccessRegister;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse;
-import bus.PlayerBUS;
+import bus.IdentityBUS;
 import dto.MatchPlayer_Server;
-import dto.PlayerDTO;
 
 public class RequestHandler {
     Thread requestHandleThread;
@@ -23,38 +22,59 @@ public class RequestHandler {
                 ClientHandler thisClientHandler = RequestHandler.this.clientHandler;
 
                 if (thisClientHandler.isLoggedIn == false) {
+                    IdentityBUS identityBUS = new IdentityBUS(thisClientHandler);
+
                     switch (requestRaw.getAction()) {
                         case ACCESS_LOGIN: {
-                            if (performValidateClient(requestRaw)) {
-                                thisClientHandler.isLoggedIn = true;
-                                thisClientHandler.sendResponse(new SocketResponse(
-                                        SocketResponse.Status.SUCCESS,
-                                        SocketResponse.Action.MSG,
-                                        "Logged in.")
-                                );
-                                onSuccessConnection();
+                            boolean result = identityBUS.performLogin(
+                                    (SocketRequest_AccessLogin) requestRaw
+                            );
+
+                            if (result == true) {
+                                RequestHandler.this.onSuccessConnection();
                             } else {
-                                thisClientHandler.sendResponse(new SocketResponse(
-                                        SocketResponse.Status.FAILED,
-                                        SocketResponse.Action.MSG,
-                                        "Invalid username or password.")
-                                );
                                 thisClientHandler.isRunning = false;
                             }
+
                             break;
                         }
                         case ACCESS_REGISTER: {
                             SocketRequest_AccessRegister request = ((SocketRequest_AccessRegister) requestRaw);
-                            System.out.println(request.getMessage());
+                            boolean result = identityBUS.performRegister(request);
+
+                            if (result == true) {
+                                thisClientHandler.sendResponse(
+                                        new SocketResponse(
+                                                SocketResponse.Status.SUCCESS,
+                                                SocketResponse.Action.MSG,
+                                                "Your account has been created."
+                                        )
+                                );
+                            } else {
+                                thisClientHandler.sendResponse(
+                                        new SocketResponse(
+                                                SocketResponse.Status.FAILED,
+                                                SocketResponse.Action.MSG,
+                                                "Register failed."
+                                        )
+                                );
+                            }
+
+                            break;
                         }
                         default: {
-                            thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED, SocketResponse.Action.MSG, "Invalid access request."));
+                            thisClientHandler.sendResponse(
+                                    new SocketResponse(
+                                            SocketResponse.Status.FAILED,
+                                            SocketResponse.Action.MSG,
+                                            "Invalid access request."
+                                    )
+                            );
                             thisClientHandler.isRunning = false;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
                             break;
                         }
                     }
-                } else if (thisClientHandler.isLoggedIn &&
-                        thisClientHandler.clientIdentifier != null) {
+                } else if (thisClientHandler.isLoggedIn && thisClientHandler.clientIdentifier != null) {
                     switch (requestRaw.getAction()) {
                         case MSG: {
                             System.out.println("Received message: " + requestRaw.getMessage());
@@ -80,20 +100,6 @@ public class RequestHandler {
     }
 
     // Privates
-
-    private boolean performValidateClient(SocketRequest requestRaw) {
-        boolean isValidated = false;
-        SocketRequest_AccessLogin request = (SocketRequest_AccessLogin) requestRaw;
-
-        PlayerBUS playerBUS = new PlayerBUS();
-        if (playerBUS.login(request.username, request.password)) {
-            PlayerDTO player = playerBUS.getOneByUsername(request.username);
-            this.clientHandler.clientIdentifier = new MatchPlayer_Server(player);
-            isValidated = true;
-        }
-
-        return isValidated;
-    }
 
     private void onSuccessConnection() {
         ((GameServer) this.clientHandler.clientManager.server)

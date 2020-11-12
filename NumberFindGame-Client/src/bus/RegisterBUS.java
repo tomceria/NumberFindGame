@@ -21,18 +21,20 @@ public class RegisterBUS {
 
     // Functions
 
-    public void action_RegisterSubmit() throws IOException {
+    public boolean action_RegisterSubmit() throws IOException {
         String username = this.viewBinder.txtUsername.getText();
         String password = new String(this.viewBinder.txtPassword.getPassword());
         String firstName = this.viewBinder.txtFirstName.getText();
         String lastName = this.viewBinder.txtLastName.getText();
         String email = this.viewBinder.txtEmail.getText();
 
-        GameMain.client.performOneTimeSocketRequest(
+        boolean result = (boolean) GameMain.client.performOneTimeSocketRequest(
                 this.hostname,
                 this.netPort,
                 new SocketRequest_AccessRegister(username, password, email, firstName, lastName)
         );
+
+        return result;
     }
 
     // Inner Classes

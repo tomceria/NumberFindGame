@@ -54,25 +54,9 @@ public class ClientHandler {
         this.clientManager = clientManager;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public Socket getClient() {
-        return client;
-    }
-
-    public ClientManager getClientManager() {
-        return clientManager;
-    }
-
-    public IClientIdentifier getClientIdentifier() {
-        return clientIdentifier;
-    }
-
     // Client Socket functions
 
-    protected void sendResponse(SocketResponse response) {
+    public void sendResponse(SocketResponse response) {
         try {
             output.writeObject(response);
         } catch (IOException e) {
@@ -104,13 +88,41 @@ public class ClientHandler {
         }
     }
 
-    //
-
     protected void init() {
         clientHandleThread.start();
     }
 
     // Properties
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Socket getClient() {
+        return client;
+    }
+
+    public ClientManager getClientManager() {
+        return clientManager;
+    }
+
+    public IClientIdentifier getClientIdentifier() {
+        return clientIdentifier;
+    }
+    public void setClientIdentifier(IClientIdentifier clientIdentifier) {
+        this.clientIdentifier = clientIdentifier;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
 
     // Inner Classes
 

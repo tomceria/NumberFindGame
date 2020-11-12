@@ -25,10 +25,12 @@ public class PlayerBUS {
     /**
      * @param player the new player to register
      */
-    public void register(PlayerDTO player) {
+    public boolean register(PlayerDTO player) {
         // hash password
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt(12)));
         playerDao.create(player);
+
+        return true;
     }
 
     /**
