@@ -5,7 +5,8 @@ import java.io.Serializable;
 public class SocketRequest implements Serializable {
     public static enum Action {
         MSG,
-        LOGIN,
+        ACCESS_LOGIN,
+        ACCESS_REGISTER,
         DISCONNECT,
         GAME_SUBMITLEVELNODE
     }
