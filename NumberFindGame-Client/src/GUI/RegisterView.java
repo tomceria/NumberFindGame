@@ -18,6 +18,7 @@ public class RegisterView {
     // ViewBinder's components
     private JTextField txtUsername;
     private JPasswordField txtPassword;
+    private JPasswordField txtPassword2;
     private JTextField txtFirstName;
     private JTextField txtLastName;
     private JTextField txtEmail;
@@ -27,6 +28,7 @@ public class RegisterView {
     private JPanel formPane;
     private JLabel lblUsername;
     private JLabel lblPassword;
+    private JLabel lblPassword2;
     private JLabel lblFirstName;
     private JLabel lblLastName;
     private JLabel lblEmail;
@@ -87,6 +89,7 @@ public class RegisterView {
     private void initViewBinder() {
         RegisterView.this.registerBUS.viewBinder.txtUsername = txtUsername;
         RegisterView.this.registerBUS.viewBinder.txtPassword = txtPassword;
+        RegisterView.this.registerBUS.viewBinder.txtPassword2 = txtPassword2;
         RegisterView.this.registerBUS.viewBinder.txtFirstName = txtFirstName;
         RegisterView.this.registerBUS.viewBinder.txtLastName = txtLastName;
         RegisterView.this.registerBUS.viewBinder.txtEmail = txtEmail;
@@ -145,7 +148,7 @@ public class RegisterView {
         txtFirstName = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         formPane.add(txtFirstName, gbc);
@@ -154,13 +157,13 @@ public class RegisterView {
         lblFirstName.setText("First name");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.WEST;
         formPane.add(lblFirstName, gbc);
         txtLastName = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         formPane.add(txtLastName, gbc);
@@ -169,13 +172,13 @@ public class RegisterView {
         lblLastName.setText("Last name");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.WEST;
         formPane.add(lblLastName, gbc);
         txtEmail = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         formPane.add(txtEmail, gbc);
@@ -184,7 +187,7 @@ public class RegisterView {
         lblEmail.setText("Email");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.anchor = GridBagConstraints.WEST;
         formPane.add(lblEmail, gbc);
         txtPassword = new JPasswordField();
@@ -197,7 +200,7 @@ public class RegisterView {
         final JSeparator separator1 = new JSeparator();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.ipady = 16;
@@ -206,17 +209,32 @@ public class RegisterView {
         btnSubmit.setText("Submit");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         formPane.add(btnSubmit, gbc);
         final JSeparator separator2 = new JSeparator();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.ipady = 24;
         formPane.add(separator2, gbc);
+        lblPassword2 = new JLabel();
+        lblPassword2.setForeground(new Color(-1));
+        lblPassword2.setText("Confirm Password");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        formPane.add(lblPassword2, gbc);
+        txtPassword2 = new JPasswordField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        formPane.add(txtPassword2, gbc);
         navPane = new JPanel();
         navPane.setLayout(new GridBagLayout());
         navPane.setBackground(new Color(-14142061));
@@ -258,4 +276,5 @@ public class RegisterView {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

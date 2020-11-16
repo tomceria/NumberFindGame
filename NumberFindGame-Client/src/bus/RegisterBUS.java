@@ -24,6 +24,7 @@ public class RegisterBUS {
     public boolean action_RegisterSubmit() throws IOException {
         String username = this.viewBinder.txtUsername.getText();
         String password = new String(this.viewBinder.txtPassword.getPassword());
+        String password2 = new String(this.viewBinder.txtPassword2.getPassword());
         String firstName = this.viewBinder.txtFirstName.getText();
         String lastName = this.viewBinder.txtLastName.getText();
         String email = this.viewBinder.txtEmail.getText();
@@ -42,6 +43,7 @@ public class RegisterBUS {
     public class RegisterBUS_ViewBinder extends ViewBinder {
         public JTextField txtUsername;
         public JPasswordField txtPassword;
+        public JPasswordField txtPassword2;
         public JTextField txtFirstName;
         public JTextField txtLastName;
         public JTextField txtEmail;
