@@ -27,14 +27,13 @@ public class ClientSocketProcess extends Thread {
                     break;
                 }
                 case GAMEROOM_PLAYERJOIN: {
-                    if (((GameClient) client).getGameRoom() != null) {
+                    if (((GameClient) this.client).getGameRoom() != null) {
                         System.out.println("CLIENT: You're already in a room.");
                     }
 
-                    GameRoomBUS
+                    ((GameClient) this.client).getGameClientBUS()
                             .listen_clientPlayerJoinRoom(
-                                    (SocketResponse_GameRoomPlayerJoin) resultRaw,
-                                    (GameClient) client
+                                    (SocketResponse_GameRoomPlayerJoin) resultRaw
                             );
                     break;
                 }
