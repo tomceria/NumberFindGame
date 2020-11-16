@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public class Logger {
 
-	static String filePath = new File("").getAbsolutePath() + "\\log.txt";
+	static String filePath = "log.txt";
 	static File file = new File(filePath);
 
 	public static void writeFile(String s) {
@@ -35,8 +35,4 @@ public class Logger {
 			}
 		}
 	}
-	public static void main(String[] args){
-		writeFile("haha");
-	}
-
 }

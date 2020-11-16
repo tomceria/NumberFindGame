@@ -33,19 +33,12 @@ public class ClientHandler {
 				try {
 					while (isRunning) {
 						SocketRequest requestRaw = receiveRequest();
-						new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init(); // RequestHandler
-																										// xử lý yêu cầu
-																										// BẤT ĐỒNG BỘ,
-																										// trong lúc đó
-																										// tiếp tục nhận
-																										// yêu cầu từ
-																										// client
+						// RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
+						new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init();
 					}
 				} catch (EOFException | SocketException e) {
 					// Disconnect
-					String s = "Client '" + ClientHandler.this.id + "' disconnected.";
-					System.out.println(s);
-					Logger.writeFile(s);
+					Logger.writeFile(String.format("Client '%s' disconnected.", ClientHandler.this.id));
 					closeSocket();
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
@@ -53,9 +46,7 @@ public class ClientHandler {
 			}
 		};
 		this.clientHandleThread.setUuid(id);
-		this.clientHandleThread.addListener(clientManager); // Khi clientHandleThread kết thúc, sẽ báo cho listener
-															// (clientManager) để thực hiện xoá khỏi danh sách
-															// clientConnections
+		this.clientHandleThread.addListener(clientManager); // Khi clientHandleThread kết thúc, sẽ báo cho listener (clientManager) để thực hiện xoá khỏi danh sách clientConnections
 		this.clientManager = clientManager;
 	}
 

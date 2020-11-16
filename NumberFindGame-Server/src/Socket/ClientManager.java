@@ -40,13 +40,13 @@ public class ClientManager implements IThreadCompleteListener {
 
 	protected void addAndStartClient(Socket client) { // Nhận tham biến là Socket client được Server instance accept()
 
-		//Logging logging = new Logging();
 		try {
 			UUID clientHandlerId = UUID.randomUUID(); // UUID này được gắn liền với ClientHandler.ClientThread
-			String s = "Login detected. Client ID '" + clientHandlerId + "'; IP: " + client.getInetAddress().toString();
-			System.out.println(s);
-			// Write to log file
-			Logger.writeFile(s);
+			Logger.writeFile(String.format(
+					"Login detected. Client ID '%s'; IP: %s",
+					clientHandlerId,
+					client.getInetAddress().toString()
+			));
 			ClientHandler clientHandler = new ClientHandler(client, clientHandlerId, this);
 			clientHandler.init(); // Khởi động Thread mới duy trì kết nối với Client
 			clientConnections.put(clientHandlerId, clientHandler); // Thêm vào danh sách clientConnections để quản lý

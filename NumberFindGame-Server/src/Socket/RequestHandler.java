@@ -106,8 +106,7 @@ public class RequestHandler {
     private void onSuccessConnection() {
     	PlayerDTO player;
     	player = ((MatchPlayer) clientHandler.getClientIdentifier()).getPlayer();
-    	String s = player.getUsername() + " Logged in";
-    	Logger.writeFile(s);
+    	Logger.writeFile(String.format("%s logged in.", player.getUsername()));
     	
         ((GameServer) this.clientHandler.clientManager.server)
                 .joinGame(this.clientHandler);
