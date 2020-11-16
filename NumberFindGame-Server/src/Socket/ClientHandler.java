@@ -45,7 +45,7 @@ public class ClientHandler {
 					// Disconnect
 					String s = "Client '" + ClientHandler.this.id + "' disconnected.";
 					System.out.println(s);
-					Logging.writeFile(s);
+					Logger.writeFile(s);
 					closeSocket();
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();

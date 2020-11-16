@@ -6,7 +6,9 @@ import Socket.Request.SocketRequest_AccessRegister;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse;
 import bus.IdentityBUS;
+import dto.MatchPlayer;
 import dto.MatchPlayer_Server;
+import dto.PlayerDTO;
 
 public class RequestHandler {
     Thread requestHandleThread;
@@ -102,6 +104,11 @@ public class RequestHandler {
     // Privates
 
     private void onSuccessConnection() {
+    	PlayerDTO player;
+    	player = ((MatchPlayer) clientHandler.getClientIdentifier()).getPlayer();
+    	String s = player.getUsername() + " Logged in";
+    	Logger.writeFile(s);
+    	
         ((GameServer) this.clientHandler.clientManager.server)
                 .joinGame(this.clientHandler);
     }

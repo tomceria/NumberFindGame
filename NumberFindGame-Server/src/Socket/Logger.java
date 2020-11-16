@@ -5,10 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import java.time.format.DateTimeFormatter;
-
 import java.time.LocalDateTime;
 
-public class Logging {
+public class Logger {
 
 	static String filePath = new File("").getAbsolutePath() + "\\log.txt";
 	static File file = new File(filePath);
@@ -35,6 +34,9 @@ public class Logging {
 				e.printStackTrace();
 			}
 		}
+	}
+	public static void main(String[] args){
+		writeFile("haha");
 	}
 
 }
