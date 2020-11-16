@@ -10,131 +10,138 @@ import java.net.SocketException;
 import java.util.UUID;
 
 public class ClientHandler {
-    UUID id;
-    Socket client;
-    ObjectInputStream input;
-    ObjectOutputStream output;
-    ClientThread clientHandleThread;
+	UUID id;
+	Socket client;
+	ObjectInputStream input;
+	ObjectOutputStream output;
+	ClientThread clientHandleThread;
 
-    boolean isLoggedIn = false;
-    boolean isRunning = true;
-    IClientIdentifier clientIdentifier; // inherits MatchPlayer
-    ClientManager clientManager;  // PARENT
+	boolean isLoggedIn = false;
+	boolean isRunning = true;
+	IClientIdentifier clientIdentifier; // inherits MatchPlayer
+	ClientManager clientManager; // PARENT
 
-    public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
-        this.id = id;
-        this.client = client;
-        this.output = new ObjectOutputStream(client.getOutputStream());
-        this.input = new ObjectInputStream(client.getInputStream());
+	public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
+		this.id = id;
+		this.client = client;
+		this.output = new ObjectOutputStream(client.getOutputStream());
+		this.input = new ObjectInputStream(client.getInputStream());
 
-        this.clientHandleThread = new ClientThread() {
-            @Override
-            public void doRun() {
-                try {
-                    while (isRunning) {
-                        SocketRequest requestRaw = receiveRequest();
-                        new RequestHandler(
-                                requestRaw,
-                                clientIdentifier,
-                                ClientHandler.this
-                        )
-                                .init();  // RequestHandler xử lý yêu cầu BẤT ĐỒNG BỘ, trong lúc đó tiếp tục nhận yêu cầu từ client
-                    }
-                } catch (EOFException | SocketException e) {
-                    // Disconnect
-                    System.out.println(String.format("Client '%s' disconnected.", ClientHandler.this.id));
-                    closeSocket();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        this.clientHandleThread.setUuid(id);
-        this.clientHandleThread.addListener(clientManager);  // Khi clientHandleThread kết thúc, sẽ báo cho listener (clientManager) để thực hiện xoá khỏi danh sách clientConnections
-        this.clientManager = clientManager;
-    }
+		this.clientHandleThread = new ClientThread() {
+			@Override
+			public void doRun() {
+				try {
+					while (isRunning) {
+						SocketRequest requestRaw = receiveRequest();
+						new RequestHandler(requestRaw, clientIdentifier, ClientHandler.this).init(); // RequestHandler
+																										// xử lý yêu cầu
+																										// BẤT ĐỒNG BỘ,
+																										// trong lúc đó
+																										// tiếp tục nhận
+																										// yêu cầu từ
+																										// client
+					}
+				} catch (EOFException | SocketException e) {
+					// Disconnect
+					String s = "Client '" + ClientHandler.this.id + "' disconnected.";
+					System.out.println(s);
+					Logging.writeFile(s);
+					closeSocket();
+				} catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		this.clientHandleThread.setUuid(id);
+		this.clientHandleThread.addListener(clientManager); // Khi clientHandleThread kết thúc, sẽ báo cho listener
+															// (clientManager) để thực hiện xoá khỏi danh sách
+															// clientConnections
+		this.clientManager = clientManager;
+	}
 
-    // Client Socket functions
+	// Client Socket functions
 
-    public void sendResponse(SocketResponse response) {
-        try {
-            output.writeObject(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public void sendResponse(SocketResponse response) {
+		try {
+			output.writeObject(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException {
-        SocketRequest request = null;
-        request = (SocketRequest) input.readObject();
-        return request;
-    }
+	protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException {
+		SocketRequest request = null;
+		request = (SocketRequest) input.readObject();
+		return request;
+	}
 
-    protected void closeSocket() {
-        try {
-            if (input != null) {
-                input.close();
-            }
-            if (output != null) {
-                output.close();
-            }
-            if (client != null) {
-                client.close();
-            }
-        } catch (SocketException e) {
-            System.out.println("Socket already closed.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	protected void closeSocket() {
+		try {
+			if (input != null) {
+				input.close();
+			}
+			if (output != null) {
+				output.close();
+			}
+			if (client != null) {
+				client.close();
+			}
+		} catch (SocketException e) {
+			System.out.println("Socket already closed.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    protected void init() {
-        clientHandleThread.start();
-    }
+	protected void init() {
+		clientHandleThread.start();
+	}
 
-    // Properties
+	// Properties
 
-    public UUID getId() {
-        return id;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public Socket getClient() {
-        return client;
-    }
+	public Socket getClient() {
+		return client;
+	}
 
-    public ClientManager getClientManager() {
-        return clientManager;
-    }
+	public ClientManager getClientManager() {
+		return clientManager;
+	}
 
-    public IClientIdentifier getClientIdentifier() {
-        return clientIdentifier;
-    }
-    public void setClientIdentifier(IClientIdentifier clientIdentifier) {
-        this.clientIdentifier = clientIdentifier;
-    }
+	public IClientIdentifier getClientIdentifier() {
+		return clientIdentifier;
+	}
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-    public void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
-    }
+	public void setClientIdentifier(IClientIdentifier clientIdentifier) {
+		this.clientIdentifier = clientIdentifier;
+	}
 
-    public boolean isRunning() {
-        return isRunning;
-    }
+	public boolean isLoggedIn() {
+		return isLoggedIn;
+	}
 
-    // Inner Classes
+	public void setLoggedIn(boolean loggedIn) {
+		isLoggedIn = loggedIn;
+	}
 
-    abstract class ClientThread extends NotifyingThread {
-        private UUID uuid;
+	public boolean isRunning() {
+		return isRunning;
+	}
 
-        public UUID getUuid() {
-            return uuid;
-        }
+	// Inner Classes
 
-        public void setUuid(UUID uuid) {
-            this.uuid = uuid;
-        }
-    }
+	abstract class ClientThread extends NotifyingThread {
+		private UUID uuid;
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		public void setUuid(UUID uuid) {
+			this.uuid = uuid;
+		}
+	}
 }
