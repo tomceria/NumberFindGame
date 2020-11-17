@@ -48,7 +48,7 @@ public class ClientHandler {
 					// Disconnect
 					Logger.writeFile(String.format("Client '%s' disconnected.", ClientHandler.this.id));
 					closeSocket();
-				} catch (IOException | ClassNotFoundException e) {
+				} catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException e) {
 					e.printStackTrace();
 				}
 			}
@@ -72,9 +72,10 @@ public class ClientHandler {
 		}
 	}
 
-	protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException {
+	protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException, BadPaddingException, IllegalBlockSizeException {
 		SocketRequest request = null;
-		request = (SocketRequest) input.readObject();
+		request = unsealObject(input.readObject());
+//		request = (SocketRequest) input.readObject();
 		return request;
 	}
 
@@ -95,12 +96,15 @@ public class ClientHandler {
 			e.printStackTrace();
 		}
 	}
+
+	// mã hóa response trước khi gửi đi
 	protected SealedObject sealObject(Object o) throws IOException, IllegalBlockSizeException {
 		ISecretObject secretObject = new SecretObjectImpl((SocketResponse) o);
 		SealedObject so = new SealedObject(secretObject, EncryptionHelper.CIPHER);
 		return so;
 	}
 
+	// giải mã request nhận được
 	protected SocketRequest unsealObject(Object o) throws ClassNotFoundException, BadPaddingException, IllegalBlockSizeException, IOException {
 		SealedObject s = (SealedObject) o;
 		ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);

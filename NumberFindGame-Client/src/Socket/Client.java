@@ -1,10 +1,15 @@
 package Socket;
 
+import Socket.Encryption.ISecretObject;
+import Socket.Encryption.SecretObjectImpl;
+import Socket.Helper.EncryptionHelper;
 import Socket.Request.SocketRequest;
 import Socket.Request.SocketRequest_AccessLogin;
-import Socket.Request.SocketRequest_AccessRegister;
 import Socket.Response.SocketResponse;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.SealedObject;
 import javax.security.sasl.AuthenticationException;
 import java.io.EOFException;
 import java.io.IOException;
@@ -86,8 +91,8 @@ public class Client {
         }
 
         try {
-            Client.output.writeObject(request);
-        } catch (IOException e) {
+            Client.output.writeObject(sealObject(request));
+        } catch (IOException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
     }
@@ -99,14 +104,29 @@ public class Client {
 
         SocketResponse response = null;
         try {
-            response = (SocketResponse) Client.input.readObject();
+//            response = (SocketResponse) Client.input.readObject();
+            response = unsealObject(Client.input.readObject());
         } catch (NullPointerException | EOFException e) {
             // Disconnect
             close();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
         return response;
+    }
+
+    // mã hóa request trước khi gửi đi
+    protected SealedObject sealObject(Object o) throws IOException, IllegalBlockSizeException {
+        ISecretObject secretObject = new SecretObjectImpl((SocketRequest) o);
+        SealedObject so = new SealedObject(secretObject, EncryptionHelper.CIPHER);
+        return so;
+    }
+
+    // giải mã response nhận về
+    protected SocketResponse unsealObject(Object o) throws ClassNotFoundException, BadPaddingException, IllegalBlockSizeException, IOException {
+        SealedObject s = (SealedObject) o;
+        ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);
+        return decryptedSecretObject.getSecretResponse();
     }
 
     public void close() {

@@ -14,7 +14,7 @@ import java.security.spec.InvalidKeySpecException;
 public class Main {
 	static Server server;
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, NoSuchPaddingException {
+	public static void main(String[] args) {
 		EncryptionHelper encryptionHelper = new EncryptionHelper();
 		encryptionHelper.createKey(Cipher.ENCRYPT_MODE);
 		encryptionHelper.createKey(Cipher.DECRYPT_MODE);
