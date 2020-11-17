@@ -74,7 +74,7 @@ public class RegisterView {
                                 JOptionPane.ERROR_MESSAGE
                         );
                     }
-                } catch (IOException exception) {
+                } catch (Exception exception) {
                     JOptionPane.showMessageDialog(
                             RegisterView.this.contentPane,
                             exception.getMessage(),
