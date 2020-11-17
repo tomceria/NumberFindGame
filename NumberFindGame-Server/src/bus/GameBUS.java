@@ -77,6 +77,15 @@ public class GameBUS {
         return newMatchPlayers;
     }
 
+    private int getCurrentLevelNodeValue() {
+        int currentLevelNodeIndex = this.getGame().getCurrentLevel().getValue() - 1;
+        int value = this.getGame().getLevel()
+                .get(currentLevelNodeIndex)
+                .getValue();
+
+        return value;
+    }
+
     // Privates CONNECTION Methods
 
     private void sendResponseToPlayer(SocketResponse response, UUID clientHandlerId) {
@@ -241,17 +250,6 @@ public class GameBUS {
             sortingMatchPlayers.get(i).setPlacing(newPlacing);
         }
 
-    }
-
-    // Other Privates
-
-    private int getCurrentLevelNodeValue() {
-        int currentLevelNodeIndex = this.getGame().getCurrentLevel().getValue() - 1;
-        int value = this.getGame().getLevel()
-                .get(currentLevelNodeIndex)
-                .getValue();
-
-        return value;
     }
 
     // Properties

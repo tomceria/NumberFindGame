@@ -19,10 +19,11 @@ import java.util.stream.Collectors;
 
 public class GameBUS {
     private Game_Client game; // PARENT
-    public GameBUS_ViewBinder viewBinder = new GameBUS_ViewBinder();
+    public GameBUS_ViewBinder viewBinder;
 
     public GameBUS(Game_Client game) {
         this.game = game;
+        this.viewBinder = new GameBUS_ViewBinder();
     }
 
     // Functions

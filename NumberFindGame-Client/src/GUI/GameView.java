@@ -11,12 +11,14 @@ import java.awt.event.ActionListener;
 public class GameView {
     // GameView.form's Components
     public JPanel contentPane;
+    // ViewBinder's components
     private JLabel lblFindThis;
+    private JLabel lblTimer;
+    private JList<MatchPlayer> listPlayers;
+    // Others
     private JButton btnQuit;
     private JPanel gamePane;
     private JPanel infoPane;
-    private JList<MatchPlayer> listPlayers;
-    private JLabel lblTimer;
 
     private GameBUS gameBUS;
 

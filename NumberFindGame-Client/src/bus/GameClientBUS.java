@@ -24,5 +24,7 @@ public class GameClientBUS {
         gameClient.getGameRoom().setClientPlayer(
                 response.clientPlayer_MatchPlayer
         );
+
+        ViewBUS.gotoGameRoomView(gameClient.getGameRoom().getGameRoomBUS());
     }
 }

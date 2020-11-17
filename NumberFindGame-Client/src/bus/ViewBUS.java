@@ -37,8 +37,15 @@ public class ViewBUS {
     public static void gotoGameView(GameBUS gameBUS) {
         GameView gameView = new GameView(gameBUS);
         mainFrame.setContentPane(gameView.contentPane);
+        mainFrame.setVisible(true);
 
         gameView.init();
+    }
+
+    public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
+        GameRoomView gameRoomView = new GameRoomView(gameRoomBUS);
+        mainFrame.setContentPane(gameRoomView.getContentPane());
+        mainFrame.setVisible(true);
     }
 
     private static void setMainFrame(JFrame mainFrame) {

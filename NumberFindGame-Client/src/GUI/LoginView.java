@@ -100,9 +100,9 @@ public class LoginView {
     }
 
     private void initViewBinder() {
-        LoginView.this.loginBUS.viewBinder.txtUsername = txtUsername;
-        LoginView.this.loginBUS.viewBinder.txtPassword = txtPassword;
-        LoginView.this.loginBUS.viewBinder.txtNetIp = txtNetIp;
+        this.loginBUS.viewBinder.txtUsername = txtUsername;
+        this.loginBUS.viewBinder.txtPassword = txtPassword;
+        this.loginBUS.viewBinder.txtNetIp = txtNetIp;
     }
 
     // Properties
