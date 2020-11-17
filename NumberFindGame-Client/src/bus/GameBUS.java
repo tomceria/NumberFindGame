@@ -95,7 +95,7 @@ public class GameBUS {
         /**
          * Client-side Validation
          */
-        if (levelNode.getValue() != game.getCurrentLevelNodeValue()) {
+        if (levelNode.getValue() != this.getCurrentLevelNodeValue()) {
             System.out.println("Wrong number.");
             return;
         }
@@ -177,6 +177,15 @@ public class GameBUS {
 
     // Privates
 
+    private int getCurrentLevelNodeValue() {
+        int currentLevelNodeIndex = this.getGame().getCurrentLevel().getValue() - 1;
+        int value = this.getGame().getLevel()
+                .get(currentLevelNodeIndex)
+                .getValue();
+
+        return value;
+    }
+
     // Properties
 
     public Game_Client getGame() {
@@ -193,7 +202,7 @@ public class GameBUS {
         public void update() {
             if (game != null) {
                 if (lblFindThis != null) {
-                    lblFindThis.setText(game.getCurrentLevelNodeValue() + "");
+                    lblFindThis.setText(GameBUS.this.getCurrentLevelNodeValue() + "");
                 }
                 if (lblTimer != null) {
                     lblTimer.setText(ui_getTimerClock());

@@ -56,11 +56,6 @@ public class Game implements Serializable {
     public CurrentLevel getCurrentLevel() {
         return currentLevel;
     }
-    public int getCurrentLevelNodeValue() {
-        return level
-                .get(currentLevel.value - 1)
-                .getValue();
-    }
     public void setCurrentLevel(CurrentLevel currentLevel) {
         this.currentLevel = currentLevel;
     }

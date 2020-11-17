@@ -37,7 +37,7 @@ public class GameBUS {
     public synchronized boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
         boolean accept = false;
 
-        if (game.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
+        if (this.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
             accept = true;
 
             performGoNextLevel(levelNode, sendingPlayer);
@@ -180,7 +180,14 @@ public class GameBUS {
         /**
          * Tăng Level cho Game
          */
-        game.setCurrentLevelAndResetTimer(game.getCurrentLevelNodeValue() + 1);
+        if (this.getGame().getCurrentLevel().getValue() < this.getGame().getLevel().size()) {
+            game.setCurrentLevelAndResetTimer(
+                    this.getGame().getCurrentLevel().getValue() + 1
+            );
+        } else {
+            // TODO: Reach Game-ending phase
+            game.setCurrentLevelAndResetTimer(1);  // Reset
+        }
 
         /**
          * CUỐI CÙNG: Thông báo cho TẤT CẢ người chơi với dữ liệu Game mới
@@ -234,6 +241,17 @@ public class GameBUS {
             sortingMatchPlayers.get(i).setPlacing(newPlacing);
         }
 
+    }
+
+    // Other Privates
+
+    private int getCurrentLevelNodeValue() {
+        int currentLevelNodeIndex = this.getGame().getCurrentLevel().getValue() - 1;
+        int value = this.getGame().getLevel()
+                .get(currentLevelNodeIndex)
+                .getValue();
+
+        return value;
     }
 
     // Properties
