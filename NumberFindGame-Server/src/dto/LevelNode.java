@@ -65,4 +65,8 @@ public class LevelNode implements Serializable {
     public void addMutation(Mutations mutation) {
         this.mutations.add(mutation);
     }
+
+    public ArrayList<Mutations> getMutations() {
+        return mutations;
+    }
 }

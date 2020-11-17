@@ -201,7 +201,12 @@ public class GameBUS {
         /**
          * Tăng điểm cho sendingPlayer
          */
-        this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart());
+        int addScore = 1;
+        // nếu là số may mắn (logic if sẽ còn thay đổi, hiện tại chỉ check size của mutations)
+        if (levelNode.getMutations().size() > 0) {
+            addScore = 3;
+        }
+        this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart(), addScore);
 
         /**
          * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
@@ -240,8 +245,8 @@ public class GameBUS {
         );
     }
 
-    private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart) {
-        matchPlayer.setScore(matchPlayer.getScore() + 1);
+    private void performOneUpScore(MatchPlayer matchPlayer, LocalTime timeStart, int addScore) {
+        matchPlayer.setScore(matchPlayer.getScore() + addScore);
         matchPlayer.newAvgTime(timeStart);
     }
 
