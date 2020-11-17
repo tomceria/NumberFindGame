@@ -22,6 +22,7 @@ public class GameBUS {
 
     public void initGame() {
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
+        this.mutateLevel(game.getLevel());
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
@@ -100,8 +101,37 @@ public class GameBUS {
                 response);
     }
 
-    // Private BUSINESS Methods
+    /**
+     * Mutate level, set lucky level node
+     *
+     * @param level
+     */
+    private void mutateLevel(ArrayList<LevelNode> level) {
+        int levelSize = level.size();
+        // phần trăm các số lucky
+        double percent  = 10;
+        // các số sẽ biến đổi trên tổng số node
+        double mutatedNumbers = Math.ceil((double) levelSize * percent / 100);
+        // mảng các số từ 1 đến levelsize
+        ArrayList<Integer> indexArr = new ArrayList<>();
 
+        // thêm vị trí của level node
+        for (int i = 0;  i < levelSize; i++) {
+            indexArr.add(i);
+        }
+        // shuffle mảng
+        Random rand = new Random();
+        Collections.shuffle(indexArr, rand);
+
+        // lấy 10% số đầu sau khi đã shuffle mảng vị trí
+        for (int i = 0; i < mutatedNumbers; i++) {
+            level.get(indexArr.get(i)).addMutation(LevelNode.Mutations.LUCKY);
+        }
+
+        int x = 0;
+    }
+
+    // Private BUSINESS Methods
     private ArrayList<LevelNode> generateLevel(int count) {
         Random rand = new Random();                                                            // TODO: add Seed support
         ArrayList<LevelNode> levelNodes = new ArrayList<LevelNode>();

@@ -2,13 +2,20 @@ package dto;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class LevelNode implements Serializable {
+    public enum Mutations {
+        LUCKY
+    }
+
     int value;
     Point2D.Double coord;
     MatchPlayer pickingMatchPlayer;
+    ArrayList<Mutations> mutations;
 
     public LevelNode() {
+        mutations = new ArrayList<>();
     }
 
     public LevelNode(LevelNode levelNode) {
@@ -53,5 +60,9 @@ public class LevelNode implements Serializable {
     }
     public void setPickingMatchPlayer(MatchPlayer pickingMatchPlayer) {
         this.pickingMatchPlayer = pickingMatchPlayer;
+    }
+
+    public void addMutation(Mutations mutation) {
+        this.mutations.add(mutation);
     }
 }
