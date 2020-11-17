@@ -57,9 +57,9 @@ public class LoginView {
             public void actionPerformed(ActionEvent e) {
                 try {
                     LoginView.this.loginBUS.action_LoginSubmit();
-                } catch (IOException exception) {
+                } catch (Exception exception) {
                     String message = exception.getMessage();
-                    if (message.equals("Connection refused (Connection refused)")) {
+                    if (message.contains("Connection refused")) {
                         message = "Game server is currently unavailable.";
                     }
 
