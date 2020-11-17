@@ -1,9 +1,15 @@
 package Socket;
 
+import Socket.Encryption.ISecretObject;
+import Socket.Encryption.SecretObjectImpl;
 import Socket.Request.SocketRequest;
 import Socket.Response.SocketResponse;
+import util.EncryptionHelper;
 import util.NotifyingThread;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.SealedObject;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
@@ -20,6 +26,8 @@ public class ClientHandler {
 	boolean isRunning = true;
 	IClientIdentifier clientIdentifier; // inherits MatchPlayer
 	ClientManager clientManager; // PARENT
+
+	EncryptionHelper encryptionHelper;
 
 	public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
 		this.id = id;
@@ -58,8 +66,8 @@ public class ClientHandler {
 		}
 
 		try {
-			output.writeObject(response);
-		} catch (IOException e) {
+			output.writeObject(sealObject(response));
+		} catch (IOException | IllegalBlockSizeException e) {
 			e.printStackTrace();
 		}
 	}
@@ -86,6 +94,17 @@ public class ClientHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	protected SealedObject sealObject(Object o) throws IOException, IllegalBlockSizeException {
+		ISecretObject secretObject = new SecretObjectImpl((SocketResponse) o);
+		SealedObject so = new SealedObject(secretObject, EncryptionHelper.CIPHER);
+		return so;
+	}
+
+	protected SocketRequest unsealObject(Object o) throws ClassNotFoundException, BadPaddingException, IllegalBlockSizeException, IOException {
+		SealedObject s = (SealedObject) o;
+		ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);
+		return decryptedSecretObject.getSecretRequest();
 	}
 
 	protected void init() {
