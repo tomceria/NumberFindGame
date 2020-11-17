@@ -6,6 +6,8 @@ import dto.GameRoom;
 import dto.GameRoom_Server;
 import util.IThreadCompleteListener;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -81,7 +83,7 @@ public class ClientManager implements IThreadCompleteListener {
 		SocketRequest request = null;
 		try {
 			request = clientHandler.receiveRequest();
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException e) {
 			e.printStackTrace();
 		}
 		return request;
