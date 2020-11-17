@@ -281,6 +281,7 @@ public class GameBUS {
         /**
          * Kết thúc game => Tự huỷ.
          */
+        ArrayList<GameRoom_Server> gameRooms = this.getServer().getGameRooms();
     }
 
     // Properties

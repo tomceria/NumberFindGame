@@ -49,6 +49,7 @@ public class GameBUS {
                 .convertMatchPlayersToMatchPlayerClients(matchPlayers);
         game.setMatchPlayers(matchPlayers);
 
+        System.out.println(game.getGameRoomInfo().getName());
         this.viewBinder.startUpdatePeriod();
     }
 

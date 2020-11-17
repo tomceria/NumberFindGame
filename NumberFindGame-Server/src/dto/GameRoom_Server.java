@@ -13,7 +13,10 @@ public class GameRoom_Server extends GameRoom {
     protected GameRoomBUS gameRoomBUS;
 
     public GameRoom_Server(GameServer server) {
-        super(GameRoomBUS.generateRoomId(server.getGameRooms()));
+        super(
+                GameRoomBUS.generateRoomId(server.getGameRooms()),
+                "NumberFindGame Game Room"
+        );
         this.gameRoomBUS = new GameRoomBUS(this);
         this.server = server;
         this.playerClients = new HashMap<UUID, ClientHandler>();

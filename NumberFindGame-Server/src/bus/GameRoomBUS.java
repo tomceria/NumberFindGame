@@ -93,6 +93,7 @@ public class GameRoomBUS {
         sendResponseToPlayer(
             new SocketResponse_GameRoomPlayerJoin(
                 this.gameRoom.getId(),
+                this.gameRoom.getName(),
                 new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
             ),
             playerClient.getId()
@@ -137,8 +138,8 @@ public class GameRoomBUS {
         );
 
         /**
+         * KHỞI TẠO TRẬN ĐẤU
          * Lấy MatchConfig và danh sách người chơi từ GameRoom đưa vào Game
-         * => Các MatchConfig được chỉnh sửa khi trận đấu đang diễn ra chỉ thay đổi trên GameRoom
          */
         MatchConfig matchConfig = this.gameRoom.getMatchConfig();
         ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), true);
@@ -148,7 +149,8 @@ public class GameRoomBUS {
                     this.getServer(),
                     gameRoom.getPlayerClients(),
                     matchConfig,
-                    matchPlayers)
+                    matchPlayers,
+                    new GameRoomInfo(this.gameRoom))
         );
         this.getGame().getGameBUS().initGame();
 
