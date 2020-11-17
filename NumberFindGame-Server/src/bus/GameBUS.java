@@ -3,6 +3,7 @@ package bus;
 import Socket.ClientManager;
 import Socket.GameServer;
 import Socket.Response.SocketResponse;
+import Socket.Response.SocketResponse_GameEnd;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
 
@@ -15,6 +16,7 @@ import static util.Maths.valueFromTwoRanges;
 
 public class GameBUS {
     private Game_Server game;  // PARENT
+    private Timer gameTimer;
 
     public GameBUS(Game_Server game) {
         this.game = game;
@@ -26,6 +28,16 @@ public class GameBUS {
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
         game.setCurrentLevelAndResetTimer(1);                                                    // also reset timer for CurrentLevel
+        this.gameTimer = new Timer();
+        this.gameTimer.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        GameBUS.this.performEndGame();
+                    }
+                },
+                this.getGame().getMatchConfig().getTime()
+        );
     }
 
     /**
@@ -250,6 +262,13 @@ public class GameBUS {
             sortingMatchPlayers.get(i).setPlacing(newPlacing);
         }
 
+    }
+
+    private void performEndGame() {
+        this.gameTimer.cancel();
+        this.broadcastResponseToPlayers(
+                new SocketResponse_GameEnd()
+        );
     }
 
     // Properties

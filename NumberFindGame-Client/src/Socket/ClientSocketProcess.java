@@ -63,6 +63,10 @@ public class ClientSocketProcess extends Thread {
                             );
                     break;
                 }
+                case GAME_END: {
+                    System.out.println("Dude the game ends. stop playing");
+                    break;
+                }
                 case NET_CLOSE: {
                     client.close();
                     isRunning = false;
