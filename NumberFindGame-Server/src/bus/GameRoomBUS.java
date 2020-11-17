@@ -17,7 +17,6 @@ import java.util.UUID;
 
 import static Socket.Response.SocketResponse.Action.*;
 import static Socket.Response.SocketResponse.Status.*;
-import static dto.GameRoomStatus.*;
 
 public class GameRoomBUS {
     private GameRoom_Server gameRoom; // PARENT
@@ -67,7 +66,7 @@ public class GameRoomBUS {
     }
 
     public void joinRoom(ClientHandler playerClient) {
-        if (this.gameRoom.getStatus() != OPEN) {
+        if (this.gameRoom.getStatus() != GameRoomStatus.OPEN) {
             // TODO: throw exception
             return;
         }
@@ -143,7 +142,7 @@ public class GameRoomBUS {
          */
         MatchConfig matchConfig = this.gameRoom.getMatchConfig();
         ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), true);
-        this.gameRoom.setStatus(PLAYING);
+        this.gameRoom.setStatus(GameRoomStatus.PLAYING);
         this.gameRoom.setGame(
             new Game_Server(
                     this.getServer(),
@@ -171,6 +170,11 @@ public class GameRoomBUS {
             MatchPlayer_Server matchPlayer = (MatchPlayer_Server) playerClient.getClientIdentifier();
             matchPlayer.setGameBUS(this.getGame().getGameBUS());
         }
+    }
+
+    public void endGame() {
+        this.gameRoom.setStatus(GameRoomStatus.OPEN);
+        this.gameRoom.setGame(null);
     }
 
     public MatchConfig getDefaultMatchConfig() {    // FUTURE-PROOF, sau này có thể cấu hình cho Player thay đổi Config

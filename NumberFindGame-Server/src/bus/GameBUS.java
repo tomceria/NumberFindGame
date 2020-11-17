@@ -1,10 +1,12 @@
 package bus;
 
+import Socket.ClientHandler;
 import Socket.ClientManager;
 import Socket.GameServer;
 import Socket.Response.SocketResponse;
 import Socket.Response.SocketResponse_GameEnd;
 import Socket.Response.SocketResponse_GameProps;
+import Socket.Response.SocketResponse_GameResult;
 import dto.*;
 
 import java.awt.geom.Point2D;
@@ -271,17 +273,51 @@ public class GameBUS {
         );
 
         /**
-         * TODO: Lưu thông tin trận đấu và điểm của players
+         * 1. TODO: Lưu thông tin trận đấu và điểm của players
          */
 
         /**
-         * Gửi thông tin trận dấu cho các players
+         * 2. KẾT THÚC GAME => BÁO CHO GAMEROOM
+         * Có thể có trường hợp Game được khởi động độc lập không có GameRoom
+         * => không cần thông báo cho GameRoom
          */
+        List<GameRoom_Server> gameRooms = this.getServer().getGameRooms().stream()
+                .filter(o -> o.getId() == this.getGame().getGameRoomInfo().getId())
+                .collect(Collectors.toList());
+        if (gameRooms.size() >= 1) {
+            gameRooms.get(0).getGameRoomBUS().endGame();
+        }
 
         /**
-         * Kết thúc game => Tự huỷ.
+         * 3. Gửi Kết quả Trận đấu cho các players
+         * Các lệnh bên dưới có thể dùng broadcast,
+         * Nhưng vì yêu cầu mỗi player nhận về response khác nhau (clientPlayerIsWinner)
+         * => Mỗi clientHandler được xử lý khác nhau
          */
-        ArrayList<GameRoom_Server> gameRooms = this.getServer().getGameRooms();
+        PlayerDTO winner = null;
+        List<MatchPlayer> matchPlayersWithFirstPlace = this.getGame().getMatchPlayers().stream()
+                .filter(mP -> mP.getPlacing() == 1).collect(Collectors.toList());
+        if (matchPlayersWithFirstPlace.size() > 0) {
+            winner = matchPlayersWithFirstPlace.get(0).getPlayer();
+        }
+        for (ClientHandler clientHandler : this.getServer().getClientManager().getClientConnections().values()) {
+            boolean clientPlayerIsWinner = winner.equals(
+                    ((MatchPlayer_Server) clientHandler.getClientIdentifier()).getPlayer()
+            );
+
+            sendResponseToPlayer(
+                    new SocketResponse_GameResult(
+                            cleanseMatchPlayersForTransfer(this.getGame().getMatchPlayers()),
+                            winner,
+                            clientPlayerIsWinner
+                    ),
+                    clientHandler.getId()
+            );
+        }
+
+        /**
+         * Gửi thông tin GameRoom mới cho các players
+         */
     }
 
     // Properties

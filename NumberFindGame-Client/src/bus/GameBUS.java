@@ -31,8 +31,8 @@ public class GameBUS {
     public void initGame() {
         // TODO: Kiểm tra nếu các property rỗng (chưa dc gán dữ liệu từ Server) thì throw exception
 
-        int clientPlayerId = this.game.getClientPlayer().getPlayer().getId();
-        MatchPlayer clientPlayer = null;
+//        int clientPlayerId = this.game.getClientPlayer().getPlayer().getId();
+//        MatchPlayer clientPlayer = null;
 
         /**
          * Ép danh sách level từ ArrayList<LevelNode> thành ArrayList<LevelNode_Client>
@@ -49,7 +49,6 @@ public class GameBUS {
                 .convertMatchPlayersToMatchPlayerClients(matchPlayers);
         game.setMatchPlayers(matchPlayers);
 
-        System.out.println(game.getGameRoomInfo().getName());
         this.viewBinder.startUpdatePeriod();
     }
 

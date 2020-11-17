@@ -69,6 +69,11 @@ public class ClientSocketProcess extends Thread {
                             .listen_GameEnd();
                     break;
                 }
+                case GAME_RESULT: {
+                    SocketResponse_GameResult result = (SocketResponse_GameResult) resultRaw;
+                    System.out.println(String.format("%s, %s", result.winner.getUsername(), result.clientPlayerIsWinner));
+                    break;
+                }
                 case NET_CLOSE: {
                     client.close();
                     isRunning = false;
