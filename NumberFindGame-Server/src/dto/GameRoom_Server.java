@@ -15,9 +15,12 @@ public class GameRoom_Server extends GameRoom {
     public GameRoom_Server(GameServer server) {
         super(GameRoomBUS.generateRoomId(server.getGameRooms()));
         this.gameRoomBUS = new GameRoomBUS(this);
-
         this.server = server;
         this.playerClients = new HashMap<UUID, ClientHandler>();
+
+        this.setMatchConfig(this.gameRoomBUS.getDefaultMatchConfig());
+        this.setStatus(GameRoomStatus.OPEN);
+        this.setGame(null);  // Chưa bắt đầu game ngay lúc tạo phòng
     }
 
     // Functions

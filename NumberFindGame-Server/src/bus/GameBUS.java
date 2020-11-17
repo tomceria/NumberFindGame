@@ -168,7 +168,7 @@ public class GameBUS {
          * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
          */
         this.getGame().getLevel()
-                .stream().filter(level -> levelNode.getValue() == level.getValue())
+                .stream().filter(lN -> levelNode.getValue() == lN.getValue())
                 .collect(Collectors.toList()).get(0)
                 .setPickingMatchPlayer(sendingPlayer);
 

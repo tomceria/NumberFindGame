@@ -46,7 +46,7 @@ public class JsonHelper {
 
     /**
      * @param config JSONObject read from config.json
-     * @return MathConfig instance
+     * @return MatchConfig instance
      */
     private MatchConfig parseConfigObject(JSONObject config) {
         MatchConfig matchConfig = new MatchConfig();

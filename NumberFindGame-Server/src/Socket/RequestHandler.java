@@ -109,6 +109,7 @@ public class RequestHandler {
     	Logger.writeFile(String.format("%s logged in.", player.getUsername()));
     	
         ((GameServer) this.clientHandler.clientManager.server)
+                .getGameServerBUS()
                 .joinGame(this.clientHandler);
     }
 

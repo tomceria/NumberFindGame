@@ -8,6 +8,7 @@ import Socket.Response.SocketResponse_GameRoomProps;
 import Socket.Response.SocketResponse_GameInit;
 import Socket.Response.SocketResponse_GameRoomPlayerJoin;
 import dto.*;
+import util.JsonHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,10 +24,6 @@ public class GameRoomBUS {
 
     public GameRoomBUS(GameRoom_Server gameRoom) {
         this.gameRoom = gameRoom;
-        this.gameRoom.setMatchConfig(getDefaultMatchConfig());
-
-        this.gameRoom.setStatus(GameRoomStatus.OPEN);
-        this.gameRoom.setGame(null);                                          // Chưa bắt đầu game ngay lúc tạo phòng
     }
 
     public static int generateRoomId(ArrayList<GameRoom_Server> gameRooms) {
@@ -175,11 +172,8 @@ public class GameRoomBUS {
     }
 
     public MatchConfig getDefaultMatchConfig() {    // FUTURE-PROOF, sau này có thể cấu hình cho Player thay đổi Config
-        // TODO: Read from config.json
-        MatchConfig matchConfig = new MatchConfig();
-        matchConfig.setNumberQty(50);
-        matchConfig.setTime(180000);
-        matchConfig.setMaxPlayer(2);
+        JsonHelper jsonHelper = new JsonHelper();
+        MatchConfig matchConfig = jsonHelper.readConfig();
         return matchConfig;
     }
 

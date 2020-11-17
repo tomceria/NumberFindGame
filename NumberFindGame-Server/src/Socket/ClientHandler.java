@@ -53,6 +53,10 @@ public class ClientHandler {
 	// Client Socket functions
 
 	public void sendResponse(SocketResponse response) {
+		if (client == null) {
+			return;
+		}
+
 		try {
 			output.writeObject(response);
 		} catch (IOException e) {
