@@ -269,6 +269,18 @@ public class GameBUS {
         this.broadcastResponseToPlayers(
                 new SocketResponse_GameEnd()
         );
+
+        /**
+         * TODO: Lưu thông tin trận đấu và điểm của players
+         */
+
+        /**
+         * Gửi thông tin trận dấu cho các players
+         */
+
+        /**
+         * Kết thúc game => Tự huỷ.
+         */
     }
 
     // Properties

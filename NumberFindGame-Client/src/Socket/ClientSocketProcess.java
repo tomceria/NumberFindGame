@@ -64,7 +64,9 @@ public class ClientSocketProcess extends Thread {
                     break;
                 }
                 case GAME_END: {
-                    System.out.println("Dude the game ends. stop playing");
+                    GameRoom_Client gameRoom = ((GameClient) client).getGameRoom();
+                    ((Game_Client) gameRoom.getGame()).getGameBUS()
+                            .listen_GameEnd();
                     break;
                 }
                 case NET_CLOSE: {

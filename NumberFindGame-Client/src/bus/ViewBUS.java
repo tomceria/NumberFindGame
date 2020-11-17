@@ -34,17 +34,23 @@ public class ViewBUS {
         mainFrame.setVisible(true);
     }
 
+    public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
+        GameRoomView gameRoomView = new GameRoomView(gameRoomBUS);
+        mainFrame.setContentPane(gameRoomView.getContentPane());
+        mainFrame.setVisible(true);
+    }
+
     public static void gotoGameView(GameBUS gameBUS) {
         GameView gameView = new GameView(gameBUS);
-        mainFrame.setContentPane(gameView.contentPane);
+        mainFrame.setContentPane(gameView.getContentPane());
         mainFrame.setVisible(true);
 
         gameView.init();
     }
 
-    public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
-        GameRoomView gameRoomView = new GameRoomView(gameRoomBUS);
-        mainFrame.setContentPane(gameRoomView.getContentPane());
+    public static void gotoGameResultView() {
+        GameResultView gameResultView = new GameResultView(new GameResultBUS());
+        mainFrame.setContentPane(gameResultView.getContentPane());
         mainFrame.setVisible(true);
     }
 

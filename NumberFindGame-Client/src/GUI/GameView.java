@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class GameView {
     // GameView.form's Components
-    public JPanel contentPane;
+    private JPanel contentPane;
     // ViewBinder's components
     private JLabel lblFindThis;
     private JLabel lblTimer;
@@ -51,6 +51,12 @@ public class GameView {
                 System.out.println("NotImplemented: Quit Game");
             }
         });
+    }
+
+    // Properties
+
+    public JPanel getContentPane() {
+        return contentPane;
     }
 
     /**

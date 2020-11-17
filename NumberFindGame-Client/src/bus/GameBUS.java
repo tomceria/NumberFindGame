@@ -157,6 +157,10 @@ public class GameBUS {
         this.viewBinder.update();
     }
 
+    public void listen_GameEnd() {
+        ViewBUS.gotoGameResultView();
+    }
+
     public String ui_getTimerClock() {
         int timeInMillis = game.getMatchConfig().getTime();
         LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
