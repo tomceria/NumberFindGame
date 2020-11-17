@@ -4,6 +4,8 @@ import bus.GameRoomBUS;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameRoomView {
     // GameView.form's Components
@@ -32,6 +34,12 @@ public class GameRoomView {
     }
 
     private void bindListeners() {
+        btnStartGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameRoomView.this.gameRoomBUS.action_RequestStartGame();
+            }
+        });
     }
 
     private void initViewBinder() {

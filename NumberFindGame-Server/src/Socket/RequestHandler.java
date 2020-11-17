@@ -1,9 +1,6 @@
 package Socket;
 
-import Socket.Request.SocketRequest;
-import Socket.Request.SocketRequest_AccessLogin;
-import Socket.Request.SocketRequest_AccessRegister;
-import Socket.Request.SocketRequest_GameSubmitLevelNode;
+import Socket.Request.*;
 import Socket.Response.SocketResponse;
 import bus.IdentityBUS;
 import dto.MatchPlayer;
@@ -80,6 +77,13 @@ public class RequestHandler {
                     switch (requestRaw.getAction()) {
                         case MSG: {
                             System.out.println("Received message: " + requestRaw.getMessage());
+                            break;
+                        }
+                        case GAMEROOM_STARTGAME: {
+                            SocketRequest_GameRoomStartGame request = ((SocketRequest_GameRoomStartGame) requestRaw);
+                            MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
+
+                            matchPlayer.getGameRoomBUS().startGame();
                             break;
                         }
                         case GAME_SUBMITLEVELNODE: {

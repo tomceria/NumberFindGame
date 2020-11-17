@@ -2,6 +2,7 @@ package bus;
 
 import Common.ViewBinder;
 import Socket.GameClient;
+import Socket.Request.SocketRequest_GameRoomStartGame;
 import Socket.Response.SocketResponse_GameRoomProps;
 import Socket.Response.SocketResponse_GameInit;
 import Socket.Response.SocketResponse_GameRoomPlayerJoin;
@@ -20,13 +21,19 @@ public class GameRoomBUS {
 
     // Functions
 
+    public void action_RequestStartGame() {
+        this.getGameRoom().getClient().sendRequest(
+                new SocketRequest_GameRoomStartGame()
+        );
+    }
+
     public void listen_setGameRoomProps(SocketResponse_GameRoomProps response) {
         ((GameRoom_Client) this.gameRoom).setPlayers(response.players);
         this.gameRoom.setMatchConfig(response.matchConfig);
         this.gameRoom.setStatus(response.status);
 
         /**
-         * Force lệnh update của ViewBinder
+         * Force lệnh update của ViewBinder khi có cập nhật về thông tin phòng
          */
         this.viewBinder.update();
     }
