@@ -7,12 +7,16 @@ import dto.PlayerDTO;
 import javax.swing.*;
 import java.awt.*;
 
-public class MatchPlayerCellRenderer extends JPanel implements ListCellRenderer<MatchPlayer>  {
+public class GameMatchPlayerCellRenderer extends JPanel implements ListCellRenderer<MatchPlayer>  {
     private JPanel paneAvatar;
     private JLabel lblNameInitial;
     private JLabel lblScore;
 
-    public MatchPlayerCellRenderer() {
+    /**
+     * Creates a new <code>JPanel</code> with a double buffer
+     * and a flow layout.
+     */
+    public GameMatchPlayerCellRenderer() {
         this.setLayout(new GridBagLayout());
         this.setBackground(new Color(-1));
         this.setMinimumSize(new Dimension(75, 50));

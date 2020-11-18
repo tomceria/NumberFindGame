@@ -2,7 +2,7 @@ package bus;
 
 import Common.ViewBinder;
 import GUI.Components.LevelNodeButton;
-import GUI.Components.MatchPlayerCellRenderer;
+import GUI.Components.GameMatchPlayerCellRenderer;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
@@ -177,7 +177,7 @@ public class GameBUS {
                 listModel.addElement(matchPlayer);
         }
         list.setModel(listModel);
-        list.setCellRenderer(new MatchPlayerCellRenderer());
+        list.setCellRenderer(new GameMatchPlayerCellRenderer());
     }
 
     // Privates

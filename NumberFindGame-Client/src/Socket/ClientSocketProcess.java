@@ -70,7 +70,8 @@ public class ClientSocketProcess extends Thread {
                     break;
                 }
                 case GAME_RESULT: {
-                    SocketResponse_GameResult result = (SocketResponse_GameResult) resultRaw;
+                    ViewBUS.gameResultView.getGameResultBUS()
+                            .listen_showResult((SocketResponse_GameResult) resultRaw);
                     break;
                 }
                 case NET_CLOSE: {
