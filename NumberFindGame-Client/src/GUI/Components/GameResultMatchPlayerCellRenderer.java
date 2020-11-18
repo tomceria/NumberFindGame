@@ -1,5 +1,6 @@
 package GUI.Components;
 
+import Common.OrdinalNumber;
 import dto.MatchPlayer;
 import dto.MatchPlayer_Client;
 import dto.PlayerDTO;
@@ -116,13 +117,21 @@ public class GameResultMatchPlayerCellRenderer extends JPanel implements ListCel
         MatchPlayer_Client matchPlayer = (MatchPlayer_Client) value;
         PlayerDTO player = value.getPlayer();
 
-        System.out.println(matchPlayer.getUiColor().toString());
         panePlayer.setBackground(matchPlayer.getUiColor());
         lblPlacing.setFont(new Font("SansSerif", Font.PLAIN, 16));
         lblInitials.setFont(new Font("SansSerif", Font.PLAIN, 21));
         lblScore.setFont(new Font("SansSerif", Font.PLAIN, 24));
 
-        lblPlacing.setText(matchPlayer.getPlacing() + "th"); // TODO: actual order
+        String[] placingColor = {"#F4CB0D", "#C4C5C7", "#D9895E"};
+        if (matchPlayer.getPlacing() >= 1 && matchPlayer.getPlacing() <= 3) {
+            panePlacing.setBackground(
+                    Color.decode(placingColor[matchPlayer.getPlacing() - 1])
+            );
+        } else {
+            panePlacing.setBackground(Color.WHITE);
+        }
+
+        lblPlacing.setText(OrdinalNumber.generate(matchPlayer.getPlacing()));
         lblInitials.setText(String.format(
                 "%c%c",
                 player.getFirstName().toUpperCase().charAt(0),
@@ -131,12 +140,6 @@ public class GameResultMatchPlayerCellRenderer extends JPanel implements ListCel
         lblName.setText(matchPlayer.getPlayer().getUsername());
         lblScore.setText(matchPlayer.getScore() + "");
 
-//        Font lblPlacingFont = this.$$$getFont$$$(null, -1, 16, lblPlacing.getFont());
-//        if (lblPlacingFont != null) lblPlacing.setFont(lblPlacingFont);
-//        Font lblInitialsFont = this.$$$getFont$$$(null, -1, 21, lblInitials.getFont());
-//        if (lblInitialsFont != null) lblInitials.setFont(lblInitialsFont);
-//        Font lblScoreFont = this.$$$getFont$$$(null, -1, 24, lblScore.getFont());
-//        if (lblScoreFont != null) lblScore.setFont(lblScoreFont);
         return this;
     }
 }

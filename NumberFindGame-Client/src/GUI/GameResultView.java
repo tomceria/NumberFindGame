@@ -72,12 +72,12 @@ public class GameResultView {
         gbc.insets = new Insets(0, 0, 24, 0);
         contentPane.add(lblWinner, gbc);
         listPlayers = new JList();
+        listPlayers.setMinimumSize(new Dimension(300, 400));
+        listPlayers.setPreferredSize(new Dimension(300, 400));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.ipadx = 300;
-        gbc.ipady = 400;
         contentPane.add(listPlayers, gbc);
         btnOkay = new JButton();
         btnOkay.setText("OK");

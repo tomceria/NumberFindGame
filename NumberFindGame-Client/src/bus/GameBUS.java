@@ -172,6 +172,8 @@ public class GameBUS {
     }
 
     public void ui_initPlayerList(JList list) {
+        MatchPlayer_Client.orderMatchPlayersByPlacing(game.getMatchPlayers());
+
         DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
         for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
                 listModel.addElement(matchPlayer);

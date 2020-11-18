@@ -299,13 +299,13 @@ public class GameBUS {
             winner = matchPlayersWithFirstPlace.get(0).getPlayer();
         }
         for (ClientHandler clientHandler : this.getServer().getClientManager().getClientConnections().values()) {
-            boolean clientPlayerIsWinner = winner.equals(
-                    ((MatchPlayer_Server) clientHandler.getClientIdentifier()).getPlayer()
-            );
+            PlayerDTO clientPlayer = ((MatchPlayer_Server) clientHandler.getClientIdentifier()).getPlayer();
+            boolean clientPlayerIsWinner = winner.equals(clientPlayer);
 
             sendResponseToPlayer(
                     new SocketResponse_GameResult(
                             cleanseMatchPlayersForTransfer(this.getGame().getMatchPlayers()),
+                            clientPlayer,
                             winner,
                             clientPlayerIsWinner
                     ),

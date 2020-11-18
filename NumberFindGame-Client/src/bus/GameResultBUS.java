@@ -1,18 +1,22 @@
 package bus;
 
+import Common.OrdinalNumber;
 import Common.ViewBinder;
 import GUI.Components.GameResultMatchPlayerCellRenderer;
 import Run.GameMain;
-import Socket.Client;
 import Socket.GameClient;
 import Socket.Response.SocketResponse_GameResult;
-import dto.*;
+import dto.MatchPlayer;
+import dto.MatchPlayer_Client;
+import dto.PlayerDTO;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class GameResultBUS {
     public ArrayList<MatchPlayer> matchPlayers;
+    public PlayerDTO clientPlayer;
     public PlayerDTO winner;
     public boolean clientPlayerIsWinner;
 
@@ -37,6 +41,7 @@ public class GameResultBUS {
          */
         ArrayList<MatchPlayer> matchPlayers = MatchPlayer_Client
                 .mergeMatchPlayersAndMatchPlayerClients(response.matchPlayers, matchPlayers_OG);
+        this.clientPlayer = response.clientPlayer;
         this.winner = response.winner;
         this.matchPlayers = matchPlayers;
         this.clientPlayerIsWinner = response.clientPlayerIsWinner;
@@ -44,13 +49,37 @@ public class GameResultBUS {
         this.viewBinder.update();
     }
 
+    public void ui_setLblWinner(JLabel label) {
+        String result;
+        if (this.clientPlayerIsWinner) {
+            result = "Victory!";
+        } else {
+            int clientPlayerPlacing = this.matchPlayers
+                    .stream().filter(mP -> mP.getPlayer().equals(this.clientPlayer))
+                    .collect(Collectors.toList())
+                    .get(0)
+                    .getPlacing();
+            result = String.format("You are %s place", OrdinalNumber.generate(clientPlayerPlacing));
+        }
+
+        label.setText(result);
+    }
+
     public void ui_initPlayerList(JList list) {
+        MatchPlayer_Client.orderMatchPlayersByPlacing(this.matchPlayers);
+
         DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
         for (MatchPlayer matchPlayer : this.matchPlayers) {
             listModel.addElement(matchPlayer);
         }
         list.setModel(listModel);
         list.setCellRenderer(new GameResultMatchPlayerCellRenderer());
+    }
+
+    public boolean isLoaded() {
+        return this.matchPlayers != null &&
+                this.clientPlayer != null &&
+                this.winner != null;
     }
 
     // Inner Classes
@@ -65,6 +94,12 @@ public class GameResultBUS {
 
         @Override
         public void update() {
+            if (!GameResultBUS.this.isLoaded()) {
+                return;
+            }
+            if (lblWinner != null) {
+                ui_setLblWinner(lblWinner);
+            }
             if (listPlayers != null) {
                 ui_initPlayerList(listPlayers);
             }
