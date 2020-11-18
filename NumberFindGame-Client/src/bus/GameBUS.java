@@ -14,12 +14,17 @@ import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class GameBUS {
+<<<<<<< HEAD
     private Game_Client game; // PARENT
     public GameBUS_ViewBinder viewBinder;
+=======
+    public GameBUS_ViewBinder viewBinder = new GameBUS_ViewBinder();
+    private Game_Client game; // PARENT
+>>>>>>> change lblFindThis to Color RED if lucky
 
     public GameBUS(Game_Client game) {
         this.game = game;
@@ -112,7 +117,7 @@ public class GameBUS {
          */
         LevelNode levelNodeSerializable = new LevelNode(levelNode);
         this.game.getClient().sendRequest(
-            new SocketRequest_GameSubmitLevelNode(levelNodeSerializable, game.getClientPlayer())
+                new SocketRequest_GameSubmitLevelNode(levelNodeSerializable, game.getClientPlayer())
         );
 
     }
@@ -170,7 +175,7 @@ public class GameBUS {
     public void ui_initPlayerList(JList list) {
         DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
         for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
-                listModel.addElement(matchPlayer);
+            listModel.addElement(matchPlayer);
         }
         list.setModel(listModel);
         list.setCellRenderer(new MatchPlayerCellRenderer());
@@ -185,6 +190,13 @@ public class GameBUS {
                 .getValue();
 
         return value;
+    }
+
+    private ArrayList<LevelNode.Mutations> getCurrentLevelNodeMutations() {
+        int currentLevelNodeIndex = this.getGame().getCurrentLevel().getValue() - 1;
+        return this.getGame().getLevel()
+                .get(currentLevelNodeIndex)
+                .getMutations();
     }
 
     // Properties
@@ -204,6 +216,13 @@ public class GameBUS {
             if (game != null) {
                 if (lblFindThis != null) {
                     lblFindThis.setText(GameBUS.this.getCurrentLevelNodeValue() + "");
+
+                    // đổi button thành màu vàng nếu là số may mắn
+                    if (GameBUS.this.getCurrentLevelNodeMutations().size() > 0) {
+                        lblFindThis.setForeground(Color.RED);
+                    } else {
+                        lblFindThis.setForeground(Color.BLACK);
+                    }
                 }
                 if (lblTimer != null) {
                     lblTimer.setText(ui_getTimerClock());

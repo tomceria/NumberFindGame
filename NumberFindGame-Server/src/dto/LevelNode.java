@@ -22,6 +22,7 @@ public class LevelNode implements Serializable {
         this.value = levelNode.value;
         this.coord = levelNode.coord;
         this.pickingMatchPlayer = levelNode.pickingMatchPlayer;
+        this.mutations = levelNode.mutations;
     }
 
     public LevelNode(LevelNode levelNode, boolean willClearServerRefs) {
@@ -34,6 +35,7 @@ public class LevelNode implements Serializable {
                 this.pickingMatchPlayer = levelNode.pickingMatchPlayer;
             }
         }
+        this.mutations = levelNode.mutations;
     }
 
     public LevelNode(int value, Point2D.Double coord) {
