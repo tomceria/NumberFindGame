@@ -1,48 +1,149 @@
 package GUI;
 
-import Run.GameMain;
 import bus.LoginBUS;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.net.ConnectException;
 
 public class LoginView {
     /*
       LoginView.form's Components
      */
-    private JPanel contentPane;
-    // ViewBinder's components
-    private JTextField txtUsername;
-    private JPasswordField txtPassword;
-    private JTextField txtNetIp;
-    // Others
-    private JLabel lblTitle;
-    private JLabel lblUsername;
-    private JLabel lblPassword;
-    private JButton btnSubmit;
-    private JLabel lblNetIp;
-    private JPanel formPane;
-    private JPanel netPane;
-    private JPanel mainPane;
-    private JLabel lnkGotoRegister;
+//    private JPanel contentPane;
+//    // ViewBinder's components
+//    private JTextField txtUsername;
+//    private JPasswordField txtPassword;
+//    private JTextField txtNetIp;
+//    // Others
+//    private JLabel lblTitle;
+//    private JLabel lblUsername;
+//    private JLabel lblPassword;
+//    private JButton btnSubmit;
+//    private JLabel lblNetIp;
+
+//    private JLabel lnkGotoRegister;
 
     private LoginBUS loginBUS;
+    
+    //private static JFrame frame = new JFrame("Number Find Game");
+    private JPanel contentPane = new JPanel();
+    private static JLabel lblUsername = new JLabel("Username");
+    private static JLabel lblPassword = new JLabel("Password");
+    private static JTextField txtUsername = new JTextField();
+    private static JPasswordField txtPassword = new JPasswordField();
+    private static JLabel lblTitle = new JLabel("Number Find Game");
+    private static JButton btnSubmit = new JButton("Login");
+    private static JLabel lnkGotoRegister = new JLabel("Create a new account...");
+    private static JLabel lblNetIp = new JLabel("Server Hostname");
+    private static JTextField txtNetIp;
 
     public LoginView(LoginBUS loginBUS) {
         this.loginBUS = loginBUS;
-
-        $$$setupUI$$$();
+        
+        loginViewSetup();
         customizeComponents();
         bindListeners();
         initViewBinder();
+    }
+    
+    public void loginViewSetup() {
+    	txtUsername.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtUsername.setColumns(10);
+		btnSubmit.setFont(new Font("Tahoma", Font.BOLD, 15));
+		
+		contentPane.setBackground(new Color(-14142061));
+		contentPane.setSize(1024,768);
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitle.setForeground(Color.WHITE);
+        lblTitle.setFont(new Font("Tahoma", Font.BOLD, 30));
+        lblUsername.setForeground(Color.WHITE);
+        lblUsername.setFont(new Font("Tahoma", Font.BOLD, 15));
+        //frame.setResizable(false);
+        
+        
+        //frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //frame.getContentPane().add(contentPane);
+        lblPassword.setForeground(Color.WHITE);
+        lblPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
+        txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        txtPassword.setColumns(10);
+        lnkGotoRegister.setForeground(Color.WHITE);
+        lnkGotoRegister.setFont(new Font("Tahoma", Font.BOLD, 15));
+        lblNetIp.setForeground(Color.WHITE);
+        
+        lblNetIp.setFont(new Font("Tahoma", Font.BOLD, 13));
+        
+        txtNetIp = new JTextField();
+        txtNetIp.setEditable(false);
+        txtNetIp.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        txtNetIp.setColumns(10);
+        GroupLayout gl_panel = new GroupLayout(contentPane);
+        gl_panel.setHorizontalGroup(
+        	gl_panel.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_panel.createSequentialGroup()
+        			.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+        				.addGroup(gl_panel.createSequentialGroup()
+        					.addGap(358)
+        					.addComponent(lblNetIp, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.UNRELATED)
+        					.addComponent(txtNetIp, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE))
+        				.addGroup(gl_panel.createSequentialGroup()
+        					.addGap(413)
+        					.addComponent(lnkGotoRegister))
+        				.addGroup(gl_panel.createSequentialGroup()
+        					.addGap(366)
+        					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(lblTitle, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addGroup(gl_panel.createSequentialGroup()
+        							.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))))
+        				.addGroup(gl_panel.createSequentialGroup()
+        					.addGap(366)
+        					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(btnSubmit, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addGroup(gl_panel.createSequentialGroup()
+        							.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))))
+        			.addContainerGap(364, Short.MAX_VALUE))
+        );
+        gl_panel.setVerticalGroup(
+        	gl_panel.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_panel.createSequentialGroup()
+        			.addGap(289)
+        			.addComponent(lblTitle)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+        				.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(gl_panel.createSequentialGroup()
+        					.addGap(3)
+        					.addComponent(lblUsername)))
+        			.addGap(5)
+        			.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+        				.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(gl_panel.createSequentialGroup()
+        					.addGap(3)
+        					.addComponent(lblPassword)))
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addComponent(btnSubmit)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addComponent(lnkGotoRegister)
+        			.addGap(191)
+        			.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblNetIp, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(txtNetIp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        );
+        contentPane.setLayout(gl_panel);
+        //frame.setSize(1024, 768);
+        //frame.setVisible(true);
     }
 
     // Functions
@@ -108,177 +209,6 @@ public class LoginView {
     // Properties
 
     public JPanel getContentPane() {
-        return contentPane;
-    }
-
-    /**
-     * Method generated by IntelliJ IDEA GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
-     */
-    private void $$$setupUI$$$() {
-        contentPane = new JPanel();
-        contentPane.setLayout(new GridBagLayout());
-        contentPane.setBackground(new Color(-14142061));
-        contentPane.setPreferredSize(new Dimension(1024, 768));
-        mainPane = new JPanel();
-        mainPane.setLayout(new GridBagLayout());
-        mainPane.setBackground(new Color(-14142061));
-        GridBagConstraints gbc;
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty = 1.0;
-        contentPane.add(mainPane, gbc);
-        formPane = new JPanel();
-        formPane.setLayout(new GridBagLayout());
-        formPane.setBackground(new Color(-14142061));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        mainPane.add(formPane, gbc);
-        btnSubmit = new JButton();
-        btnSubmit.setText("Login");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(8, 0, 0, 0);
-        formPane.add(btnSubmit, gbc);
-        lblUsername = new JLabel();
-        lblUsername.setForeground(new Color(-1));
-        lblUsername.setText("Username");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.insets = new Insets(0, 0, 8, 8);
-        formPane.add(lblUsername, gbc);
-        lblPassword = new JLabel();
-        lblPassword.setForeground(new Color(-1));
-        lblPassword.setText("Password");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.insets = new Insets(0, 0, 8, 8);
-        formPane.add(lblPassword, gbc);
-        txtPassword = new JPasswordField();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 120;
-        gbc.insets = new Insets(0, 0, 8, 0);
-        formPane.add(txtPassword, gbc);
-        txtUsername = new JTextField();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 120;
-        gbc.insets = new Insets(0, 0, 8, 0);
-        formPane.add(txtUsername, gbc);
-        lnkGotoRegister = new JLabel();
-        lnkGotoRegister.setForeground(new Color(-1));
-        lnkGotoRegister.setText("Create a new account...");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(8, 0, 0, 0);
-        formPane.add(lnkGotoRegister, gbc);
-        lblTitle = new JLabel();
-        lblTitle.setFocusCycleRoot(true);
-        Font lblTitleFont = this.$$$getFont$$$("Fira Code", Font.BOLD, 32, lblTitle.getFont());
-        if (lblTitleFont != null) lblTitle.setFont(lblTitleFont);
-        lblTitle.setForeground(new Color(-1));
-        lblTitle.setText("NumberFindGame");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 16, 0);
-        mainPane.add(lblTitle, gbc);
-        netPane = new JPanel();
-        netPane.setLayout(new GridBagLayout());
-        netPane.setBackground(new Color(-14142061));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.ipady = 10;
-        contentPane.add(netPane, gbc);
-        lblNetIp = new JLabel();
-        Font lblNetIpFont = this.$$$getFont$$$(null, -1, 10, lblNetIp.getFont());
-        if (lblNetIpFont != null) lblNetIp.setFont(lblNetIpFont);
-        lblNetIp.setForeground(new Color(-1));
-        lblNetIp.setText("Server Hostname");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 0, 8);
-        netPane.add(lblNetIp, gbc);
-        txtNetIp = new JTextField();
-        Font txtNetIpFont = this.$$$getFont$$$(null, -1, 10, txtNetIp.getFont());
-        if (txtNetIpFont != null) txtNetIp.setFont(txtNetIpFont);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 100;
-        netPane.add(txtNetIp, gbc);
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
-        if (currentFont == null) return null;
-        String resultName;
-        if (fontName == null) {
-            resultName = currentFont.getName();
-        } else {
-            Font testFont = new Font(fontName, Font.PLAIN, 10);
-            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
-                resultName = fontName;
-            } else {
-                resultName = currentFont.getName();
-            }
-        }
-        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
 

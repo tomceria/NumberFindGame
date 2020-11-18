@@ -1,5 +1,0 @@
-16-11-2020 09:13:30  Login detected. Client ID 4d577ca9-eec9-4688-9e1d-038d827736b8; IP: /127.0.0.1
-16-11-2020 09:18:49  Login detected. Client ID 47f0ddaa-97b3-41ea-8be2-4d5eb794d166; IP: /127.0.0.1
-16-11-2020 09:18:50  Client '47f0ddaa-97b3-41ea-8be2-4d5eb794d166' disconnected.
-16-11-2020 09:19:32  Login detected. Client ID f4c2d109-54e5-44e9-9f4c-c0bcb5490fdb; IP: /127.0.0.1
-16-11-2020 09:20:51  Client 'f4c2d109-54e5-44e9-9f4c-c0bcb5490fdb' disconnected.
