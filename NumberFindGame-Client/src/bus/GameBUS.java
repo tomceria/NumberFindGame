@@ -18,13 +18,8 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class GameBUS {
-<<<<<<< HEAD
     private Game_Client game; // PARENT
     public GameBUS_ViewBinder viewBinder;
-=======
-    public GameBUS_ViewBinder viewBinder = new GameBUS_ViewBinder();
-    private Game_Client game; // PARENT
->>>>>>> change lblFindThis to Color RED if lucky
 
     public GameBUS(Game_Client game) {
         this.game = game;
