@@ -30,6 +30,7 @@ public class GameBUS {
 
     /**
      * Client gửi số Đã chọn đúng. Phải là synchronized tránh 2 player gửi 1 số cùng lúc
+     *
      * @param levelNode
      * @param sendingPlayer
      * @return
@@ -54,6 +55,7 @@ public class GameBUS {
 
     /**
      * Trong Level có pickingMatchPlayer, prop đó có thể là MatchPlayer_Server => Clone object mới ko có ref đó
+     *
      * @param level Danh sách Level gốc (có thể chứa pickingMatchPlayer là MatchPlayer_Server)
      * @return Danh sách LevelNode đã được "thanh tẩy"
      */
@@ -64,8 +66,10 @@ public class GameBUS {
         }
         return newLevel;
     }
+
     /**
      * Ép MatchPlayer_Server về MatchPlayers (Không có reference gì đến ClientHandler) để có thể chuyển gói dữ liệu về cho Client
+     *
      * @param matchPlayers Danh sách MatchPlayer gốc (là MatchPlayer_Server)
      * @return Danh sách MatchPlayer đã được "thanh tẩy"
      */
@@ -221,35 +225,35 @@ public class GameBUS {
         // Nếu 2 người chơi có score bằng nhau, sẽ dựa vào avgTime để chọn người chơi thứ hạng cao hơn
 
         ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
-        ArrayList<MatchPlayer> sortingMatchPlayers = new ArrayList<MatchPlayer>();
+        int matchPlayersSize = matchPlayers.size();
 
-        // Bước 1: Những người chơi đã có điểm => Add vào ĐẦU danh sách tạm
-        for (int i = 1; i <= game.getCurrentLevel().getValue(); i++) {
-            // TODO: Placing based on avgTime
-            for (MatchPlayer matchPlayer : matchPlayers) {
-                if (matchPlayer.getScore() == i) {
-                    sortingMatchPlayers.add(0, matchPlayer);
+        // Bước 1: sắp xếp theo điểm
+        // TODO: Placing based on avgTime
+        for (int i = 0; i < matchPlayersSize; i++) {
+            for (int j = i + 1; j < matchPlayersSize; j++) {
+                if (matchPlayers.get(i).getScore() < matchPlayers.get(j).getScore()) {
+                    // swap i, j
+                    Collections.swap(matchPlayers, i, j);
                 }
             }
         }
-        // Bước 2: Những người chơi chưa có điểm => Add vào ĐUÔI danh sách tạm
-        for (MatchPlayer matchPlayer : matchPlayers) {
-            if (matchPlayer.getScore() == 0) {
-                sortingMatchPlayers.add(matchPlayer);
+
+        // sắp xếp theo avg time
+        for (int i = 0; i < matchPlayersSize; i++) {
+            for (int j = i + 1; j < matchPlayersSize; j++) {
+                if ((matchPlayers.get(i).getAvgTime() > matchPlayers.get(j).getAvgTime()) && (matchPlayers.get(i).getScore() == matchPlayers.get(j).getScore())) {
+                    // swap i, j
+                    Collections.swap(matchPlayers, i, j);
+                }
             }
-        }
-        // Bước 3: Với danh sách tạm đã có thứ tự thứ hạng => gán Placing
-        for (int i = 0; i < sortingMatchPlayers.size(); i++) {
-            int newPlacing;
-            MatchPlayer mP = sortingMatchPlayers.get(i);
-            if (mP.getScore() == 0) {
-                newPlacing = matchPlayers.size();
-            } else {
-                newPlacing = i + 1;
-            }
-            sortingMatchPlayers.get(i).setPlacing(newPlacing);
         }
 
+        // Bước 3: Với danh sách tạm đã có thứ tự thứ hạng => gán Placing
+        for (int i = 0; i < matchPlayersSize; i++) {
+            matchPlayers.get(i).setPlacing(i+1);
+        }
+
+        int x = 0;
     }
 
     // Properties

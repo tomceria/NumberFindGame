@@ -20,10 +20,10 @@ public class MySqlDataAccessHelper {
 
 	public MySqlDataAccessHelper() {
 		/* HUY */
-		this.Host = "localhost";
-		this.UserName = "root";
-		this.Password = "passne";
-		this.DataBase = "numberfindgame";
+//		this.Host = "localhost";
+//		this.UserName = "root";
+//		this.Password = "passne";
+//		this.DataBase = "numberfindgame";
 		/* HOANG */
 //		this.Host = "localhost:9001";
 //		this.UserName = "root";
@@ -34,6 +34,11 @@ public class MySqlDataAccessHelper {
 //		this.UserName = "root";
 //		this.Password = "password";
 //		this.DataBase = "numberfindgame";
+		/* AN */
+		this.Host = "localhost";
+		this.UserName = "root";
+		this.Password = "";
+		this.DataBase = "numberfindgame";
 
 		this.connect = null;
 		this.stmt = null;
