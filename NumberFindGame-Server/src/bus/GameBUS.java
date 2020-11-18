@@ -267,26 +267,24 @@ public class GameBUS {
     }
 
     private void performEndGame() {
+        /**
+         * Ngưng timer của game. Ưu tiên thực hiện trước hết
+         */
         this.gameTimer.cancel();
+
+        /**
+         * 1. Thông báo với players rằng game đã kết thúc
+         * => Quá trình xử lý kết quả có thể kéo dài, việc gửi thông báo này tránh player gửi thêm các request dư thừa
+         */
         this.broadcastResponseToPlayers(
                 new SocketResponse_GameEnd()
         );
 
         /**
-         * 1. TODO: Lưu thông tin trận đấu và điểm của players
+         * 2. Lưu thông tin trận đấu và điểm của players
          */
 
-        /**
-         * 2. KẾT THÚC GAME => BÁO CHO GAMEROOM
-         * Có thể có trường hợp Game được khởi động độc lập không có GameRoom
-         * => không cần thông báo cho GameRoom
-         */
-        List<GameRoom_Server> gameRooms = this.getServer().getGameRooms().stream()
-                .filter(o -> o.getId() == this.getGame().getGameRoomInfo().getId())
-                .collect(Collectors.toList());
-        if (gameRooms.size() >= 1) {
-            gameRooms.get(0).getGameRoomBUS().endGame();
-        }
+        // TODO: LƯU THÔNG TIN TRẬN ĐẤU VÀ ĐIỂM
 
         /**
          * 3. Gửi Kết quả Trận đấu cho các players
@@ -316,8 +314,17 @@ public class GameBUS {
         }
 
         /**
-         * Gửi thông tin GameRoom mới cho các players
+         * 4. (OPTIONAL) Báo cho GameRoom biết rằng game đã KẾT THÚC, cập nhật GameRoom. Gửi GameRoom mới đến players
+         * Optional vì: Có thể có trường hợp Game được khởi động độc lập không có GameRoom
          */
+        List<GameRoom_Server> gameRoomOfGameAsList = this.getServer().getGameRooms().stream()
+                .filter(o -> o.getId() == this.getGame().getGameRoomInfo().getId())
+                .collect(Collectors.toList());
+        if (gameRoomOfGameAsList.size() >= 1) {
+            GameRoom_Server gameRoom = gameRoomOfGameAsList.get(0);
+            gameRoom.getGameRoomBUS().endGame();
+            gameRoom.getGameRoomBUS().notifyUpdateGameRoomProps();
+        }
     }
 
     // Properties
