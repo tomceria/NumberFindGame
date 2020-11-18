@@ -56,15 +56,7 @@ public class GameBUS {
         if (this.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
             accept = true;
 
-            /**
-             * Tăng điểm cho sendingPlayer
-             */
-            int addScore = 1;
-            // nếu là số may mắn (logic if sẽ còn thay đổi, hiện tại chỉ check size của mutations)
-            if (levelNode.getMutations().size() > 0) {
-                addScore = 3;
-            }
-            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart(), addScore);
+            performSuccessLevelNodeValidation(levelNode, sendingPlayer);
 
             /**
              * Tiến hành thủ tục chuyển sang Level tiếp theo. Nếu đã vượt qua LevelNode cuối cùng thì end game
@@ -232,6 +224,23 @@ public class GameBUS {
         return levelNodes;
     }
 
+    private void performSuccessLevelNodeValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {
+        /**
+         * Tăng điểm cho sendingPlayer
+         */
+        int addScore = 1;
+        // nếu là số may mắn (logic if sẽ còn thay đổi, hiện tại chỉ check size của mutations)
+        if (levelNode.getMutations().size() > 0) {
+            addScore = 3;
+        }
+        this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart(), addScore);
+
+        /**
+         * Gán thứ hạng mới cho các player
+         */
+        this.performPlacingPlayers();
+    }
+
     private void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
         /**
          * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
@@ -240,11 +249,6 @@ public class GameBUS {
                 .stream().filter(lN -> levelNode.getValue() == lN.getValue())
                 .collect(Collectors.toList()).get(0)
                 .setPickingMatchPlayer(sendingPlayer);
-
-        /**
-         * Gán thứ hạng mới cho các player
-         */
-        this.performPlacingPlayers();
 
         /**
          * Tăng Level cho Game

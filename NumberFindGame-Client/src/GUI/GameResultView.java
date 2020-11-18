@@ -72,8 +72,9 @@ public class GameResultView {
         gbc.insets = new Insets(0, 0, 24, 0);
         contentPane.add(lblWinner, gbc);
         listPlayers = new JList();
-        listPlayers.setMinimumSize(new Dimension(300, 400));
-        listPlayers.setPreferredSize(new Dimension(300, 400));
+        listPlayers.setMaximumSize(new Dimension(300, 400));
+        listPlayers.setMinimumSize(new Dimension(300, 50));
+        listPlayers.setPreferredSize(new Dimension(300, 0));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
