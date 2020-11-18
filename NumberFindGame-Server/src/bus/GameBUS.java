@@ -1,9 +1,12 @@
 package bus;
 
+import Socket.ClientHandler;
 import Socket.ClientManager;
 import Socket.GameServer;
 import Socket.Response.SocketResponse;
+import Socket.Response.SocketResponse_GameEnd;
 import Socket.Response.SocketResponse_GameProps;
+import Socket.Response.SocketResponse_GameResult;
 import dto.*;
 
 import java.awt.geom.Point2D;
@@ -15,6 +18,7 @@ import static util.Maths.valueFromTwoRanges;
 
 public class GameBUS {
     private Game_Server game;  // PARENT
+    private Timer gameTimer;
 
     public GameBUS(Game_Server game) {
         this.game = game;
@@ -27,6 +31,16 @@ public class GameBUS {
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
         game.setCurrentLevelAndResetTimer(1);                                                    // also reset timer for CurrentLevel
+        this.gameTimer = new Timer();
+        this.gameTimer.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        GameBUS.this.performEndGame();
+                    }
+                },
+                this.getGame().getMatchConfig().getTime()
+        );
     }
 
     /**
@@ -285,6 +299,67 @@ public class GameBUS {
             sortingMatchPlayers.get(i).setPlacing(newPlacing);
         }
 
+    }
+
+    private void performEndGame() {
+        /**
+         * Ngưng timer của game. Ưu tiên thực hiện trước hết
+         */
+        this.gameTimer.cancel();
+
+        /**
+         * 1. Thông báo với players rằng game đã kết thúc
+         * => Quá trình xử lý kết quả có thể kéo dài, việc gửi thông báo này tránh player gửi thêm các request dư thừa
+         */
+        this.broadcastResponseToPlayers(
+                new SocketResponse_GameEnd()
+        );
+
+        /**
+         * 2. Lưu thông tin trận đấu và điểm của players
+         */
+
+        // TODO: LƯU THÔNG TIN TRẬN ĐẤU VÀ ĐIỂM
+
+        /**
+         * 3. Gửi Kết quả Trận đấu cho các players
+         * Các lệnh bên dưới có thể dùng broadcast,
+         * Nhưng vì yêu cầu mỗi player nhận về response khác nhau (clientPlayerIsWinner)
+         * => Mỗi clientHandler được xử lý khác nhau
+         */
+        PlayerDTO winner = null;
+        List<MatchPlayer> matchPlayersWithFirstPlace = this.getGame().getMatchPlayers().stream()
+                .filter(mP -> mP.getPlacing() == 1).collect(Collectors.toList());
+        if (matchPlayersWithFirstPlace.size() > 0) {
+            winner = matchPlayersWithFirstPlace.get(0).getPlayer();
+        }
+        for (ClientHandler clientHandler : this.getServer().getClientManager().getClientConnections().values()) {
+            PlayerDTO clientPlayer = ((MatchPlayer_Server) clientHandler.getClientIdentifier()).getPlayer();
+            boolean clientPlayerIsWinner = clientPlayer.equals(winner);
+
+            sendResponseToPlayer(
+                    new SocketResponse_GameResult(
+                            cleanseMatchPlayersForTransfer(this.getGame().getMatchPlayers()),
+                            clientPlayer,
+                            winner,
+                            clientPlayerIsWinner
+                    ),
+                    clientHandler.getId()
+            );
+        }
+
+        /**
+         * 4. (OPTIONAL) Báo cho GameRoom biết rằng game đã KẾT THÚC, cập nhật GameRoom. Gửi GameRoom mới đến players
+         * Optional vì: Có thể có trường hợp Game được khởi động độc lập không có GameRoom
+         */
+        List<GameRoom_Server> gameRoomOfGameAsList = this.getServer().getGameRooms().stream()
+                .filter(o -> o.getId() == this.getGame().getGameRoomInfo().getId())
+                .collect(Collectors.toList());
+        if (gameRoomOfGameAsList.size() >= 1) {
+            GameRoom_Server gameRoom = gameRoomOfGameAsList.get(0);
+            gameRoom.getGameRoomBUS().endGame();
+            gameRoom.getGameRoomBUS().notifyUpdateGameRoomProps();
+        }
     }
 
     // Properties

@@ -1,18 +1,26 @@
 package GUI.Components;
 
+import Run.GameMain;
+import Socket.GameClient;
+import dto.Game_Client;
 import dto.MatchPlayer;
 import dto.MatchPlayer_Client;
 import dto.PlayerDTO;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
-public class MatchPlayerCellRenderer extends JPanel implements ListCellRenderer<MatchPlayer>  {
+public class GameMatchPlayerCellRenderer extends JPanel implements ListCellRenderer<MatchPlayer>  {
     private JPanel paneAvatar;
     private JLabel lblNameInitial;
     private JLabel lblScore;
 
-    public MatchPlayerCellRenderer() {
+    /**
+     * Creates a new <code>JPanel</code> with a double buffer
+     * and a flow layout.
+     */
+    public GameMatchPlayerCellRenderer() {
         this.setLayout(new GridBagLayout());
         this.setBackground(new Color(-1));
         this.setMinimumSize(new Dimension(75, 50));
@@ -82,6 +90,17 @@ public class MatchPlayerCellRenderer extends JPanel implements ListCellRenderer<
 
         lblScore.setText(value.getScore() + "");
         lblScore.setFont(new Font("SansSerif", Font.BOLD, 12));
+
+        if (matchPlayer.getPlayer().equals(
+                ((Game_Client)
+                        ((GameClient) GameMain.client).getGameRoom().getGame()
+                ).getClientPlayer().getPlayer()
+        )) {
+            Border clientPlayerIndicator = BorderFactory.createLineBorder(Color.BLACK, 3);
+            paneAvatar.setBorder(clientPlayerIndicator);
+        } else {
+            paneAvatar.setBorder(null);
+        }
 
         return this;
     }

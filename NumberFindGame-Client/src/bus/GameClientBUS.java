@@ -19,7 +19,7 @@ public class GameClientBUS {
      */
     public void listen_clientPlayerJoinRoom(SocketResponse_GameRoomPlayerJoin response) {
         gameClient.setGameRoom(
-                new GameRoom_Client(response.gameRoomId, this.gameClient)
+                new GameRoom_Client(response.gameRoomId, response.gameRoomName, this.gameClient)
         );
         gameClient.getGameRoom().setClientPlayer(
                 response.clientPlayer_MatchPlayer

@@ -2,17 +2,23 @@ package dto;
 
 public class GameRoom {
     private int id;
+    private String name;
     protected MatchConfig matchConfig;
     protected GameRoomStatus status;
     private Game game;
 
-    public GameRoom(int id) {
+    public GameRoom(int id, String name) {
         this.id = id;
+        this.name = name;
     }
 
     // Properties
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public MatchConfig getMatchConfig() {

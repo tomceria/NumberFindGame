@@ -17,7 +17,6 @@ import java.util.UUID;
 
 import static Socket.Response.SocketResponse.Action.*;
 import static Socket.Response.SocketResponse.Status.*;
-import static dto.GameRoomStatus.*;
 
 public class GameRoomBUS {
     private GameRoom_Server gameRoom; // PARENT
@@ -48,26 +47,17 @@ public class GameRoomBUS {
         return i;
     }
 
-    public void notifyUpdateGameRoomProps(ArrayList<MatchPlayer> matchPlayers, MatchConfig matchConfig, GameRoomStatus status) {
-        if (matchPlayers == null) {
-            matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), false);
-        }
-        if (matchConfig == null) {
-            matchConfig = gameRoom.getMatchConfig();
-        }
-        if (status == null) {
-            status = gameRoom.getStatus();
-        }
-        SocketResponse response = new SocketResponse_GameRoomProps(matchPlayers, matchConfig, status);
+    public void notifyUpdateGameRoomProps() {
+        SocketResponse response = new SocketResponse_GameRoomProps(
+                getMatchPlayersInRoomToSendResponse(),
+                this.gameRoom.getMatchConfig(),
+                this.gameRoom.getStatus()
+        );
         broadcastResponseToRoom(response);
     }
 
-    public void reloadMatchConfig() {  // Hàm này cần thiết vì GameServer chỉ có 1 phòng duy nhất và Client ko dc đổi Config
-        this.gameRoom.setMatchConfig(getDefaultMatchConfig());
-    }
-
     public void joinRoom(ClientHandler playerClient) {
-        if (this.gameRoom.getStatus() != OPEN) {
+        if (this.gameRoom.getStatus() != GameRoomStatus.OPEN) {
             // TODO: throw exception
             return;
         }
@@ -77,9 +67,9 @@ public class GameRoomBUS {
          */
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
         broadcastResponseToRoom(new SocketResponse(
-            SUCCESS,
-            MSG,
-            String.format("%s joined Room %d.", matchPlayer.getPlayer().getUsername(), gameRoom.getId())
+                SUCCESS,
+                MSG,
+                String.format("%s joined Room %d.", matchPlayer.getPlayer().getUsername(), gameRoom.getId())
         ));
 
         /**
@@ -91,11 +81,12 @@ public class GameRoomBUS {
          * 3. Cho Player mới (playerClient) vào phòng (phía Client)
          */
         sendResponseToPlayer(
-            new SocketResponse_GameRoomPlayerJoin(
-                this.gameRoom.getId(),
-                new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
-            ),
-            playerClient.getId()
+                new SocketResponse_GameRoomPlayerJoin(
+                        this.gameRoom.getId(),
+                        this.gameRoom.getName(),
+                        new MatchPlayer((MatchPlayer) playerClient.getClientIdentifier())   // clone để không có reference đến MatchPlayerServer
+                ),
+                playerClient.getId()
         );
 
         /**
@@ -103,7 +94,7 @@ public class GameRoomBUS {
          * Hành động này phải thực hiện sau bước "2" vì playerClient cần được nhận notifyUpdateGameRoomProps ngay khi vào phòng
          * Vì lúc này getMatchPlayersInRoomToSendResponse() đã chứa playerClient
          */
-        this.notifyUpdateGameRoomProps(this.getMatchPlayersInRoomToSendResponse(), null, null);
+        this.notifyUpdateGameRoomProps();
 
         /**
          * Gán GameRoomBUS cho ClientIdentifier
@@ -122,8 +113,8 @@ public class GameRoomBUS {
 
         MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
         if (this.gameRoom.getPlayerClients().size() > 0) {
-            broadcastResponseToRoom( new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())) );
-            this.notifyUpdateGameRoomProps(this.getMatchPlayersInRoomToSendResponse(), null, null);
+            broadcastResponseToRoom(new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())));
+            this.notifyUpdateGameRoomProps();
         }
     }
 
@@ -133,22 +124,23 @@ public class GameRoomBUS {
          * Sau khi broadcast, GameRoomBUS sẽ bước vào giai đoạn xử lý
          */
         this.broadcastResponseToRoom(
-            new SocketResponse(SUCCESS, MSG, "Starting game...")
+                new SocketResponse(SUCCESS, MSG, "Starting game...")
         );
 
         /**
+         * KHỞI TẠO TRẬN ĐẤU
          * Lấy MatchConfig và danh sách người chơi từ GameRoom đưa vào Game
-         * => Các MatchConfig được chỉnh sửa khi trận đấu đang diễn ra chỉ thay đổi trên GameRoom
          */
         MatchConfig matchConfig = this.gameRoom.getMatchConfig();
         ArrayList<MatchPlayer> matchPlayers = convertClientHandlersToMatchPlayers(this.gameRoom.getPlayerClients(), true);
-        this.gameRoom.setStatus(PLAYING);
+        this.gameRoom.setStatus(GameRoomStatus.PLAYING);
         this.gameRoom.setGame(
-            new Game_Server(
-                    this.getServer(),
-                    gameRoom.getPlayerClients(),
-                    matchConfig,
-                    matchPlayers)
+                new Game_Server(
+                        this.getServer(),
+                        gameRoom.getPlayerClients(),
+                        matchConfig,
+                        matchPlayers,
+                        new GameRoomInfo(this.gameRoom))
         );
         this.getGame().getGameBUS().initGame();
 
@@ -157,7 +149,7 @@ public class GameRoomBUS {
          */
         Game gameSerializable = new Game(this.getGame(), true);
         this.broadcastResponseToRoom(
-            new SocketResponse_GameInit(gameSerializable)
+                new SocketResponse_GameInit(gameSerializable)
         );
 
         /**
@@ -169,6 +161,11 @@ public class GameRoomBUS {
             MatchPlayer_Server matchPlayer = (MatchPlayer_Server) playerClient.getClientIdentifier();
             matchPlayer.setGameBUS(this.getGame().getGameBUS());
         }
+    }
+
+    public void endGame() {
+        this.gameRoom.setStatus(GameRoomStatus.OPEN);
+        this.gameRoom.setGame(null);
     }
 
     public MatchConfig getDefaultMatchConfig() {    // FUTURE-PROOF, sau này có thể cấu hình cho Player thay đổi Config

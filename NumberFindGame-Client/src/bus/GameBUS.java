@@ -2,7 +2,7 @@ package bus;
 
 import Common.ViewBinder;
 import GUI.Components.LevelNodeButton;
-import GUI.Components.MatchPlayerCellRenderer;
+import GUI.Components.GameMatchPlayerCellRenderer;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
@@ -31,8 +31,8 @@ public class GameBUS {
     public void initGame() {
         // TODO: Kiểm tra nếu các property rỗng (chưa dc gán dữ liệu từ Server) thì throw exception
 
-        int clientPlayerId = this.game.getClientPlayer().getPlayer().getId();
-        MatchPlayer clientPlayer = null;
+//        int clientPlayerId = this.game.getClientPlayer().getPlayer().getId();
+//        MatchPlayer clientPlayer = null;
 
         /**
          * Ép danh sách level từ ArrayList<LevelNode> thành ArrayList<LevelNode_Client>
@@ -157,6 +157,10 @@ public class GameBUS {
         this.viewBinder.update();
     }
 
+    public void listen_GameEnd() {
+        ViewBUS.gotoGameResultView();
+    }
+
     public String ui_getTimerClock() {
         int timeInMillis = game.getMatchConfig().getTime();
         LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
@@ -168,12 +172,14 @@ public class GameBUS {
     }
 
     public void ui_initPlayerList(JList list) {
+        MatchPlayer_Client.orderMatchPlayersByPlacing(game.getMatchPlayers());
+
         DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
         for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
             listModel.addElement(matchPlayer);
         }
         list.setModel(listModel);
-        list.setCellRenderer(new MatchPlayerCellRenderer());
+        list.setCellRenderer(new GameMatchPlayerCellRenderer());
     }
 
     // Privates

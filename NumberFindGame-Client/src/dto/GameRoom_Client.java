@@ -11,8 +11,8 @@ public class GameRoom_Client extends GameRoom {
     MatchPlayer clientPlayer;
     ArrayList<MatchPlayer> players;
 
-    public GameRoom_Client(int id, GameClient client) {
-        super(id);
+    public GameRoom_Client(int id, String name, GameClient client) {
+        super(id, name);
         this.client = client;
         this.gameRoomBUS = new GameRoomBUS(this);
     }

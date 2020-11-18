@@ -2,6 +2,7 @@ package dto;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MatchPlayer_Client extends MatchPlayer {
     Color uiColor;
@@ -12,6 +13,27 @@ public class MatchPlayer_Client extends MatchPlayer {
 
     public MatchPlayer_Client(MatchPlayer matchPlayer) {
         super(matchPlayer);
+    }
+
+    // STATIC Functions
+
+    public static void setColorForMatchPlayers(ArrayList<MatchPlayer> matchPlayers) {
+        // Set UiColor for MatchPlayers
+        ArrayList<Color> colors = new ArrayList<Color>() {{                                       // TODO: Move to Utils
+            add(Color.decode("#f73378"));
+            add(Color.decode("#ffee33"));
+            add(Color.decode("#33bfff"));
+            add(Color.decode("#33eb91"));
+            add(Color.decode("#ffa733"));
+            add(Color.decode("#834bff"));
+        }};
+        for (int i = 0; i < matchPlayers.size(); i++) {
+            ((MatchPlayer_Client) matchPlayers.get(i)).uiColor = colors.get(i);
+        }
+    }
+
+    public static void orderMatchPlayersByPlacing(ArrayList<MatchPlayer> matchPlayers) {
+        Collections.sort(matchPlayers, (o1, o2) -> o1.getPlacing() - o2.getPlacing());
     }
 
     // Overrides

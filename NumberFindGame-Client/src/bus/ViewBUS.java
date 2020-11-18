@@ -7,6 +7,11 @@ import java.awt.*;
 
 public class ViewBUS {
     private static JFrame mainFrame;
+    public static LoginView loginView = null;
+    public static RegisterView registerView = null;
+    public static GameRoomView gameRoomView = null;
+    public static GameView gameView = null;
+    public static GameResultView gameResultView = null;
 
     public static void configureWindow(JFrame mainFrame) {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,30 +26,46 @@ public class ViewBUS {
     }
 
     public static void gotoLoginView() {
-        LoginView loginView = new LoginView(new LoginBUS());
+        if (loginView == null) {
+            loginView = new LoginView(new LoginBUS());
+        }
         mainFrame.setContentPane(loginView.getContentPane());
         mainFrame.setVisible(true);
     }
 
     public static void gotoRegisterView(String hostname, int netPort) {
-        RegisterView registerView = new RegisterView(
-                new RegisterBUS(hostname, netPort)
-        );
+        if (registerView == null) {
+            registerView = new RegisterView(
+                    new RegisterBUS(hostname, netPort)
+            );
+        }
         mainFrame.setContentPane(registerView.getContentPane());
         mainFrame.setVisible(true);
     }
 
+    public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
+        if (gameRoomView == null) {
+            gameRoomView = new GameRoomView(gameRoomBUS);
+        }
+        mainFrame.setContentPane(gameRoomView.getContentPane());
+        mainFrame.setVisible(true);
+    }
+
     public static void gotoGameView(GameBUS gameBUS) {
-        GameView gameView = new GameView(gameBUS);
-        mainFrame.setContentPane(gameView.contentPane);
+        if (gameView == null) {
+            gameView = new GameView(gameBUS);
+        }
+        mainFrame.setContentPane(gameView.getContentPane());
         mainFrame.setVisible(true);
 
         gameView.init();
     }
 
-    public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
-        GameRoomView gameRoomView = new GameRoomView(gameRoomBUS);
-        mainFrame.setContentPane(gameRoomView.getContentPane());
+    public static void gotoGameResultView() {
+        if (gameResultView == null) {
+            gameResultView = new GameResultView(new GameResultBUS());
+        }
+        mainFrame.setContentPane(gameResultView.getContentPane());
         mainFrame.setVisible(true);
     }
 

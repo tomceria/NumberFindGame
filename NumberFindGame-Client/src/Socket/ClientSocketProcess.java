@@ -63,6 +63,17 @@ public class ClientSocketProcess extends Thread {
                             );
                     break;
                 }
+                case GAME_END: {
+                    GameRoom_Client gameRoom = ((GameClient) client).getGameRoom();
+                    ((Game_Client) gameRoom.getGame()).getGameBUS()
+                            .listen_GameEnd();
+                    break;
+                }
+                case GAME_RESULT: {
+                    ViewBUS.gameResultView.getGameResultBUS()
+                            .listen_showResult((SocketResponse_GameResult) resultRaw);
+                    break;
+                }
                 case NET_CLOSE: {
                     client.close();
                     isRunning = false;

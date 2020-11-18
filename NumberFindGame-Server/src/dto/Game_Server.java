@@ -14,8 +14,8 @@ public class Game_Server extends Game {
     private HashMap<UUID, ClientHandler> playerClients;
     private GameBUS gameBUS;
 
-    public Game_Server(GameServer server, HashMap<UUID, ClientHandler> playerClients, MatchConfig matchConfig, ArrayList<MatchPlayer> players) {
-        super(matchConfig, players);
+    public Game_Server(GameServer server, HashMap<UUID, ClientHandler> playerClients, MatchConfig matchConfig, ArrayList<MatchPlayer> players, GameRoomInfo gameRoomInfo) {
+        super(matchConfig, players, gameRoomInfo);
         this.gameBUS = new GameBUS(this);
 
         this.server = server;
