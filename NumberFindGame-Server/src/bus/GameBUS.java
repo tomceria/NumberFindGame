@@ -56,7 +56,24 @@ public class GameBUS {
         if (this.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
             accept = true;
 
-            performGoNextLevel(levelNode, sendingPlayer);
+            /**
+             * Tăng điểm cho sendingPlayer
+             */
+            int addScore = 1;
+            // nếu là số may mắn (logic if sẽ còn thay đổi, hiện tại chỉ check size của mutations)
+            if (levelNode.getMutations().size() > 0) {
+                addScore = 3;
+            }
+            this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart(), addScore);
+
+            /**
+             * Tiến hành thủ tục chuyển sang Level tiếp theo. Nếu đã vượt qua LevelNode cuối cùng thì end game
+             */
+            if (this.getGame().getCurrentLevel().getValue() < this.getGame().getLevel().size()) {
+                performGoNextLevel(levelNode, sendingPlayer);
+            } else {
+                performEndGame();
+            }
         }
 
         return accept;
@@ -216,16 +233,6 @@ public class GameBUS {
     }
 
     private void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
-        /**
-         * Tăng điểm cho sendingPlayer
-         */
-        int addScore = 1;
-        // nếu là số may mắn (logic if sẽ còn thay đổi, hiện tại chỉ check size của mutations)
-        if (levelNode.getMutations().size() > 0) {
-            addScore = 3;
-        }
-        this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart(), addScore);
-
         /**
          * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
          */

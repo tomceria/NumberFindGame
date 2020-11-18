@@ -3,6 +3,7 @@ package dto;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class MatchPlayer_Client extends MatchPlayer {
     Color uiColor;
@@ -86,7 +87,10 @@ public class MatchPlayer_Client extends MatchPlayer {
         ArrayList<MatchPlayer> matchPlayers = convertMatchPlayersToMatchPlayerClients(_matchPlayers);
         for (int i = 0; i < matchPlayers.size(); i++) {
             MatchPlayer matchPlayer = matchPlayers.get(i);
-            MatchPlayer matchPlayer_OG = matchPlayers_OG.get(i);
+            MatchPlayer matchPlayer_OG = matchPlayers_OG.stream()
+                    .filter(mP -> mP.getPlayer().getUsername().equals(matchPlayer.getPlayer().getUsername()))
+                    .collect(Collectors.toList())
+                    .get(0);
             ((MatchPlayer_Client) matchPlayer).setUiColor(
                     ((MatchPlayer_Client) matchPlayer_OG).getUiColor()
             );

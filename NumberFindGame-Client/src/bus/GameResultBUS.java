@@ -66,10 +66,11 @@ public class GameResultBUS {
     }
 
     public void ui_initPlayerList(JList list) {
-        MatchPlayer_Client.orderMatchPlayersByPlacing(this.matchPlayers);
+        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>(this.matchPlayers);
+        MatchPlayer_Client.orderMatchPlayersByPlacing(matchPlayers);
 
         DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
-        for (MatchPlayer matchPlayer : this.matchPlayers) {
+        for (MatchPlayer matchPlayer : matchPlayers) {
             listModel.addElement(matchPlayer);
         }
         list.setModel(listModel);

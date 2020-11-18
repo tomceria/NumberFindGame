@@ -144,10 +144,10 @@ public class GameResultMatchPlayerCellRenderer extends JPanel implements ListCel
         lblName.setText(matchPlayer.getPlayer().getUsername());
         lblScore.setText(matchPlayer.getScore() + "");
 
-        if (matchPlayer.getPlayer().equals(
+        if (matchPlayer.getPlayer().getUsername().equals(
                 ((Game_Client)
                         ((GameClient) GameMain.client).getGameRoom().getGame()
-                ).getClientPlayer().getPlayer()
+                ).getClientPlayer().getPlayer().getUsername()
         )) {
             Border clientPlayerIndicator = BorderFactory.createLineBorder(Color.BLACK, 3);
             panePlayer.setBorder(clientPlayerIndicator);

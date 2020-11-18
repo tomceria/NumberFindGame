@@ -24,7 +24,6 @@ public class Game_Client extends Game {
     @Override
     public void setMatchPlayers(ArrayList<MatchPlayer> players) {
         super.setMatchPlayers(players);
-        MatchPlayer_Client.setColorForMatchPlayers(players);
     }
 
     // Properties
