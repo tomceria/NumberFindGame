@@ -46,10 +46,11 @@ public class RegisterBUS {
 
     public static boolean RegisterValidate(String username, String password, String password2, String firstName, String lastName, String email) {
         String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        String fields[] = {username, password, email, firstName, lastName};
+        String fields[] = {username, password, password2, email, firstName, lastName};
+        String fieldsLabel[] = {"Username", "Password", "Confirm password", "Email", "First Name", "Last Name"};
         for (int i = 0; i < fields.length; i++) {
             if (fields[i].equals("")) {
-                throw new RuntimeException(fields[i] + " cannot be empty");
+                throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
             }
         }
 
