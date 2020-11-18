@@ -78,8 +78,7 @@ public class GameResultBUS {
 
     public boolean isLoaded() {
         return this.matchPlayers != null &&
-                this.clientPlayer != null &&
-                this.winner != null;
+                this.clientPlayer != null;
     }
 
     // Inner Classes
@@ -90,6 +89,7 @@ public class GameResultBUS {
 
         public GameResultBUS_ViewBinder() {
             super();
+            this.startUpdatePeriod();
         }
 
         @Override

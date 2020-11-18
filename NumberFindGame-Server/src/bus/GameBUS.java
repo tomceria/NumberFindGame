@@ -300,7 +300,7 @@ public class GameBUS {
         }
         for (ClientHandler clientHandler : this.getServer().getClientManager().getClientConnections().values()) {
             PlayerDTO clientPlayer = ((MatchPlayer_Server) clientHandler.getClientIdentifier()).getPlayer();
-            boolean clientPlayerIsWinner = winner.equals(clientPlayer);
+            boolean clientPlayerIsWinner = clientPlayer.equals(winner);
 
             sendResponseToPlayer(
                     new SocketResponse_GameResult(

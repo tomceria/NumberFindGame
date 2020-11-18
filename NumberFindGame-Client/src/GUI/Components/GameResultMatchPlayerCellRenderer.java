@@ -1,11 +1,15 @@
 package GUI.Components;
 
 import Common.OrdinalNumber;
+import Run.GameMain;
+import Socket.GameClient;
+import dto.Game_Client;
 import dto.MatchPlayer;
 import dto.MatchPlayer_Client;
 import dto.PlayerDTO;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class GameResultMatchPlayerCellRenderer extends JPanel implements ListCellRenderer<MatchPlayer> {
@@ -139,6 +143,17 @@ public class GameResultMatchPlayerCellRenderer extends JPanel implements ListCel
         ));
         lblName.setText(matchPlayer.getPlayer().getUsername());
         lblScore.setText(matchPlayer.getScore() + "");
+
+        if (matchPlayer.getPlayer().equals(
+                ((Game_Client)
+                        ((GameClient) GameMain.client).getGameRoom().getGame()
+                ).getClientPlayer().getPlayer()
+        )) {
+            Border clientPlayerIndicator = BorderFactory.createLineBorder(Color.BLACK, 3);
+            panePlayer.setBorder(clientPlayerIndicator);
+        } else {
+            panePlayer.setBorder(null);
+        }
 
         return this;
     }
