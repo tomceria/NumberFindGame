@@ -24,7 +24,22 @@ public class LoginBUS {
         String password = new String(this.viewBinder.txtPassword.getPassword());
         String hostname = this.viewBinder.txtNetIp.getText();
 
-        this.performConnectToServer(hostname, username, password);
+        if(LoginValidate(username,password)){
+            this.performConnectToServer(hostname, username, password);
+        }
+    }
+
+    // Login Form Validate
+
+    public static boolean LoginValidate(String username, String password) {
+        if (username.equals("")) {
+            throw new RuntimeException("Please enter username");
+        }
+        if (password.equals("")) {
+            throw new RuntimeException("Please enter password");
+        }
+
+        return true;
     }
 
     public void action_GotoRegisterView() {
