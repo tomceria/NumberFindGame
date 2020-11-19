@@ -1,6 +1,8 @@
 package dto;
 
-public class MatchDTO {
+import java.io.Serializable;
+
+public class MatchDTO implements Serializable {
     private int id;
     private String timeStart;
     private double duration;
@@ -98,6 +100,10 @@ public class MatchDTO {
      */
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

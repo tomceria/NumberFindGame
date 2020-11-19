@@ -17,6 +17,7 @@ public class PlayerDAO {
 		PlayerDTO player = new PlayerDTO();
 		
 		try {
+			player.setId(rs.getInt("id"));
 			player.setUsername(rs.getString("username"));
 			player.setPassword(rs.getString("password"));
 			player.setEmail(rs.getString("email"));
