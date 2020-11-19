@@ -126,14 +126,19 @@ public class GameBUS {
      */
     private void mutateLevel(ArrayList<LevelNode> level) {
         int levelSize = level.size();
-        // phần trăm các số lucky
-        double percent  = 10;
+
+        // phần trăm các số lucky, blinding
+        double percentLucky  = 10;
+        double percentBlinding  = 5;
+
         // các số sẽ biến đổi trên tổng số node
-        double mutatedNumbers = Math.ceil((double) levelSize * percent / 100);
-        // mảng các số từ 1 đến levelsize
+        double luckyNumbers = Math.ceil((double) levelSize * percentLucky / 100);
+        double blindingNumbers = Math.ceil((double) levelSize * percentBlinding / 100);
+
+        // mảng index từ 1 đến levelSize (vị trí của các level node)
         ArrayList<Integer> indexArr = new ArrayList<>();
 
-        // thêm vị trí của level node
+        // thêm vị trí của level node vào mảng index
         for (int i = 0;  i < levelSize; i++) {
             indexArr.add(i);
         }
@@ -141,12 +146,15 @@ public class GameBUS {
         Random rand = new Random();
         Collections.shuffle(indexArr, rand);
 
-        // lấy 10% số đầu sau khi đã shuffle mảng vị trí
-        for (int i = 0; i < mutatedNumbers; i++) {
-            level.get(indexArr.get(i)).addMutation(LevelNode.Mutations.LUCKY);
+        // lấy % số đầu từ mảng vị trí, gán mutation = LUCKY
+        for (int i = 0; i < luckyNumbers; i++) {
+            level.get(indexArr.get(i)).setMutation(LevelNode.Mutation.LUCKY);
         }
 
-        int x = 0;
+        // lấy % số tiếp theo từ mảng vị trí, gán mutation = BLINDING
+        for (int i = (int) luckyNumbers; i < luckyNumbers + blindingNumbers; i++) {
+            level.get(indexArr.get(i)).setMutation(LevelNode.Mutation.BLINDING);
+        }
     }
 
     // Private BUSINESS Methods
@@ -221,7 +229,7 @@ public class GameBUS {
          */
         int addScore = 1;
         // nếu là số may mắn (logic if sẽ còn thay đổi, hiện tại chỉ check size của mutations)
-        if (levelNode.getMutations().size() > 0) {
+        if (levelNode.getMutation() == LevelNode.Mutation.LUCKY) {
             addScore = 3;
         }
         this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart(), addScore);

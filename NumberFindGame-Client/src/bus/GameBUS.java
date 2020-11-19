@@ -193,11 +193,11 @@ public class GameBUS {
         return value;
     }
 
-    private ArrayList<LevelNode.Mutations> getCurrentLevelNodeMutations() {
+    private LevelNode.Mutation getCurrentLevelNodeMutation() {
         int currentLevelNodeIndex = this.getGame().getCurrentLevel().getValue() - 1;
         return this.getGame().getLevel()
                 .get(currentLevelNodeIndex)
-                .getMutations();
+                .getMutation();
     }
 
     // Properties
@@ -218,9 +218,11 @@ public class GameBUS {
                 if (lblFindThis != null) {
                     lblFindThis.setText(GameBUS.this.getCurrentLevelNodeValue() + "");
 
-                    // đổi button thành màu vàng nếu là số may mắn
-                    if (GameBUS.this.getCurrentLevelNodeMutations().size() > 0) {
+                    // đổi button thành màu đỏ nếu là số may mắn, màu xanh lá nếu là số ưu tiên
+                    if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.LUCKY) {
                         lblFindThis.setForeground(Color.RED);
+                    } else if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.BLINDING) {
+                        lblFindThis.setForeground(Color.GREEN.darker());
                     } else {
                         lblFindThis.setForeground(Color.BLACK);
                     }
