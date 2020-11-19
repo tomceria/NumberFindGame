@@ -3,7 +3,6 @@ package bus;
 import Common.ViewBinder;
 import GUI.Components.GameMatchPlayerCellRenderer;
 import GUI.Components.LevelNodeButton;
-import Socket.GameClient;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
@@ -16,10 +15,14 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 public class GameBUS {
     public GameBUS_ViewBinder viewBinder;
+    // để tránh bị trùng với Timer của java swing
+    java.util.Timer blindingTimer;
     private Game_Client game; // PARENT
 
     public GameBUS(Game_Client game) {
@@ -51,6 +54,9 @@ public class GameBUS {
         game.setMatchPlayers(matchPlayers);
 
         this.viewBinder.startUpdatePeriod();
+
+        // timer để che số của client
+        this.blindingTimer = new Timer();
     }
 
     public void renderLevel(JPanel gamePane) {
@@ -154,13 +160,18 @@ public class GameBUS {
         }
 
         // blind các button của clients
-        LevelNode prevLevelNode = levelNodes.get(game.getCurrentLevel().getValue() - 1 - 1);
-        if (prevLevelNode.getMutation() == LevelNode.Mutation.BLINDING) {
-            String clientPlayerUsername = game.getClientPlayer().getPlayer().getUsername();
-            String pickingPlayerUsername = prevLevelNode.getPickingMatchPlayer().getPlayer().getUsername();
-            // nếu client khác username của player chọn đúng nút ưu tiên thì bị che
-            if (!clientPlayerUsername.equals(pickingPlayerUsername)) {
-                ui_blindingLevelNodeButton(3000);
+        // nếu index >= 0 (chưa kết thúc game)
+        // kết thúc game thì currentLevel.value = 1
+        int prevLevelIndex = game.getCurrentLevel().getValue() - 1 - 1;
+        if (prevLevelIndex >= 0) {
+            LevelNode prevLevelNode = levelNodes.get(game.getCurrentLevel().getValue() - 1 - 1);
+            if (prevLevelNode.getMutation() == LevelNode.Mutation.BLINDING) {
+                String clientPlayerUsername = game.getClientPlayer().getPlayer().getUsername();
+                String pickingPlayerUsername = prevLevelNode.getPickingMatchPlayer().getPlayer().getUsername();
+                // nếu client khác username của player chọn đúng nút ưu tiên thì bị che
+                if (!clientPlayerUsername.equals(pickingPlayerUsername)) {
+                    ui_blindingLevelNodeButton(3000);
+                }
             }
         }
 
@@ -181,19 +192,21 @@ public class GameBUS {
             lnc.getButton().setVisible(false);
         }
 
-        // hiển thị lại button sau ms giây
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        for (LevelNode_Client lnc : levelNodes) {
-                            lnc.getButton().setVisible(true);
-                        }
-                        cancel();
-                    }
-                },
-                milliseconds
-        );
+        TimerTask unblindBtn = new TimerTask() {
+            @Override
+            public void run() {
+                for (LevelNode_Client lnc : levelNodes) {
+                    lnc.getButton().setVisible(true);
+                    // kết thúc timer task và cả timer của
+                    cancel();
+                    blindingTimer.cancel();
+                }
+            }
+        };
+        // hủy timer hiện tại
+        blindingTimer.cancel();
+        blindingTimer = new Timer();
+        blindingTimer.schedule(unblindBtn, milliseconds);
     }
 
     public String ui_getTimerClock() {

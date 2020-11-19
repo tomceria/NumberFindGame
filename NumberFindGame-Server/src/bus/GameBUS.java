@@ -129,7 +129,7 @@ public class GameBUS {
 
         // phần trăm các số lucky, blinding
         double percentLucky  = 0;
-        double percentBlinding  = 50;
+        double percentBlinding  = 100;
 
         // các số sẽ biến đổi trên tổng số node
         double luckyNumbers = Math.ceil((double) levelSize * percentLucky / 100);
