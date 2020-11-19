@@ -1,8 +1,9 @@
 package bus;
 
 import Common.ViewBinder;
-import GUI.Components.LevelNodeButton;
 import GUI.Components.GameMatchPlayerCellRenderer;
+import GUI.Components.LevelNodeButton;
+import Socket.GameClient;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
@@ -18,8 +19,8 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class GameBUS {
-    private Game_Client game; // PARENT
     public GameBUS_ViewBinder viewBinder;
+    private Game_Client game; // PARENT
 
     public GameBUS(Game_Client game) {
         this.game = game;
@@ -144,10 +145,22 @@ public class GameBUS {
         /**
          * 4. Cập nhật GUI
          */
-        for (LevelNode levelNode : game.getLevel()) {
+        ArrayList<LevelNode> levelNodes = game.getLevel();
+        for (LevelNode levelNode : levelNodes) {
             MatchPlayer pickingMatchPlayer = levelNode.getPickingMatchPlayer();
             if (pickingMatchPlayer != null) {
                 ((LevelNode_Client) levelNode).getButton().setPicked(pickingMatchPlayer);
+            }
+        }
+
+        // blind các button của clients
+        LevelNode prevLevelNode = levelNodes.get(game.getCurrentLevel().getValue() - 1 - 1);
+        if (prevLevelNode.getMutation() == LevelNode.Mutation.BLINDING) {
+            String clientPlayerUsername = game.getClientPlayer().getPlayer().getUsername();
+            String pickingPlayerUsername = prevLevelNode.getPickingMatchPlayer().getPlayer().getUsername();
+            // nếu client khác username của player chọn đúng nút ưu tiên thì bị che
+            if (!clientPlayerUsername.equals(pickingPlayerUsername)) {
+                ui_blindingLevelNodeButton(3000);
             }
         }
 
@@ -159,6 +172,28 @@ public class GameBUS {
 
     public void listen_GameEnd() {
         ViewBUS.gotoGameResultView();
+    }
+
+    public void ui_blindingLevelNodeButton(int milliseconds) {
+        // ẩn button khỏi client
+        ArrayList<LevelNode_Client> levelNodes = LevelNode_Client.castToLevelNodeClients(game.getLevel());
+        for (LevelNode_Client lnc : levelNodes) {
+            lnc.getButton().setVisible(false);
+        }
+
+        // hiển thị lại button sau ms giây
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        for (LevelNode_Client lnc : levelNodes) {
+                            lnc.getButton().setVisible(true);
+                        }
+                        cancel();
+                    }
+                },
+                milliseconds
+        );
     }
 
     public String ui_getTimerClock() {
