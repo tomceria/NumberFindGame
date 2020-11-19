@@ -296,6 +296,7 @@ public class GameBUS {
 
         // Bước 1: Sắp xếp theo điểm
         Collections.sort(matchPlayersWithScore, Comparator.comparingInt(MatchPlayer::getScore));
+        Collections.reverse(matchPlayersWithScore);
 
         // Bước 2: Sắp xếp theo avg time
         for (int i = 0; i < matchPlayersWithScoreSize; i++) {
@@ -315,8 +316,6 @@ public class GameBUS {
         for (int i = 0; i < matchPlayersNoScore.size(); i++) {
             matchPlayersNoScore.get(i).setPlacing(game.getMatchPlayers().size());
         }
-
-        int x = 0;
     }
 
     private void performEndGame() {
