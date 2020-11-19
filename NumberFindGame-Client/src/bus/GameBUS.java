@@ -230,6 +230,19 @@ public class GameBUS {
         list.setCellRenderer(new GameMatchPlayerCellRenderer());
     }
 
+    public void ui_initLblFindThis(JLabel label) {
+        label.setText(GameBUS.this.getCurrentLevelNodeValue() + "");
+
+        // đổi button thành màu xanh lá nếu là số may mắn, màu đỏ nếu là số ưu tiên
+        if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.LUCKY) {
+            label.setForeground(Color.GREEN.darker());
+        } else if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.BLINDING) {
+            label.setForeground(Color.RED);
+        } else {
+            label.setForeground(Color.BLACK);
+        }
+    }
+
     // Privates
 
     private int getCurrentLevelNodeValue() {
@@ -264,16 +277,7 @@ public class GameBUS {
         public void update() {
             if (game != null) {
                 if (lblFindThis != null) {
-                    lblFindThis.setText(GameBUS.this.getCurrentLevelNodeValue() + "");
-
-                    // đổi button thành màu đỏ nếu là số may mắn, màu xanh lá nếu là số ưu tiên
-                    if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.LUCKY) {
-                        lblFindThis.setForeground(Color.RED);
-                    } else if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.BLINDING) {
-                        lblFindThis.setForeground(Color.GREEN.darker());
-                    } else {
-                        lblFindThis.setForeground(Color.BLACK);
-                    }
+                    ui_initLblFindThis(lblFindThis);
                 }
                 if (lblTimer != null) {
                     lblTimer.setText(ui_getTimerClock());
