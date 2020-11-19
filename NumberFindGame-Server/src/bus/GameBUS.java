@@ -130,7 +130,7 @@ public class GameBUS {
     }
 
     /**
-     * Mutate level, set lucky level node
+     * Mutate level, set lucky level nodes and blinding level nodes
      *
      * @param level
      */
@@ -138,8 +138,8 @@ public class GameBUS {
         int levelSize = level.size();
 
         // phần trăm các số lucky, blinding
-        double percentLucky  = 0;
-        double percentBlinding  = 100;
+        double percentLucky  = 10;
+        double percentBlinding  = 5;
 
         // các số sẽ biến đổi trên tổng số node
         double luckyNumbers = Math.ceil((double) levelSize * percentLucky / 100);
