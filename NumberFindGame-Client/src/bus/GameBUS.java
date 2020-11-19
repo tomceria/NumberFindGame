@@ -1,8 +1,8 @@
 package bus;
 
 import Common.ViewBinder;
-import GUI.Components.LevelNodeButton;
 import GUI.Components.GameMatchPlayerCellRenderer;
+import GUI.Components.LevelNodeButton;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
@@ -15,11 +15,15 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 public class GameBUS {
-    private Game_Client game; // PARENT
     public GameBUS_ViewBinder viewBinder;
+    // để tránh bị trùng với Timer của java swing
+    java.util.Timer blindingTimer;
+    private Game_Client game; // PARENT
 
     public GameBUS(Game_Client game) {
         this.game = game;
@@ -50,6 +54,9 @@ public class GameBUS {
         game.setMatchPlayers(matchPlayers);
 
         this.viewBinder.startUpdatePeriod();
+
+        // timer để che số của client
+        this.blindingTimer = new Timer();
     }
 
     public void renderLevel(JPanel gamePane) {
@@ -144,10 +151,27 @@ public class GameBUS {
         /**
          * 4. Cập nhật GUI
          */
-        for (LevelNode levelNode : game.getLevel()) {
+        ArrayList<LevelNode> levelNodes = game.getLevel();
+        for (LevelNode levelNode : levelNodes) {
             MatchPlayer pickingMatchPlayer = levelNode.getPickingMatchPlayer();
             if (pickingMatchPlayer != null) {
                 ((LevelNode_Client) levelNode).getButton().setPicked(pickingMatchPlayer);
+            }
+        }
+
+        // blind các button của clients
+        // nếu index >= 0 (chưa kết thúc game)
+        // kết thúc game thì currentLevel.value = 1
+        int prevLevelIndex = game.getCurrentLevel().getValue() - 1 - 1;
+        if (prevLevelIndex >= 0) {
+            LevelNode prevLevelNode = levelNodes.get(game.getCurrentLevel().getValue() - 1 - 1);
+            if (prevLevelNode.getMutation() == LevelNode.Mutation.BLINDING) {
+                String clientPlayerUsername = game.getClientPlayer().getPlayer().getUsername();
+                String pickingPlayerUsername = prevLevelNode.getPickingMatchPlayer().getPlayer().getUsername();
+                // nếu client khác username của player chọn đúng nút ưu tiên thì bị che
+                if (!clientPlayerUsername.equals(pickingPlayerUsername)) {
+                    ui_blindingLevelNodeButton(3000);
+                }
             }
         }
 
@@ -159,6 +183,30 @@ public class GameBUS {
 
     public void listen_GameEnd() {
         ViewBUS.gotoGameResultView();
+    }
+
+    public void ui_blindingLevelNodeButton(int milliseconds) {
+        // ẩn button khỏi client
+        ArrayList<LevelNode_Client> levelNodes = LevelNode_Client.castToLevelNodeClients(game.getLevel());
+        for (LevelNode_Client lnc : levelNodes) {
+            lnc.getButton().setVisible(false);
+        }
+
+        TimerTask unblindBtn = new TimerTask() {
+            @Override
+            public void run() {
+                for (LevelNode_Client lnc : levelNodes) {
+                    lnc.getButton().setVisible(true);
+                    // kết thúc timer task và cả timer của
+                    cancel();
+                    blindingTimer.cancel();
+                }
+            }
+        };
+        // hủy timer hiện tại
+        blindingTimer.cancel();
+        blindingTimer = new Timer();
+        blindingTimer.schedule(unblindBtn, milliseconds);
     }
 
     public String ui_getTimerClock() {
@@ -182,6 +230,19 @@ public class GameBUS {
         list.setCellRenderer(new GameMatchPlayerCellRenderer());
     }
 
+    public void ui_initLblFindThis(JLabel label) {
+        label.setText(GameBUS.this.getCurrentLevelNodeValue() + "");
+
+        // đổi button thành màu xanh lá nếu là số may mắn, màu đỏ nếu là số ưu tiên
+        if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.LUCKY) {
+            label.setForeground(Color.GREEN.darker());
+        } else if (GameBUS.this.getCurrentLevelNodeMutation() == LevelNode.Mutation.BLINDING) {
+            label.setForeground(Color.RED);
+        } else {
+            label.setForeground(Color.BLACK);
+        }
+    }
+
     // Privates
 
     private int getCurrentLevelNodeValue() {
@@ -193,11 +254,11 @@ public class GameBUS {
         return value;
     }
 
-    private ArrayList<LevelNode.Mutations> getCurrentLevelNodeMutations() {
+    private LevelNode.Mutation getCurrentLevelNodeMutation() {
         int currentLevelNodeIndex = this.getGame().getCurrentLevel().getValue() - 1;
         return this.getGame().getLevel()
                 .get(currentLevelNodeIndex)
-                .getMutations();
+                .getMutation();
     }
 
     // Properties
@@ -216,14 +277,7 @@ public class GameBUS {
         public void update() {
             if (game != null) {
                 if (lblFindThis != null) {
-                    lblFindThis.setText(GameBUS.this.getCurrentLevelNodeValue() + "");
-
-                    // đổi button thành màu vàng nếu là số may mắn
-                    if (GameBUS.this.getCurrentLevelNodeMutations().size() > 0) {
-                        lblFindThis.setForeground(Color.RED);
-                    } else {
-                        lblFindThis.setForeground(Color.BLACK);
-                    }
+                    ui_initLblFindThis(lblFindThis);
                 }
                 if (lblTimer != null) {
                     lblTimer.setText(ui_getTimerClock());
