@@ -11,6 +11,7 @@ import dto.MatchPlayer_Client;
 import dto.PlayerDTO;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,11 @@ public class GameResultBUS {
     }
 
     // Functions
+
+    public void action_ReturnToGameRoom() {
+        ViewBUS.gotoGameRoomView();
+        ViewBUS.gameResultView = null;
+    }
 
     public void listen_showResult(SocketResponse_GameResult response) {
         /**
@@ -66,14 +72,17 @@ public class GameResultBUS {
     }
 
     public void ui_initPlayerList(JList list) {
-        MatchPlayer_Client.orderMatchPlayersByPlacing(this.matchPlayers);
+        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>(this.matchPlayers);
+        MatchPlayer_Client.orderMatchPlayersByPlacing(matchPlayers);
 
         DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
-        for (MatchPlayer matchPlayer : this.matchPlayers) {
+        for (MatchPlayer matchPlayer : matchPlayers) {
             listModel.addElement(matchPlayer);
         }
         list.setModel(listModel);
         list.setCellRenderer(new GameResultMatchPlayerCellRenderer());
+
+        list.setPreferredSize(new Dimension(300, 50 * this.matchPlayers.size()));
     }
 
     public boolean isLoaded() {
@@ -89,19 +98,29 @@ public class GameResultBUS {
 
         public GameResultBUS_ViewBinder() {
             super();
+
+            /**
+             * Thực hiện vòng lặp update() (với startUpdatePeriod()) trong lúc đợi các Component được render
+             * Khi render hoàn tất, các Component được gán dữ liệu của mình,
+             * Kết thúc vòng lặp với stopUpdatePeriod()
+             */
+            this.update();
             this.startUpdatePeriod();
         }
 
         @Override
         public void update() {
+            /**
+             * ViewBinder này áp dụng cơ chế Update-once-initiated
+             */
+
             if (!GameResultBUS.this.isLoaded()) {
                 return;
             }
-            if (lblWinner != null) {
+            if (lblWinner != null && listPlayers != null) {
                 ui_setLblWinner(lblWinner);
-            }
-            if (listPlayers != null) {
                 ui_initPlayerList(listPlayers);
+                this.stopUpdatePeriod();
             }
         }
     }

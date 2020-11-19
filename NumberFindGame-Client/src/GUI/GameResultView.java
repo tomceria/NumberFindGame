@@ -4,6 +4,8 @@ import bus.GameResultBUS;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameResultView {
     // GameView.form's Components
@@ -32,7 +34,13 @@ public class GameResultView {
     }
 
     private void bindListeners() {
-
+        this.btnOkay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameResultView.this.getGameResultBUS()
+                        .action_ReturnToGameRoom();
+            }
+        });
     }
 
     private void initViewBinder() {
@@ -72,8 +80,9 @@ public class GameResultView {
         gbc.insets = new Insets(0, 0, 24, 0);
         contentPane.add(lblWinner, gbc);
         listPlayers = new JList();
-        listPlayers.setMinimumSize(new Dimension(300, 400));
-        listPlayers.setPreferredSize(new Dimension(300, 400));
+        listPlayers.setMaximumSize(new Dimension(300, 400));
+        listPlayers.setMinimumSize(new Dimension(300, 50));
+        listPlayers.setPreferredSize(new Dimension(300, 0));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;

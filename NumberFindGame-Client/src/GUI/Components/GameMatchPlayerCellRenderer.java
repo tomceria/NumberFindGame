@@ -91,10 +91,10 @@ public class GameMatchPlayerCellRenderer extends JPanel implements ListCellRende
         lblScore.setText(value.getScore() + "");
         lblScore.setFont(new Font("SansSerif", Font.BOLD, 12));
 
-        if (matchPlayer.getPlayer().equals(
+        if (matchPlayer.getPlayer().getUsername().equals(
                 ((Game_Client)
                         ((GameClient) GameMain.client).getGameRoom().getGame()
-                ).getClientPlayer().getPlayer()
+                ).getClientPlayer().getPlayer().getUsername()
         )) {
             Border clientPlayerIndicator = BorderFactory.createLineBorder(Color.BLACK, 3);
             paneAvatar.setBorder(clientPlayerIndicator);

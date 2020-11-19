@@ -27,6 +27,7 @@ public class GameBUS {
     public void initGame() {
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
         this.mutateLevel(game.getLevel());
+        this.performPlacingPlayers();
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
@@ -56,7 +57,16 @@ public class GameBUS {
         if (this.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
             accept = true;
 
-            performGoNextLevel(levelNode, sendingPlayer);
+            performSuccessLevelNodeValidation(levelNode, sendingPlayer);
+
+            /**
+             * Tiến hành thủ tục chuyển sang Level tiếp theo. Nếu đã vượt qua LevelNode cuối cùng thì end game
+             */
+            if (this.getGame().getCurrentLevel().getValue() < this.getGame().getLevel().size()) {
+                performGoNextLevel(levelNode, sendingPlayer);
+            } else {
+                performEndGame();
+            }
         }
 
         return accept;
@@ -223,7 +233,7 @@ public class GameBUS {
         return levelNodes;
     }
 
-    private void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
+    private void performSuccessLevelNodeValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {
         /**
          * Tăng điểm cho sendingPlayer
          */
@@ -235,17 +245,19 @@ public class GameBUS {
         this.performOneUpScore(sendingPlayer, game.getCurrentLevel().getTimeStart(), addScore);
 
         /**
+         * Gán thứ hạng mới cho các player
+         */
+        this.performPlacingPlayers();
+    }
+
+    private void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
+        /**
          * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
          */
         this.getGame().getLevel()
                 .stream().filter(lN -> levelNode.getValue() == lN.getValue())
                 .collect(Collectors.toList()).get(0)
                 .setPickingMatchPlayer(sendingPlayer);
-
-        /**
-         * Gán thứ hạng mới cho các player
-         */
-        this.performPlacingPlayers();
 
         /**
          * Tăng Level cho Game
@@ -281,36 +293,37 @@ public class GameBUS {
         // Điểm tìm số (score); Thời gian trung bình tìm ra số (avgTime)
         // Nếu 2 người chơi có score bằng nhau, sẽ dựa vào avgTime để chọn người chơi thứ hạng cao hơn
 
-        ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
-        int matchPlayersSize = matchPlayers.size();
+        // Chuẩn bị: Tạo ra 2 danh sách giành riêng cho Người chơi có điểm và Người chơi ko có điểm
+        ArrayList<MatchPlayer> matchPlayersWithScore = new ArrayList<MatchPlayer>(
+                game.getMatchPlayers().stream().filter(mP -> mP.getScore() > 0).collect(Collectors.toList())
+        );
+        int matchPlayersWithScoreSize = matchPlayersWithScore.size();
+        ArrayList<MatchPlayer> matchPlayersNoScore = new ArrayList<MatchPlayer>(
+                game.getMatchPlayers().stream().filter(mP -> mP.getScore() <= 0).collect(Collectors.toList())
+        );
 
-        // Bước 1: sắp xếp theo điểm
-        // TODO: Placing based on avgTime
-        for (int i = 0; i < matchPlayersSize; i++) {
-            for (int j = i + 1; j < matchPlayersSize; j++) {
-                if (matchPlayers.get(i).getScore() < matchPlayers.get(j).getScore()) {
-                    // swap i, j
-                    Collections.swap(matchPlayers, i, j);
-                }
-            }
-        }
+        // Bước 1: Sắp xếp theo điểm
+        Collections.sort(matchPlayersWithScore, Comparator.comparingInt(MatchPlayer::getScore));
+        Collections.reverse(matchPlayersWithScore);
 
-        // sắp xếp theo avg time
-        for (int i = 0; i < matchPlayersSize; i++) {
-            for (int j = i + 1; j < matchPlayersSize; j++) {
-                if ((matchPlayers.get(i).getAvgTime() > matchPlayers.get(j).getAvgTime()) && (matchPlayers.get(i).getScore() == matchPlayers.get(j).getScore())) {
-                    // swap i, j
-                    Collections.swap(matchPlayers, i, j);
+        // Bước 2: Sắp xếp theo avg time
+        for (int i = 0; i < matchPlayersWithScoreSize; i++) {
+            for (int j = i + 1; j < matchPlayersWithScoreSize; j++) {
+                if ((matchPlayersWithScore.get(i).getAvgTime() > matchPlayersWithScore.get(j).getAvgTime()) && (matchPlayersWithScore.get(i).getScore() == matchPlayersWithScore.get(j).getScore())) {
+                    Collections.swap(matchPlayersWithScore, i, j);
                 }
             }
         }
 
         // Bước 3: Với danh sách tạm đã có thứ tự thứ hạng => gán Placing
-        for (int i = 0; i < matchPlayersSize; i++) {
-            matchPlayers.get(i).setPlacing(i+1);
+        for (int i = 0; i < matchPlayersWithScoreSize; i++) {
+            matchPlayersWithScore.get(i).setPlacing(i+1);
         }
 
-        int x = 0;
+        // Bước 4: Gán Placing = LAST cho danh sách Người chơi ko có điểm
+        for (int i = 0; i < matchPlayersNoScore.size(); i++) {
+            matchPlayersNoScore.get(i).setPlacing(game.getMatchPlayers().size());
+        }
     }
 
     private void performEndGame() {
@@ -361,7 +374,16 @@ public class GameBUS {
         }
 
         /**
-         * 4. (OPTIONAL) Báo cho GameRoom biết rằng game đã KẾT THÚC, cập nhật GameRoom. Gửi GameRoom mới đến players
+         * 5. Xoá Điểm số của các MatchPlayer
+         */
+        for (MatchPlayer mP : this.getGame().getMatchPlayers()) {
+            mP.setScore(0);
+            mP.setPlacing(0);
+            ((MatchPlayer_Server) mP).setAvgTime(0);
+        }
+
+        /**
+         * 6. (OPTIONAL) Báo cho GameRoom biết rằng game đã KẾT THÚC, cập nhật GameRoom. Gửi GameRoom mới đến players
          * Optional vì: Có thể có trường hợp Game được khởi động độc lập không có GameRoom
          */
         List<GameRoom_Server> gameRoomOfGameAsList = this.getServer().getGameRooms().stream()

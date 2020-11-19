@@ -80,7 +80,9 @@ public class GameRoomBUS {
         @Override
         public void update() {
             if (gameRoom != null) {
-                if (lblPlayerCount != null && GameRoomBUS.this.getGameRoom().getPlayers().size() > 0) {
+                if (lblPlayerCount != null &&
+                        GameRoomBUS.this.getGameRoom().getPlayers() != null &&
+                        GameRoomBUS.this.getGameRoom().getPlayers().size() > 0) {
                     ui_loadPlayerCount(lblPlayerCount);
                 }
             }

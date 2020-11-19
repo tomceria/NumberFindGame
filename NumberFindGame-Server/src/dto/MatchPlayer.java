@@ -7,9 +7,9 @@ import java.time.LocalTime;
 public class MatchPlayer implements Serializable {
     private PlayerDTO player;
     private MatchDTO match;
-	private int score = 0;
-	private int placing = 0;
-	private double avgTime = 0;
+	int score = 0;
+	int placing = 0;
+	double avgTime = 0;
 
 	public MatchPlayer(PlayerDTO player) {
 		this.player = player;

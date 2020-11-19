@@ -52,6 +52,7 @@ public class GameBUS {
         matchPlayers = MatchPlayer_Client
                 .convertMatchPlayersToMatchPlayerClients(matchPlayers);
         game.setMatchPlayers(matchPlayers);
+        MatchPlayer_Client.setColorForMatchPlayers(game.getMatchPlayers());
 
         this.viewBinder.startUpdatePeriod();
 
@@ -183,6 +184,7 @@ public class GameBUS {
 
     public void listen_GameEnd() {
         ViewBUS.gotoGameResultView();
+        ViewBUS.gameView = null;
     }
 
     public void ui_blindingLevelNodeButton(int milliseconds) {
@@ -220,10 +222,11 @@ public class GameBUS {
     }
 
     public void ui_initPlayerList(JList list) {
-        MatchPlayer_Client.orderMatchPlayersByPlacing(game.getMatchPlayers());
+        ArrayList<MatchPlayer> matchPlayers = new ArrayList<MatchPlayer>(game.getMatchPlayers());
+        MatchPlayer_Client.orderMatchPlayersByPlacing(matchPlayers);
 
         DefaultListModel<MatchPlayer> listModel = new DefaultListModel<MatchPlayer>();
-        for (MatchPlayer matchPlayer : game.getMatchPlayers()) {
+        for (MatchPlayer matchPlayer : matchPlayers) {
             listModel.addElement(matchPlayer);
         }
         list.setModel(listModel);
