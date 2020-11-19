@@ -4,6 +4,8 @@ import bus.GameResultBUS;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameResultView {
     // GameView.form's Components
@@ -32,7 +34,13 @@ public class GameResultView {
     }
 
     private void bindListeners() {
-
+        this.btnOkay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameResultView.this.getGameResultBUS()
+                        .action_ReturnToGameRoom();
+            }
+        });
     }
 
     private void initViewBinder() {

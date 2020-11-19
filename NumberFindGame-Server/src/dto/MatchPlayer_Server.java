@@ -46,4 +46,8 @@ public class MatchPlayer_Server extends MatchPlayer implements IClientIdentifier
     public void setGameBUS(GameBUS gameBUS) {
         this.gameBUS = gameBUS;
     }
+
+    public void setAvgTime(double avgTime) {
+        this.avgTime = avgTime;
+    }
 }

@@ -27,6 +27,7 @@ public class GameBUS {
     public void initGame() {
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
         this.mutateLevel(game.getLevel());
+        this.performPlacingPlayers();
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
         game.setStartTime(LocalTime.now());
@@ -364,7 +365,16 @@ public class GameBUS {
         }
 
         /**
-         * 4. (OPTIONAL) Báo cho GameRoom biết rằng game đã KẾT THÚC, cập nhật GameRoom. Gửi GameRoom mới đến players
+         * 5. Xoá Điểm số của các MatchPlayer
+         */
+        for (MatchPlayer mP : this.getGame().getMatchPlayers()) {
+            mP.setScore(0);
+            mP.setPlacing(0);
+            ((MatchPlayer_Server) mP).setAvgTime(0);
+        }
+
+        /**
+         * 6. (OPTIONAL) Báo cho GameRoom biết rằng game đã KẾT THÚC, cập nhật GameRoom. Gửi GameRoom mới đến players
          * Optional vì: Có thể có trường hợp Game được khởi động độc lập không có GameRoom
          */
         List<GameRoom_Server> gameRoomOfGameAsList = this.getServer().getGameRooms().stream()

@@ -160,6 +160,7 @@ public class GameBUS {
 
     public void listen_GameEnd() {
         ViewBUS.gotoGameResultView();
+        ViewBUS.gameView = null;
     }
 
     public String ui_getTimerClock() {

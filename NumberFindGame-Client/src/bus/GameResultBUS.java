@@ -29,6 +29,11 @@ public class GameResultBUS {
 
     // Functions
 
+    public void action_ReturnToGameRoom() {
+        ViewBUS.gotoGameRoomView();
+        ViewBUS.gameResultView = null;
+    }
+
     public void listen_showResult(SocketResponse_GameResult response) {
         /**
          * Lấy danh sách người chơi của Game instance

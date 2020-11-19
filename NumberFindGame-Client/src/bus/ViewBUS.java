@@ -47,6 +47,12 @@ public class ViewBUS {
         if (gameRoomView == null) {
             gameRoomView = new GameRoomView(gameRoomBUS);
         }
+        gotoGameRoomView();
+    }
+    public static void gotoGameRoomView() {
+        if (gameRoomView == null) {
+            return;
+        }
         mainFrame.setContentPane(gameRoomView.getContentPane());
         mainFrame.setVisible(true);
     }
