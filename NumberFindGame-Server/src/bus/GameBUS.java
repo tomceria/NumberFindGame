@@ -285,33 +285,35 @@ public class GameBUS {
         // Điểm tìm số (score); Thời gian trung bình tìm ra số (avgTime)
         // Nếu 2 người chơi có score bằng nhau, sẽ dựa vào avgTime để chọn người chơi thứ hạng cao hơn
 
-        ArrayList<MatchPlayer> matchPlayers = game.getMatchPlayers();
-        int matchPlayersSize = matchPlayers.size();
+        // Chuẩn bị: Tạo ra 2 danh sách giành riêng cho Người chơi có điểm và Người chơi ko có điểm
+        ArrayList<MatchPlayer> matchPlayersWithScore = new ArrayList<MatchPlayer>(
+                game.getMatchPlayers().stream().filter(mP -> mP.getScore() > 0).collect(Collectors.toList())
+        );
+        int matchPlayersWithScoreSize = matchPlayersWithScore.size();
+        ArrayList<MatchPlayer> matchPlayersNoScore = new ArrayList<MatchPlayer>(
+                game.getMatchPlayers().stream().filter(mP -> mP.getScore() <= 0).collect(Collectors.toList())
+        );
 
-        // Bước 1: sắp xếp theo điểm
-        // TODO: Placing based on avgTime
-        for (int i = 0; i < matchPlayersSize; i++) {
-            for (int j = i + 1; j < matchPlayersSize; j++) {
-                if (matchPlayers.get(i).getScore() < matchPlayers.get(j).getScore()) {
-                    // swap i, j
-                    Collections.swap(matchPlayers, i, j);
-                }
-            }
-        }
+        // Bước 1: Sắp xếp theo điểm
+        Collections.sort(matchPlayersWithScore, Comparator.comparingInt(MatchPlayer::getScore));
 
-        // sắp xếp theo avg time
-        for (int i = 0; i < matchPlayersSize; i++) {
-            for (int j = i + 1; j < matchPlayersSize; j++) {
-                if ((matchPlayers.get(i).getAvgTime() > matchPlayers.get(j).getAvgTime()) && (matchPlayers.get(i).getScore() == matchPlayers.get(j).getScore())) {
-                    // swap i, j
-                    Collections.swap(matchPlayers, i, j);
+        // Bước 2: Sắp xếp theo avg time
+        for (int i = 0; i < matchPlayersWithScoreSize; i++) {
+            for (int j = i + 1; j < matchPlayersWithScoreSize; j++) {
+                if ((matchPlayersWithScore.get(i).getAvgTime() > matchPlayersWithScore.get(j).getAvgTime()) && (matchPlayersWithScore.get(i).getScore() == matchPlayersWithScore.get(j).getScore())) {
+                    Collections.swap(matchPlayersWithScore, i, j);
                 }
             }
         }
 
         // Bước 3: Với danh sách tạm đã có thứ tự thứ hạng => gán Placing
-        for (int i = 0; i < matchPlayersSize; i++) {
-            matchPlayers.get(i).setPlacing(i+1);
+        for (int i = 0; i < matchPlayersWithScoreSize; i++) {
+            matchPlayersWithScore.get(i).setPlacing(i+1);
+        }
+
+        // Bước 4: Gán Placing = LAST cho danh sách Người chơi ko có điểm
+        for (int i = 0; i < matchPlayersNoScore.size(); i++) {
+            matchPlayersNoScore.get(i).setPlacing(game.getMatchPlayers().size());
         }
 
         int x = 0;
