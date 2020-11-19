@@ -24,16 +24,22 @@ public class RequestHandler {
 				ClientHandler thisClientHandler = RequestHandler.this.clientHandler;
 
 				if (thisClientHandler.isLoggedIn == false) {
-					IdentityBUS identityBUS = new IdentityBUS(thisClientHandler);
+					IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
+							RequestHandler.this.clientHandler.clientManager.server);
 
 					switch (requestRaw.getAction()) {
 					case ACCESS_LOGIN: {
-						boolean result = identityBUS.performLogin((SocketRequest_AccessLogin) requestRaw);
-
-						if (result == true) {
-							RequestHandler.this.onSuccessConnection();
-						} else {
-							thisClientHandler.isRunning = false;
+						boolean result = false;
+						try {
+							result = identityBUS.performLogin((SocketRequest_AccessLogin) requestRaw);
+							if (result == true) {
+								RequestHandler.this.onSuccessConnection();
+							} else {
+								thisClientHandler.isRunning = false;
+							}
+						} catch (Exception e) {
+							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
+									SocketResponse.Action.MSG, e.getMessage()));
 						}
 
 						break;
