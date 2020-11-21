@@ -2,9 +2,12 @@ package bus;
 
 import Common.ViewBinder;
 import Run.GameMain;
+import Socket.GameClient;
 import Socket.Request.SocketRequest_AccessChangePassword;
 import Socket.Request.SocketRequest_AccessRegister;
 import Socket.Request.SocketRequest_AccessUpdateInfo;
+import dto.PlayerDTO;
+import util.BCrypt;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -43,12 +46,13 @@ public class UpdateInfoBUS {
 		boolean result = false;
 
 		String username = this.viewBinder.txtUsername.getText();
-		String password = new String(this.viewBinder.txtPassword.getPassword());
-		String password2 = new String(this.viewBinder.txtPassword2.getPassword());
+		String oldPassword = new String(this.viewBinder.txtOldPassword.getPassword());
+		String newPassword = new String(this.viewBinder.txtNewPassword.getPassword());
+		String newPassword2 = new String(this.viewBinder.txtNewPassword2.getPassword());
 
-		if (ChangePasswordValidate(password, password2)) {
+		if (ChangePasswordValidate(oldPassword, newPassword, newPassword2)) {
 			try {
-				GameMain.client.sendRequest(new SocketRequest_AccessChangePassword(username, password));
+				GameMain.client.sendRequest(new SocketRequest_AccessChangePassword(username, newPassword));
 				result = true;
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
@@ -79,20 +83,26 @@ public class UpdateInfoBUS {
 	}
 
 	// Change password form validate
-	public static boolean ChangePasswordValidate(String password, String password2) {
-		String fields[] = { password, password2 };
-		String fieldsLabel[] = { "Password", "Confirm password" };
+	public static boolean ChangePasswordValidate(String oldPassword, String newPassword, String newPassword2) {
+		PlayerDTO player = ((GameClient) GameMain.client).getClientPlayer().getPlayer();
+		String fields[] = { oldPassword, newPassword, newPassword2 };
+		String fieldsLabel[] = { "Old Password", "New Password", "Confirm password" };
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].equals("")) {
 				throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
 			}
 		}
 
-		if (password.length() < 5) {
-			throw new RuntimeException("Password must be longer than 5 characters");
+		if (!BCrypt.checkpw(oldPassword, player.getPassword())) {
+			throw new RuntimeException("Old Password is incorrect");
 		}
-		if (!password.equals(password2)) {
-			throw new RuntimeException("Password confirmation does not match");
+
+		if (newPassword.length() < 5) {
+			throw new RuntimeException("New Password must be longer than 5 characters");
+		}
+
+		if (!newPassword.equals(newPassword2)) {
+			throw new RuntimeException("New Password confirmation does not match");
 		}
 
 		return true;
@@ -101,8 +111,9 @@ public class UpdateInfoBUS {
 
 	public class UpdateInfoBUS_ViewBinder extends ViewBinder {
 		public JTextField txtUsername;
-		public JPasswordField txtPassword;
-		public JPasswordField txtPassword2;
+		public JPasswordField txtOldPassword;
+		public JPasswordField txtNewPassword;
+		public JPasswordField txtNewPassword2;
 		public JTextField txtFirstName;
 		public JTextField txtLastName;
 		public JTextField txtEmail;

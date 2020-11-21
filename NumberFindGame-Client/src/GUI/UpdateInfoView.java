@@ -6,6 +6,7 @@ import bus.ViewBUS;
 import dto.GameRoom;
 import dto.MatchPlayer;
 import dto.PlayerDTO;
+import util.BCrypt;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -25,8 +26,8 @@ public class UpdateInfoView {
 	private JPanel contentPane = new JPanel();
 	// ViewBinder's components
 	private JTextField txtUsername;
-	private JPasswordField txtPassword;
-	private JPasswordField txtPassword2;
+	private JPasswordField txtNewPassword;
+	private JPasswordField txtNewPassword2;
 	private JTextField txtFirstName;
 	private JTextField txtLastName;
 	private JTextField txtEmail;
@@ -36,6 +37,7 @@ public class UpdateInfoView {
 	private JButton btnChangePassword = new JButton("Submit");
 
 	private UpdateInfoBUS updateInfoBUS;
+	private JPasswordField txtOldPassword;
 
 	public UpdateInfoView(UpdateInfoBUS updateInfoBUS) {
 		this.updateInfoBUS = updateInfoBUS;
@@ -117,26 +119,25 @@ public class UpdateInfoView {
 		gbc_txtUsername.gridx = 2;
 		gbc_txtUsername.gridy = 5;
 		contentPane.add(txtUsername, gbc_txtUsername);
-
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setForeground(Color.WHITE);
-		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
-		GridBagConstraints gbc_lblPassword = new GridBagConstraints();
-		gbc_lblPassword.anchor = GridBagConstraints.WEST;
-		gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPassword.gridx = 4;
-		gbc_lblPassword.gridy = 5;
-		contentPane.add(lblPassword, gbc_lblPassword);
-
-		txtPassword = new JPasswordField();
-		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		GridBagConstraints gbc_txtPassword = new GridBagConstraints();
-		gbc_txtPassword.anchor = GridBagConstraints.NORTH;
-		gbc_txtPassword.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtPassword.insets = new Insets(0, 0, 5, 0);
-		gbc_txtPassword.gridx = 5;
-		gbc_txtPassword.gridy = 5;
-		contentPane.add(txtPassword, gbc_txtPassword);
+		
+		JLabel lblOldPassword = new JLabel("Old Password");
+		lblOldPassword.setForeground(Color.WHITE);
+		lblOldPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
+		GridBagConstraints gbc_lblOldPassword = new GridBagConstraints();
+		gbc_lblOldPassword.anchor = GridBagConstraints.WEST;
+		gbc_lblOldPassword.insets = new Insets(0, 0, 5, 5);
+		gbc_lblOldPassword.gridx = 4;
+		gbc_lblOldPassword.gridy = 5;
+		contentPane.add(lblOldPassword, gbc_lblOldPassword);
+		
+		txtOldPassword = new JPasswordField();
+		txtOldPassword.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		GridBagConstraints gbc_txtOldPassword = new GridBagConstraints();
+		gbc_txtOldPassword.insets = new Insets(0, 0, 5, 0);
+		gbc_txtOldPassword.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtOldPassword.gridx = 5;
+		gbc_txtOldPassword.gridy = 5;
+		contentPane.add(txtOldPassword, gbc_txtOldPassword);
 
 		JLabel lblFirstName = new JLabel("First Name");
 		lblFirstName.setForeground(Color.WHITE);
@@ -170,26 +171,26 @@ public class UpdateInfoView {
 		gbc_separator.gridx = 3;
 		gbc_separator.gridy = 4;
 		contentPane.add(separator, gbc_separator);
-
-		JLabel lblPassword2 = new JLabel("Confirm Password");
-		lblPassword2.setForeground(Color.WHITE);
-		lblPassword2.setFont(new Font("Tahoma", Font.BOLD, 15));
-		GridBagConstraints gbc_lblPassword2 = new GridBagConstraints();
-		gbc_lblPassword2.anchor = GridBagConstraints.WEST;
-		gbc_lblPassword2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPassword2.gridx = 4;
-		gbc_lblPassword2.gridy = 6;
-		contentPane.add(lblPassword2, gbc_lblPassword2);
-
-		txtPassword2 = new JPasswordField();
-		txtPassword2.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		GridBagConstraints gbc_txtPassword2 = new GridBagConstraints();
-		gbc_txtPassword2.anchor = GridBagConstraints.NORTH;
-		gbc_txtPassword2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtPassword2.insets = new Insets(0, 0, 5, 0);
-		gbc_txtPassword2.gridx = 5;
-		gbc_txtPassword2.gridy = 6;
-		contentPane.add(txtPassword2, gbc_txtPassword2);
+		
+				JLabel lblNewPassword = new JLabel("New Password");
+				lblNewPassword.setForeground(Color.WHITE);
+				lblNewPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
+				GridBagConstraints gbc_lblNewPassword = new GridBagConstraints();
+				gbc_lblNewPassword.anchor = GridBagConstraints.WEST;
+				gbc_lblNewPassword.insets = new Insets(0, 0, 5, 5);
+				gbc_lblNewPassword.gridx = 4;
+				gbc_lblNewPassword.gridy = 6;
+				contentPane.add(lblNewPassword, gbc_lblNewPassword);
+		
+				txtNewPassword = new JPasswordField();
+				txtNewPassword.setFont(new Font("Tahoma", Font.PLAIN, 17));
+				GridBagConstraints gbc_txtNewPassword = new GridBagConstraints();
+				gbc_txtNewPassword.anchor = GridBagConstraints.NORTH;
+				gbc_txtNewPassword.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtNewPassword.insets = new Insets(0, 0, 5, 0);
+				gbc_txtNewPassword.gridx = 5;
+				gbc_txtNewPassword.gridy = 6;
+				contentPane.add(txtNewPassword, gbc_txtNewPassword);
 
 		JLabel lblLastName = new JLabel("Last Name");
 		lblLastName.setForeground(Color.WHITE);
@@ -211,6 +212,26 @@ public class UpdateInfoView {
 		gbc_txtLastName.gridx = 2;
 		gbc_txtLastName.gridy = 7;
 		contentPane.add(txtLastName, gbc_txtLastName);
+		
+				JLabel lblNewPassword2 = new JLabel("Confirm Password");
+				lblNewPassword2.setForeground(Color.WHITE);
+				lblNewPassword2.setFont(new Font("Tahoma", Font.BOLD, 15));
+				GridBagConstraints gbc_lblNewPassword2 = new GridBagConstraints();
+				gbc_lblNewPassword2.anchor = GridBagConstraints.WEST;
+				gbc_lblNewPassword2.insets = new Insets(0, 0, 5, 5);
+				gbc_lblNewPassword2.gridx = 4;
+				gbc_lblNewPassword2.gridy = 7;
+				contentPane.add(lblNewPassword2, gbc_lblNewPassword2);
+		
+				txtNewPassword2 = new JPasswordField();
+				txtNewPassword2.setFont(new Font("Tahoma", Font.PLAIN, 17));
+				GridBagConstraints gbc_txtNewPassword2 = new GridBagConstraints();
+				gbc_txtNewPassword2.anchor = GridBagConstraints.NORTH;
+				gbc_txtNewPassword2.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtNewPassword2.insets = new Insets(0, 0, 5, 0);
+				gbc_txtNewPassword2.gridx = 5;
+				gbc_txtNewPassword2.gridy = 7;
+				contentPane.add(txtNewPassword2, gbc_txtNewPassword2);
 
 		JLabel lblEmail = new JLabel("Email");
 		lblEmail.setForeground(Color.WHITE);
@@ -232,13 +253,13 @@ public class UpdateInfoView {
 		gbc_txtEmail.gridx = 2;
 		gbc_txtEmail.gridy = 8;
 		contentPane.add(txtEmail, gbc_txtEmail);
-
-		btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 16));
-		GridBagConstraints gbc_btnChangePassword = new GridBagConstraints();
-		gbc_btnChangePassword.insets = new Insets(0, 0, 5, 0);
-		gbc_btnChangePassword.gridx = 5;
-		gbc_btnChangePassword.gridy = 8;
-		contentPane.add(btnChangePassword, gbc_btnChangePassword);
+		
+				btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 16));
+				GridBagConstraints gbc_btnChangePassword = new GridBagConstraints();
+				gbc_btnChangePassword.insets = new Insets(0, 0, 5, 0);
+				gbc_btnChangePassword.gridx = 5;
+				gbc_btnChangePassword.gridy = 9;
+				contentPane.add(btnChangePassword, gbc_btnChangePassword);
 
 		btnUpdate.setFont(new Font("Tahoma", Font.BOLD, 16));
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
@@ -292,8 +313,9 @@ public class UpdateInfoView {
 
 	private void initViewBinder() {
 		UpdateInfoView.this.updateInfoBUS.viewBinder.txtUsername = txtUsername;
-		UpdateInfoView.this.updateInfoBUS.viewBinder.txtPassword = txtPassword;
-		UpdateInfoView.this.updateInfoBUS.viewBinder.txtPassword2 = txtPassword2;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtOldPassword = txtOldPassword;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtNewPassword = txtNewPassword;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtNewPassword2 = txtNewPassword2;
 		UpdateInfoView.this.updateInfoBUS.viewBinder.txtFirstName = txtFirstName;
 		UpdateInfoView.this.updateInfoBUS.viewBinder.txtLastName = txtLastName;
 		UpdateInfoView.this.updateInfoBUS.viewBinder.txtEmail = txtEmail;
