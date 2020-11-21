@@ -52,6 +52,7 @@ public class GameRoomView {
 
     private void initViewBinder() {
         this.gameRoomBUS.viewBinder.lblPlayerCount = lblPlayerCount;
+        this.gameRoomBUS.viewBinder.btnStartGame = btnStartGame;
     }
 
     // Properties
