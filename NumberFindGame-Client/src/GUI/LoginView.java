@@ -60,7 +60,7 @@ public class LoginView {
 		lblNetIp.setFont(new Font("Tahoma", Font.BOLD, 13));
 
 		txtNetIp = new JTextField();
-		txtNetIp.setEditable(false);
+		txtNetIp.setEditable(true);
 		txtNetIp.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtNetIp.setColumns(10);
 		GroupLayout gl_panel = new GroupLayout(contentPane);
