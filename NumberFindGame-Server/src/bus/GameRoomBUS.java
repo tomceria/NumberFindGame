@@ -102,9 +102,9 @@ public class GameRoomBUS {
         ((MatchPlayer_Server) playerClient.getClientIdentifier()).setGameRoomBUS(this);
 
         // TODO: Change startGame condition
-        if (this.gameRoom.getPlayerClients().size() == this.gameRoom.getMatchConfig().getMaxPlayer()) {
-            this.startGame();
-        }
+//        if (this.gameRoom.getPlayerClients().size() == this.gameRoom.getMatchConfig().getMaxPlayer()) {
+//            this.startGame();
+//        }
     }
 
     public void leaveRoom(ClientHandler playerClient) {

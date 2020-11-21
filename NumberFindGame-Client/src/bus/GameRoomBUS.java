@@ -1,18 +1,19 @@
 package bus;
 
 import Common.ViewBinder;
-import Socket.GameClient;
 import Socket.Request.SocketRequest_GameRoomStartGame;
-import Socket.Response.SocketResponse_GameRoomProps;
 import Socket.Response.SocketResponse_GameInit;
-import Socket.Response.SocketResponse_GameRoomPlayerJoin;
-import dto.*;
+import Socket.Response.SocketResponse_GameRoomProps;
+import dto.GameRoom;
+import dto.GameRoom_Client;
+import dto.Game_Client;
+import dto.MatchPlayer;
 
 import javax.swing.*;
 
 public class GameRoomBUS {
-    GameRoom gameRoom; // PARENT
     public GameRoomBUS_ViewBinder viewBinder;
+    GameRoom gameRoom; // PARENT
 
     public GameRoomBUS(GameRoom gameRoom) {
         this.gameRoom = gameRoom;
@@ -70,6 +71,7 @@ public class GameRoomBUS {
 
     public class GameRoomBUS_ViewBinder extends ViewBinder {
         public JLabel lblPlayerCount;
+        public JButton btnStartGame;
 
         public GameRoomBUS_ViewBinder() {
             super();
@@ -84,6 +86,14 @@ public class GameRoomBUS {
                         GameRoomBUS.this.getGameRoom().getPlayers() != null &&
                         GameRoomBUS.this.getGameRoom().getPlayers().size() > 0) {
                     ui_loadPlayerCount(lblPlayerCount);
+                }
+
+                if (GameRoomBUS.this.getGameRoom().getPlayers() != null) {
+                    if (GameRoomBUS.this.getGameRoom().getPlayers().size() > 1) {
+                        btnStartGame.setVisible(true);
+                    } else {
+                        btnStartGame.setVisible(false);
+                    }
                 }
             }
         }
