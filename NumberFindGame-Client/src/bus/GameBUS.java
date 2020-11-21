@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -213,8 +214,8 @@ public class GameBUS {
 
     public String ui_getTimerClock() {
         int timeInMillis = game.getMatchConfig().getTime();
-        LocalTime timeEnd = LocalTime.from(game.getStartTime()).plus(timeInMillis, ChronoUnit.MILLIS);
-        LocalTime timeDiff = timeEnd.minusNanos(LocalTime.now().toNanoOfDay());
+        LocalDateTime timeEnd = game.getStartTime().plus(timeInMillis, ChronoUnit.MILLIS);
+        LocalDateTime timeDiff = timeEnd.minusNanos(LocalDateTime.now().toLocalTime().toNanoOfDay());
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("mm:ss");
 

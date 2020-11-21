@@ -20,15 +20,15 @@ public class MySqlDataAccessHelper {
 
 	public MySqlDataAccessHelper() {
 		/* HUY */
-//		this.Host = "localhost";
-//		this.UserName = "root";
-//		this.Password = "passne";
-//		this.DataBase = "numberfindgame";
-		/* HOANG */
-		this.Host = "localhost:9001";
+		this.Host = "localhost";
 		this.UserName = "root";
-		this.Password = "CaraCara123123";
-		this.DataBase = "NumberFindGameDB";
+		this.Password = "passne";
+		this.DataBase = "numberfindgame";
+		/* HOANG */
+//		this.Host = "localhost:9001";
+//		this.UserName = "root";
+//		this.Password = "CaraCara123123";
+//		this.DataBase = "NumberFindGameDB";
 		/* NGAN */
 //		this.Host = "localhost";
 //		this.UserName = "root";
@@ -113,7 +113,7 @@ public class MySqlDataAccessHelper {
 	// Create prepared statement
 	public void prepare(String sql) {
 		try {
-			this.preStmt = this.getConnect().prepareStatement(sql);
+			this.preStmt = this.getConnect().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		} catch (SQLException e) {
 			displayError(e);
 		} catch (Exception e) {
@@ -160,17 +160,27 @@ public class MySqlDataAccessHelper {
 
 	public int executeUpdatePre() {
 		int res = Integer.MIN_VALUE;
+		int key = 0;
 		try {
 			// for debug
 //			System.out.println(this.preStmt.toString());
 			res = this.preStmt.executeUpdate();
+
+			if (res == 0) {
+				throw new SQLException("Update db failed, no rows affected.");
+			}
+
+			ResultSet generatedKeys = preStmt.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				key = (int) generatedKeys.getLong(1);
+			}
 		} catch (SQLException e) {
 			displayError(e);
 		} finally {
 			this.Close();
 		}
 
-		return res;
+		return key;
 	}
 
 	public void Close() {

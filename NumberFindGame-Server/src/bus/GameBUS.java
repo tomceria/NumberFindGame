@@ -7,9 +7,13 @@ import Socket.Response.SocketResponse;
 import Socket.Response.SocketResponse_GameEnd;
 import Socket.Response.SocketResponse_GameProps;
 import Socket.Response.SocketResponse_GameResult;
+import dao.MatchDAO;
+import dao.MatchPlayerDAO;
+import dao.PlayerDAO;
 import dto.*;
 
 import java.awt.geom.Point2D;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +34,7 @@ public class GameBUS {
         this.performPlacingPlayers();
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
-        game.setStartTime(LocalTime.now());
+        game.setStartTime(LocalDateTime.now());
         game.setCurrentLevelAndResetTimer(1);                                                    // also reset timer for CurrentLevel
         this.gameTimer = new Timer();
         this.gameTimer.schedule(
@@ -268,6 +272,7 @@ public class GameBUS {
             );
         } else {
             // TODO: Reach Game-ending phase
+//            GameBUS.this.performEndGame();
             game.setCurrentLevelAndResetTimer(1);  // Reset
         }
 
@@ -358,6 +363,9 @@ public class GameBUS {
         if (matchPlayersWithFirstPlace.size() > 0) {
             winner = matchPlayersWithFirstPlace.get(0).getPlayer();
         }
+
+        this.performSaveGameResult();
+
         for (ClientHandler clientHandler : this.getServer().getClientManager().getClientConnections().values()) {
             PlayerDTO clientPlayer = ((MatchPlayer_Server) clientHandler.getClientIdentifier()).getPlayer();
             boolean clientPlayerIsWinner = clientPlayer.equals(winner);
@@ -393,6 +401,20 @@ public class GameBUS {
             GameRoom_Server gameRoom = gameRoomOfGameAsList.get(0);
             gameRoom.getGameRoomBUS().endGame();
             gameRoom.getGameRoomBUS().notifyUpdateGameRoomProps();
+        }
+    }
+
+    private void performSaveGameResult() {
+        MatchDAO matchDAO = new MatchDAO();
+        MatchPlayerDAO mpDAO = new MatchPlayerDAO();
+        PlayerDAO playerDAO = new PlayerDAO();
+
+        MatchDTO match = new MatchDTO(game);
+        match = matchDAO.create(match);
+
+        for (MatchPlayer mp : game.getMatchPlayers()) {
+            mp.setMatch(match);
+            mpDAO.create(mp);
         }
     }
 
