@@ -76,6 +76,27 @@ public class GameBUS {
         return accept;
     }
 
+    public boolean req_quitGame(MatchPlayer_Server sendingPlayer) {
+        GameServer server = this.game.getServer();
+        this.game.getPlayerClients().remove(sendingPlayer.getClientHandlerId());
+
+        /**
+         * Trường hợp nếu Game được khởi tạo với GameRoom (common) => xoá player khỏi GameRoom
+         */
+        if (this.game.getGameRoomInfo() != null) {
+            GameRoom gameRoom = server.getGameRooms().stream()
+                    .filter(gR -> gR.getId() == this.getGame().getGameRoomInfo().getId())
+                    .collect(Collectors.toList())
+                    .get(0);
+            gameRoom.setGame(this.game);
+            sendingPlayer.getGameRoomBUS().notifyUpdateGameRoomProps();
+        }
+
+        server.getClientManager().disconnectClient(sendingPlayer.getClientHandlerId());
+
+        return true;
+    }
+
     // Privates
 
     private GameServer getServer() {

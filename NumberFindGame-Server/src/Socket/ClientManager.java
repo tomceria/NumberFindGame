@@ -58,7 +58,7 @@ public class ClientManager implements IThreadCompleteListener {
 		}
 	}
 
-	protected void disconnectClient(UUID clientHandlerId) {
+	public void disconnectClient(UUID clientHandlerId) {
 		/**
 		 * Duyệt tất cả các GameRoom trong server
 		 */

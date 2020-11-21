@@ -48,7 +48,7 @@ public class GameView {
         btnQuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("NotImplemented: Quit Game");
+                GameView.this.gameBUS.action_QuitGame();
             }
         });
     }
