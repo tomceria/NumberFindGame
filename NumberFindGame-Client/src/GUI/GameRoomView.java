@@ -17,6 +17,9 @@ public class GameRoomView {
     private JButton btnStartGame;
 
     private GameRoomBUS gameRoomBUS;
+    private JButton btnUpdateInfo;
+    private JButton btnQuitGame;
+    private GridBagConstraints gbc_1;
 
     public GameRoomView(GameRoomBUS gameRoomBUS) {
         this.gameRoomBUS = gameRoomBUS;
@@ -40,6 +43,11 @@ public class GameRoomView {
                 GameRoomView.this.gameRoomBUS.action_RequestStartGame();
             }
         });
+        btnUpdateInfo.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GameRoomView.this.gameRoomBUS.action_GotoUpdateInfoView();
+        	}
+        });
     }
 
     private void initViewBinder() {
@@ -61,13 +69,17 @@ public class GameRoomView {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridBagLayout());
+        GridBagLayout gbl_contentPane = new GridBagLayout();
+        gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+        gbl_contentPane.rowHeights = new int[]{0, 0, 45, 45, 45};
+        contentPane.setLayout(gbl_contentPane);
         contentPane.setBackground(new Color(-14142061));
         lblFavor01 = new JLabel();
         lblFavor01.setForeground(new Color(-1));
         lblFavor01.setText("Waiting for more players...");
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
+        gbc.insets = new Insets(0, 0, 5, 0);
         gbc.gridx = 0;
         gbc.gridy = 0;
         contentPane.add(lblFavor01, gbc);
@@ -77,15 +89,30 @@ public class GameRoomView {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.insets = new Insets(6, 0, 0, 0);
+        gbc.insets = new Insets(6, 0, 5, 0);
         contentPane.add(lblPlayerCount, gbc);
         btnStartGame = new JButton();
         btnStartGame.setText("Start Game");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.insets = new Insets(16, 0, 0, 0);
-        contentPane.add(btnStartGame, gbc);
+        gbc_1 = new GridBagConstraints();
+        gbc_1.insets = new Insets(0, 0, 5, 0);
+        gbc_1.gridx = 0;
+        gbc_1.gridy = 2;
+        contentPane.add(btnStartGame, gbc_1);
+        
+        btnUpdateInfo = new JButton("Update Info");
+        
+        GridBagConstraints gbc_btnUpdateInfo = new GridBagConstraints();
+        gbc_btnUpdateInfo.insets = new Insets(0, 0, 5, 0);
+        gbc_btnUpdateInfo.gridx = 0;
+        gbc_btnUpdateInfo.gridy = 3;
+        contentPane.add(btnUpdateInfo, gbc_btnUpdateInfo);
+        
+        btnQuitGame = new JButton("Quit Game");
+        GridBagConstraints gbc_btnQuitGame = new GridBagConstraints();
+        gbc_btnQuitGame.insets = new Insets(0, 0, 5, 0);
+        gbc_btnQuitGame.gridx = 0;
+        gbc_btnQuitGame.gridy = 4;
+        contentPane.add(btnQuitGame, gbc_btnQuitGame);
     }
 
     /**

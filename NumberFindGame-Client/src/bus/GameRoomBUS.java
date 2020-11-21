@@ -10,6 +10,8 @@ import dto.*;
 
 import javax.swing.*;
 
+import bus.LoginBUS;
+
 public class GameRoomBUS {
     GameRoom gameRoom; // PARENT
     public GameRoomBUS_ViewBinder viewBinder;
@@ -54,6 +56,10 @@ public class GameRoomBUS {
                 this.getGameRoom().getPlayers().size(),
                 this.getGameRoom().getMatchConfig().getMaxPlayer()
         ));
+    }
+    
+    public void action_GotoUpdateInfoView() {
+    	ViewBUS.gotoUpdateInfoView();
     }
 
     // Privates

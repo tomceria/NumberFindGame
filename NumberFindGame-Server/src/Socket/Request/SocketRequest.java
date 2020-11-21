@@ -9,7 +9,9 @@ public class SocketRequest implements Serializable {
         ACCESS_REGISTER,
         DISCONNECT,
         GAMEROOM_STARTGAME,
-        GAME_SUBMITLEVELNODE
+        GAME_SUBMITLEVELNODE, 
+        ACCESS_CHANGEPASSWORD,
+        ACCESS_UPDATEINFO
     }
 
     Action action;

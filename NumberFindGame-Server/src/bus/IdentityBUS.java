@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import Socket.ClientHandler;
+import Socket.Request.SocketRequest_AccessChangePassword;
 import Socket.Request.SocketRequest_AccessLogin;
 import Socket.Request.SocketRequest_AccessRegister;
+import Socket.Request.SocketRequest_AccessUpdateInfo;
 import Socket.Response.SocketResponse;
 import dto.MatchPlayer;
 import dto.MatchPlayer_Server;
@@ -77,6 +79,28 @@ public class IdentityBUS {
 				request.lastName);
 
 		boolean result = playerBUS.register(player);
+
+		return result;
+	}
+	
+	public boolean performUpdateInfo(SocketRequest_AccessUpdateInfo request) throws Exception {
+		PlayerBUS playerBus = new PlayerBUS();
+		
+		PlayerDTO player = new PlayerDTO(request.username, request.password, request.email, request.firstName,
+				request.lastName);
+
+		boolean result = playerBUS.updateInfo(player);
+
+		return result;
+	}
+	
+	public boolean performChangePassword(SocketRequest_AccessChangePassword request) throws Exception {
+		PlayerBUS playerBus = new PlayerBUS();
+		
+		PlayerDTO player = new PlayerDTO(request.username, request.password, request.email, request.firstName,
+				request.lastName);
+
+		boolean result = playerBUS.updateInfo(player);
 
 		return result;
 	}
