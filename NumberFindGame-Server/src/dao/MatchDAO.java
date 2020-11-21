@@ -4,6 +4,7 @@ import dto.MatchDTO;
 import util.MySqlDataAccessHelper;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 
 public class MatchDAO {
     /**
@@ -20,7 +21,8 @@ public class MatchDAO {
 
         // bind values
         int order = 1;
-        conn.bind(order++, match.getTimeStart());
+        Timestamp sqlDatetime = Timestamp.valueOf(match.getTimeStart());
+        conn.bind(order++, sqlDatetime.toString());
         conn.bind(order++, match.getDuration());
         conn.bind(order++, match.getFoundCount());
         conn.bind(order++, match.getNumberQty());

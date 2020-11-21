@@ -1,23 +1,23 @@
 package dto;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class MatchDTO implements Serializable {
     private int id;
-    private String timeStart;
+    private LocalDateTime timeStart;
     private double duration;
     private int foundCount;
     private int numberQty;
     private String time;
     private int maxPlayer;
 
-    public MatchDTO(Game_Server game) {
-        Time sqlDatetime = Time.valueOf(game.getStartTime());
-        this.timeStart = sqlDatetime.toString();
-        this.duration = Duration.between(game.getStartTime(), LocalTime.now()).toMillis();
+    public MatchDTO(Game game) {
+//        Timestamp sqlDatetime = Timestamp.valueOf(game.getStartTime());
+        this.timeStart = game.getStartTime();
+        this.duration = Duration.between(game.getStartTime().toLocalTime(), LocalTime.now()).toMillis();
         this.foundCount = game.getCurrentLevel().getValue();
         this.numberQty = game.getMatchConfig().getNumberQty();
         this.time = String.valueOf(game.getMatchConfig().getTime());
@@ -27,14 +27,14 @@ public class MatchDTO implements Serializable {
     /**
      * @return the timeStart
      */
-    public String getTimeStart() {
+    public LocalDateTime getTimeStart() {
         return timeStart;
     }
 
     /**
      * @param timeStart the timeStart to set
      */
-    public void setTimeStart(String timeStart) {
+    public void setTimeStart(LocalDateTime timeStart) {
         this.timeStart = timeStart;
     }
 

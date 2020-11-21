@@ -13,6 +13,7 @@ import dao.PlayerDAO;
 import dto.*;
 
 import java.awt.geom.Point2D;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class GameBUS {
         this.performPlacingPlayers();
 
         // Timer-related statements. These has to be the LAST STATEMENT in the init() to provide fair gameplay
-        game.setStartTime(LocalTime.now());
+        game.setStartTime(LocalDateTime.now());
         game.setCurrentLevelAndResetTimer(1);                                                    // also reset timer for CurrentLevel
         this.gameTimer = new Timer();
         this.gameTimer.schedule(

@@ -1,7 +1,7 @@
 package dto;
 
 import java.io.Serializable;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Game implements Serializable {
@@ -9,7 +9,7 @@ public class Game implements Serializable {
     CurrentLevel currentLevel;
     ArrayList<LevelNode> level;
     ArrayList<MatchPlayer> players;
-    LocalTime startTime;
+    LocalDateTime startTime;
     GameRoomInfo gameRoomInfo; // Game does not and should not acknowledge GameRoom. Nullable
 
     /**
@@ -76,10 +76,10 @@ public class Game implements Serializable {
         this.players = players;
     }
 
-    public LocalTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
