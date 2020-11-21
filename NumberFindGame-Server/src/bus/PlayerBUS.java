@@ -39,8 +39,6 @@ public class PlayerBUS {
      * @return
      */
     public boolean updateInfo(PlayerDTO player) {
-        // hash password
-        //player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt(12)));
         playerDao.updateInfo(player);
 
         return true;

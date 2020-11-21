@@ -23,7 +23,7 @@ public class RequestHandler {
 				if (thisClientHandler.isLoggedIn == false) {
 					IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
 							RequestHandler.this.clientHandler.clientManager.server);
-
+					System.out.println(requestRaw.getMessage());
 					switch (requestRaw.getAction()) {
 					case ACCESS_LOGIN: {
 						boolean result = false;
@@ -60,12 +60,14 @@ public class RequestHandler {
 
                             break;
                         }
-					case ACCESS_UPDATEINFO: {
+					case PLAYER_UPDATEINFO: {
+						System.out.println("false");
 						SocketRequest_AccessUpdateInfo request = ((SocketRequest_AccessUpdateInfo) requestRaw);
 						boolean result = false;
 						try {
 							result = identityBUS.performUpdateInfo(request);
 							if (result == true) {
+								System.out.println("true");
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
 										SocketResponse.Action.MSG, "Your account has been updated."));
 							} else {
@@ -76,10 +78,10 @@ public class RequestHandler {
 							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
 									SocketResponse.Action.MSG, e.getMessage()));
 						}
-
+						System.out.println("false");
                             break;
                         }
-					case ACCESS_CHANGEPASSWORD: {
+					case PLAYER_CHANGEPASSWORD: {
 						SocketRequest_AccessChangePassword request = ((SocketRequest_AccessChangePassword) requestRaw);
 						boolean result = false;
 						try {
