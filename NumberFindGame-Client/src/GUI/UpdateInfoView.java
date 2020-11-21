@@ -76,7 +76,7 @@ public class UpdateInfoView {
 		gbc_lblTitle.gridx = 1;
 		gbc_lblTitle.gridy = 1;
 		contentPane.add(lblTitle, gbc_lblTitle);
-		
+
 		JLabel lblAccountInfo = new JLabel("Update Account Info");
 		lblAccountInfo.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		lblAccountInfo.setForeground(Color.WHITE);
@@ -86,7 +86,7 @@ public class UpdateInfoView {
 		gbc_lblAccountInfo.gridx = 1;
 		gbc_lblAccountInfo.gridy = 3;
 		contentPane.add(lblAccountInfo, gbc_lblAccountInfo);
-		
+
 		JLabel lblChangePassword = new JLabel("Change Password");
 		lblChangePassword.setForeground(Color.WHITE);
 		lblChangePassword.setFont(new Font("Tahoma", Font.PLAIN, 27));
@@ -232,13 +232,13 @@ public class UpdateInfoView {
 		gbc_txtEmail.gridx = 2;
 		gbc_txtEmail.gridy = 8;
 		contentPane.add(txtEmail, gbc_txtEmail);
-		
-				btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 16));
-				GridBagConstraints gbc_btnChangePassword = new GridBagConstraints();
-				gbc_btnChangePassword.insets = new Insets(0, 0, 5, 0);
-				gbc_btnChangePassword.gridx = 5;
-				gbc_btnChangePassword.gridy = 8;
-				contentPane.add(btnChangePassword, gbc_btnChangePassword);
+
+		btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 16));
+		GridBagConstraints gbc_btnChangePassword = new GridBagConstraints();
+		gbc_btnChangePassword.insets = new Insets(0, 0, 5, 0);
+		gbc_btnChangePassword.gridx = 5;
+		gbc_btnChangePassword.gridy = 8;
+		contentPane.add(btnChangePassword, gbc_btnChangePassword);
 
 		btnUpdate.setFont(new Font("Tahoma", Font.BOLD, 16));
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
@@ -257,7 +257,7 @@ public class UpdateInfoView {
 		txtFirstName.setText(player.getFirstName());
 		txtLastName.setText(player.getLastName());
 		txtEmail.setText(player.getEmail());
-		
+
 		btnNavBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -268,9 +268,8 @@ public class UpdateInfoView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					
+
 					UpdateInfoView.this.updateInfoBUS.action_UpdateSubmit();
-					System.out.println("hello");
 
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, exception.getMessage(), "Error",
@@ -282,18 +281,11 @@ public class UpdateInfoView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-				boolean result = UpdateInfoView.this.updateInfoBUS.action_ChangePassword();
-				if (result == true) {
-					JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Your password has been update.",
-							"Information", JOptionPane.INFORMATION_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Unknown update error", "Error",
+					UpdateInfoView.this.updateInfoBUS.action_ChangePassword();
+				} catch (Exception exception) {
+					JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, exception.getMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
-			} catch (Exception exception) {
-				JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, exception.getMessage(), "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
 			}
 		});
 	}

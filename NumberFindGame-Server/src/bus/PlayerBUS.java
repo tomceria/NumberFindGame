@@ -49,10 +49,10 @@ public class PlayerBUS {
      * @param player
      * @return
      */
-    public boolean changePassword(PlayerDTO player) {
+    public boolean changePassword(String username, String password) {
         // hash password
-        player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt(12)));
-        playerDao.changePassword(player);
+        password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        playerDao.changePassword(username, password);
 
         return true;
     }
