@@ -19,11 +19,12 @@ public class RequestHandler {
 			@Override
 			public void run() {
 				ClientHandler thisClientHandler = RequestHandler.this.clientHandler;
+				IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
+						RequestHandler.this.clientHandler.clientManager.server);
 
 				if (thisClientHandler.isLoggedIn == false) {
-					IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
-							RequestHandler.this.clientHandler.clientManager.server);
-					System.out.println(requestRaw.getMessage());
+//					IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
+//							RequestHandler.this.clientHandler.clientManager.server);
 					switch (requestRaw.getAction()) {
 					case ACCESS_LOGIN: {
 						boolean result = false;
@@ -58,16 +59,37 @@ public class RequestHandler {
 									SocketResponse.Action.MSG, e.getMessage()));
 						}
 
-                            break;
-                        }
+						break;
+					}
+					default: {
+						thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
+								SocketResponse.Action.MSG, "Invalid access request."));
+						thisClientHandler.isRunning = false; // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp =>
+																// Kết thúc Thread => Disconnect
+						break;
+					}
+					}
+				} else if (thisClientHandler.isLoggedIn && thisClientHandler.clientIdentifier != null) {
+					switch (requestRaw.getAction()) {
+					case MSG: {
+						System.out.println("Received message: " + requestRaw.getMessage());
+						break;
+					}
+					case GAMEROOM_STARTGAME: {
+						SocketRequest_GameRoomStartGame request = ((SocketRequest_GameRoomStartGame) requestRaw);
+						MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
+
+						matchPlayer.getGameRoomBUS().startGame();
+						break;
+					}
 					case PLAYER_UPDATEINFO: {
-						System.out.println("false");
+//						IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
+//								RequestHandler.this.clientHandler.clientManager.server);
 						SocketRequest_AccessUpdateInfo request = ((SocketRequest_AccessUpdateInfo) requestRaw);
 						boolean result = false;
 						try {
 							result = identityBUS.performUpdateInfo(request);
 							if (result == true) {
-								System.out.println("true");
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
 										SocketResponse.Action.MSG, "Your account has been updated."));
 							} else {
@@ -78,10 +100,11 @@ public class RequestHandler {
 							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
 									SocketResponse.Action.MSG, e.getMessage()));
 						}
-						System.out.println("false");
-                            break;
-                        }
+						break;
+					}
 					case PLAYER_CHANGEPASSWORD: {
+//						IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
+//								RequestHandler.this.clientHandler.clientManager.server);
 						SocketRequest_AccessChangePassword request = ((SocketRequest_AccessChangePassword) requestRaw);
 						boolean result = false;
 						try {
@@ -98,36 +121,11 @@ public class RequestHandler {
 									SocketResponse.Action.MSG, e.getMessage()));
 						}
 
-                            break;
-                        }
-                        default: {
-                            thisClientHandler.sendResponse(
-                                    new SocketResponse(
-                                            SocketResponse.Status.FAILED,
-                                            SocketResponse.Action.MSG,
-                                            "Invalid access request."
-                                    )
-                            );
-                            thisClientHandler.isRunning = false;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
-                            break;
-                        }
-                    }
-                } else if (thisClientHandler.isLoggedIn && thisClientHandler.clientIdentifier != null) {
-                    switch (requestRaw.getAction()) {
-                        case MSG: {
-                            System.out.println("Received message: " + requestRaw.getMessage());
-                            break;
-                        }
-                        case GAMEROOM_STARTGAME: {
-                            SocketRequest_GameRoomStartGame request = ((SocketRequest_GameRoomStartGame) requestRaw);
-                            MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
-
-                            matchPlayer.getGameRoomBUS().startGame();
-                            break;
-                        }
-                        case GAME_SUBMITLEVELNODE: {
-                            SocketRequest_GameSubmitLevelNode request = ((SocketRequest_GameSubmitLevelNode) requestRaw);
-                            MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
+						break;
+					}
+					case GAME_SUBMITLEVELNODE: {
+						SocketRequest_GameSubmitLevelNode request = ((SocketRequest_GameSubmitLevelNode) requestRaw);
+						MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
 
 						matchPlayer.getGameBUS().req_sendLevelNodeForValidation(request.levelNode, matchPlayer);
 						break;
