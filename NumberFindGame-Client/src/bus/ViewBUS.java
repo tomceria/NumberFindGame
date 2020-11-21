@@ -10,6 +10,7 @@ public class ViewBUS {
     public static LoginView loginView = null;
     public static RegisterView registerView = null;
     public static GameRoomView gameRoomView = null;
+    public static UpdateInfoView updateInfoView = null;
     public static GameView gameView = null;
     public static GameResultView gameResultView = null;
 
@@ -54,6 +55,22 @@ public class ViewBUS {
             return;
         }
         mainFrame.setContentPane(gameRoomView.getContentPane());
+        mainFrame.setVisible(true);
+    }
+    
+    public static void test() {
+//        if (gameRoomView != null) {
+//            return;
+//        }
+        mainFrame.setContentPane(gameRoomView.getContentPane());
+        mainFrame.setVisible(true);
+    }
+    
+    public static void gotoUpdateInfoView() {
+        if (updateInfoView == null) {
+        	updateInfoView = new UpdateInfoView();
+        }
+        mainFrame.setContentPane(updateInfoView.getContentPane());
         mainFrame.setVisible(true);
     }
 

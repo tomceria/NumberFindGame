@@ -121,5 +121,54 @@ public class PlayerDAO {
 
 		conn.Close();
 	}
+	
+	public void updateInfo(PlayerDTO player) {
+		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
+
+		//String query = "INSERT INTO players (username, password, email, first_name, last_name) VALUES(?, ?, ?, ?, ?)";
+		String query = "UPDATE players "
+					 + "SET first_name = ?,"
+					 + "last_name = ?,"
+					 + "email = ?"
+					 + "WHERE username = ?";
+
+		// prepare statement
+		conn.prepare(query);
+
+		// bind values
+		int order = 1;
+		
+		conn.bind(order++, player.getFirstName());
+		conn.bind(order++, player.getLastName());
+		conn.bind(order++, player.getEmail());
+		conn.bind(order, player.getUsername());
+
+		// execute update with prepare statement
+		conn.executeUpdatePre();
+
+		conn.Close();
+	}
+	
+	public void changePassword(PlayerDTO player) {
+		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
+
+		String query = "UPDATE players "
+					 + "SET password = ?"
+					 + "WHERE username = ?";
+
+		// prepare statement
+		conn.prepare(query);
+
+		// bind values
+		int order = 1;
+		
+		conn.bind(order++, player.getPassword());
+		conn.bind(order, player.getUsername());
+
+		// execute update with prepare statement
+		conn.executeUpdatePre();
+
+		conn.Close();
+	}
 
 }

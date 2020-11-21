@@ -32,6 +32,32 @@ public class PlayerBUS {
 
         return true;
     }
+    
+    /**
+     * 
+     * @param player
+     * @return
+     */
+    public boolean updateInfo(PlayerDTO player) {
+        // hash password
+        //player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt(12)));
+        playerDao.updateInfo(player);
+
+        return true;
+    }
+    
+    /**
+     * 
+     * @param player
+     * @return
+     */
+    public boolean changePassword(PlayerDTO player) {
+        // hash password
+        player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt(12)));
+        playerDao.changePassword(player);
+
+        return true;
+    }
 
     /**
      *
