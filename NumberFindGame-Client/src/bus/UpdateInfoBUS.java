@@ -10,110 +10,109 @@ import javax.swing.*;
 import java.io.IOException;
 
 public class UpdateInfoBUS {
-    private String hostname;
-    private int netPort;
+	public UpdateInfoBUS_ViewBinder viewBinder;
 
-    public UpdateInfoBUS_ViewBinder viewBinder;
+	public UpdateInfoBUS() {
+		this.viewBinder = new UpdateInfoBUS_ViewBinder();
+	}
 
-    public UpdateInfoBUS(String hostname, int netPort) {
-        this.hostname = hostname;
-        this.netPort = netPort;
-        this.viewBinder = new UpdateInfoBUS_ViewBinder();
-    }
+	// Functions
 
-    // Functions
+	public boolean action_UpdateSubmit() {
+		boolean result = false;
 
-    public boolean action_UpdateSubmit() throws IOException {
-        boolean result = false;
+		String username = this.viewBinder.txtUsername.getText();
+		String firstName = this.viewBinder.txtFirstName.getText();
+		String lastName = this.viewBinder.txtLastName.getText();
+		String email = this.viewBinder.txtEmail.getText();
 
-        String username = this.viewBinder.txtUsername.getText();
-        String firstName = this.viewBinder.txtFirstName.getText();
-        String lastName = this.viewBinder.txtLastName.getText();
-        String email = this.viewBinder.txtEmail.getText();
+		if (UpdateValidate(firstName, lastName, email)) {
+			try {
+				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName));
+				result = true;
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
 
-        if (UpdateValidate(firstName, lastName, email)) {
-            result = (boolean) GameMain.client.performOneTimeSocketRequest(
-                    this.hostname,
-                    this.netPort,
-                    new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName)
-            );
-        }
+			}
+		}
 
-        return result;
-    }
-    
-    public boolean action_ChangePassword() throws IOException {
-        boolean result = false;
+		return result;
+	}
 
-        String username = this.viewBinder.txtUsername.getText();
-        String password = new String(this.viewBinder.txtPassword.getPassword());
-        String password2 = new String(this.viewBinder.txtPassword2.getPassword());
+	public boolean action_ChangePassword() throws IOException {
+		boolean result = false;
 
-        if (ChangePasswordValidate(password, password2)) {
-            result = (boolean) GameMain.client.performOneTimeSocketRequest(
-                    this.hostname,
-                    this.netPort,
-                    new SocketRequest_AccessChangePassword(username, password)
-            );
-        }
+		String username = this.viewBinder.txtUsername.getText();
+		String password = new String(this.viewBinder.txtPassword.getPassword());
+		String password2 = new String(this.viewBinder.txtPassword2.getPassword());
 
-        return result;
-    }
+		if (ChangePasswordValidate(password, password2)) {
+			try {
+				GameMain.client.sendRequest(new SocketRequest_AccessChangePassword(username, password));
+				result = true;
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
 
-    // Update info Form Validate
+			}
+		}
 
-    public static boolean UpdateValidate(String firstName, String lastName, String email) {
-        String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        String fields[] = {email, firstName, lastName};
-        String fieldsLabel[] = {"Email", "First Name", "Last Name"};
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].equals("")) {
-                throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
-            }
-        }
+		return result;
+	}
 
-        if (!email.matches(emailRegex)) {
-            throw new RuntimeException("Invalid email address");
-        }
+	// Update info Form Validate
 
-        return true;
-    }
+	public static boolean UpdateValidate(String firstName, String lastName, String email) {
+		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		String fields[] = { email, firstName, lastName };
+		String fieldsLabel[] = { "First Name", "Last Name", "Email" };
+		for (int i = 0; i < fields.length; i++) {
+			if (fields[i].equals("")) {
+				throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
+			}
+		}
 
-    // Change password form validate
-    public static boolean ChangePasswordValidate(String password, String password2) {
-        String fields[] = {password, password2};
-        String fieldsLabel[] = {"Password", "Confirm password"};
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].equals("")) {
-                throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
-            }
-        }
+		if (!email.matches(emailRegex)) {
+			throw new RuntimeException("Invalid email address");
+		}
 
-        if (password.length() < 5) {
-            throw new RuntimeException("Password must be longer than 5 characters");
-        }
-        if (!password.equals(password2)) {
-            throw new RuntimeException("Password confirmation does not match");
-        }
-  
-        return true;
-    }
-    // Inner Classes
+		return true;
+	}
 
-    public class UpdateInfoBUS_ViewBinder extends ViewBinder {
-        public JTextField txtUsername;
-        public JPasswordField txtPassword;
-        public JPasswordField txtPassword2;
-        public JTextField txtFirstName;
-        public JTextField txtLastName;
-        public JTextField txtEmail;
+	// Change password form validate
+	public static boolean ChangePasswordValidate(String password, String password2) {
+		String fields[] = { password, password2 };
+		String fieldsLabel[] = { "Password", "Confirm password" };
+		for (int i = 0; i < fields.length; i++) {
+			if (fields[i].equals("")) {
+				throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
+			}
+		}
 
-        public UpdateInfoBUS_ViewBinder() {
-            super();
-        }
+		if (password.length() < 5) {
+			throw new RuntimeException("Password must be longer than 5 characters");
+		}
+		if (!password.equals(password2)) {
+			throw new RuntimeException("Password confirmation does not match");
+		}
 
-        @Override
-        public void update() {
-        }
-    }
+		return true;
+	}
+	// Inner Classes
+
+	public class UpdateInfoBUS_ViewBinder extends ViewBinder {
+		public JTextField txtUsername;
+		public JPasswordField txtPassword;
+		public JPasswordField txtPassword2;
+		public JTextField txtFirstName;
+		public JTextField txtLastName;
+		public JTextField txtEmail;
+
+		public UpdateInfoBUS_ViewBinder() {
+			super();
+		}
+
+		@Override
+		public void update() {
+		}
+	}
 }

@@ -61,3 +61,48 @@
 21-11-2020 09:02:18  Client 'f2bf26ab-d5f4-4bd1-80cd-d0fc70570762' disconnected.
 21-11-2020 09:05:45  Login detected. Client ID '0d1e61e7-87cc-49c6-b748-c2d9670d96b8'; IP: /127.0.0.1
 21-11-2020 09:05:46  saidan00 logged in.
+21-11-2020 09:33:15  Client '0d1e61e7-87cc-49c6-b748-c2d9670d96b8' disconnected.
+21-11-2020 09:33:26  Login detected. Client ID 'ec655c99-d55a-4d36-8f63-532e85cb05a1'; IP: /127.0.0.1
+21-11-2020 09:33:27  saidan00 logged in.
+21-11-2020 09:42:07  Client 'ec655c99-d55a-4d36-8f63-532e85cb05a1' disconnected.
+21-11-2020 09:42:15  Login detected. Client ID '425b208d-909c-40e1-89c5-e25692e73627'; IP: /127.0.0.1
+21-11-2020 09:42:15  saidan00 logged in.
+21-11-2020 09:43:24  Client '425b208d-909c-40e1-89c5-e25692e73627' disconnected.
+21-11-2020 09:47:05  Login detected. Client ID '6d0dd5cc-dba8-4348-940e-b5d3ad1a36e3'; IP: /127.0.0.1
+21-11-2020 09:47:06  saidan00 logged in.
+21-11-2020 09:59:56  Client '6d0dd5cc-dba8-4348-940e-b5d3ad1a36e3' disconnected.
+21-11-2020 10:00:29  Login detected. Client ID '951cf899-3b1b-4fa7-889b-8f8e01e1123f'; IP: /127.0.0.1
+21-11-2020 10:00:30  saidan00 logged in.
+21-11-2020 10:02:42  Client '951cf899-3b1b-4fa7-889b-8f8e01e1123f' disconnected.
+21-11-2020 10:19:42  Login detected. Client ID '46e52427-c3cc-4aa8-b0cc-e9a4bd6516b9'; IP: /127.0.0.1
+21-11-2020 10:19:42  saidan00 logged in.
+21-11-2020 10:24:20  Client '46e52427-c3cc-4aa8-b0cc-e9a4bd6516b9' disconnected.
+21-11-2020 10:26:43  Login detected. Client ID '127d4ce0-3d6f-441b-88b1-dd72156175be'; IP: /127.0.0.1
+21-11-2020 10:26:44  saidan00 logged in.
+21-11-2020 10:28:17  Login detected. Client ID '66eb69f0-2fbc-4731-a447-3ad523ca8d80'; IP: /127.0.0.1
+21-11-2020 10:28:17  Client '66eb69f0-2fbc-4731-a447-3ad523ca8d80' disconnected.
+21-11-2020 10:28:24  Client '127d4ce0-3d6f-441b-88b1-dd72156175be' disconnected.
+21-11-2020 10:28:25  Login detected. Client ID '87e8c9c3-f704-40a1-a783-714e36b000e2'; IP: /127.0.0.1
+21-11-2020 10:28:26  saidan00 logged in.
+21-11-2020 10:32:20  Client '87e8c9c3-f704-40a1-a783-714e36b000e2' disconnected.
+21-11-2020 10:32:29  Login detected. Client ID '0bafa00a-4a7b-42b5-bb92-f417979a6a37'; IP: /127.0.0.1
+21-11-2020 10:32:30  saidan00 logged in.
+21-11-2020 10:34:44  Client '0bafa00a-4a7b-42b5-bb92-f417979a6a37' disconnected.
+21-11-2020 10:34:53  Login detected. Client ID 'f0f1ec5b-c985-4f4b-b6a7-749448012c7f'; IP: /127.0.0.1
+21-11-2020 10:34:53  saidan00 logged in.
+21-11-2020 10:36:13  Client 'f0f1ec5b-c985-4f4b-b6a7-749448012c7f' disconnected.
+21-11-2020 10:36:19  Login detected. Client ID 'c71f920d-3fc7-4de7-a27b-315a43412754'; IP: /127.0.0.1
+21-11-2020 10:36:20  saidan00 logged in.
+21-11-2020 10:39:28  Client 'c71f920d-3fc7-4de7-a27b-315a43412754' disconnected.
+21-11-2020 10:39:37  Login detected. Client ID 'bb13a87d-ab29-4fb7-94e9-23d98129e720'; IP: /127.0.0.1
+21-11-2020 10:39:38  saidan00 logged in.
+21-11-2020 10:42:18  Client 'bb13a87d-ab29-4fb7-94e9-23d98129e720' disconnected.
+21-11-2020 10:42:26  Login detected. Client ID 'ff1c5200-2fb7-4461-9102-b77ccf67fcc0'; IP: /127.0.0.1
+21-11-2020 10:42:26  saidan00 logged in.
+21-11-2020 10:45:52  Client 'ff1c5200-2fb7-4461-9102-b77ccf67fcc0' disconnected.
+21-11-2020 10:49:56  Login detected. Client ID '559a8454-cb5a-4392-a747-6d9dc9da3af0'; IP: /127.0.0.1
+21-11-2020 10:49:56  saidan00 logged in.
+21-11-2020 10:50:08  Client '559a8454-cb5a-4392-a747-6d9dc9da3af0' disconnected.
+21-11-2020 10:54:04  Login detected. Client ID '6b20095f-14be-4027-96fa-9ba9d4b34360'; IP: /127.0.0.1
+21-11-2020 10:54:05  saidan00 logged in.
+21-11-2020 10:54:20  Client '6b20095f-14be-4027-96fa-9ba9d4b34360' disconnected.

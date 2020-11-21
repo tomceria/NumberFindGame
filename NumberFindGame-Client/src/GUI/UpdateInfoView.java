@@ -34,8 +34,8 @@ public class UpdateInfoView {
 
 	private UpdateInfoBUS updateInfoBUS;
 
-	public UpdateInfoView() {
-		// this.updateInfoBus = updateInfoBUS;
+	public UpdateInfoView(UpdateInfoBUS updateInfoBUS) {
+		this.updateInfoBUS = updateInfoBUS;
 
 		updateInfoViewSetup();
 		bindListeners();
@@ -47,9 +47,9 @@ public class UpdateInfoView {
 		contentPane.setBackground(Color.decode("#35455d"));
 		GridBagLayout gbl_formPane = new GridBagLayout();
 		gbl_formPane.columnWidths = new int[] { 135, 139, 195, 55, 83, 200, 0 };
-		gbl_formPane.rowHeights = new int[] { 211, 39, 49, 0, 27, 27, 27, 0, 0, 0, 0, 120, 0 };
+		gbl_formPane.rowHeights = new int[] { 211, 39, 49, 45, 0, 27, 27, 27, 0, 0, 0, 0, 120, 0 };
 		gbl_formPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_formPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+		gbl_formPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		contentPane.setLayout(gbl_formPane);
 
@@ -68,11 +68,31 @@ public class UpdateInfoView {
 		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 32));
 		GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 		gbc_lblTitle.anchor = GridBagConstraints.NORTH;
-		gbc_lblTitle.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTitle.insets = new Insets(0, 0, 5, 0);
 		gbc_lblTitle.gridwidth = 5;
 		gbc_lblTitle.gridx = 1;
 		gbc_lblTitle.gridy = 1;
 		contentPane.add(lblTitle, gbc_lblTitle);
+		
+		JLabel lblAccountInfo = new JLabel("Update Account Info");
+		lblAccountInfo.setFont(new Font("Tahoma", Font.BOLD, 27));
+		lblAccountInfo.setForeground(Color.WHITE);
+		GridBagConstraints gbc_lblAccountInfo = new GridBagConstraints();
+		gbc_lblAccountInfo.gridwidth = 2;
+		gbc_lblAccountInfo.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAccountInfo.gridx = 1;
+		gbc_lblAccountInfo.gridy = 3;
+		contentPane.add(lblAccountInfo, gbc_lblAccountInfo);
+		
+		JLabel lblChangePassword = new JLabel("Change Password");
+		lblChangePassword.setForeground(Color.WHITE);
+		lblChangePassword.setFont(new Font("Tahoma", Font.BOLD, 27));
+		GridBagConstraints gbc_lblChangePassword = new GridBagConstraints();
+		gbc_lblChangePassword.gridwidth = 2;
+		gbc_lblChangePassword.insets = new Insets(0, 0, 5, 0);
+		gbc_lblChangePassword.gridx = 4;
+		gbc_lblChangePassword.gridy = 3;
+		contentPane.add(lblChangePassword, gbc_lblChangePassword);
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setForeground(Color.WHITE);
 		lblUsername.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -80,7 +100,7 @@ public class UpdateInfoView {
 		gbc_lblUsername.anchor = GridBagConstraints.WEST;
 		gbc_lblUsername.insets = new Insets(0, 0, 5, 5);
 		gbc_lblUsername.gridx = 1;
-		gbc_lblUsername.gridy = 4;
+		gbc_lblUsername.gridy = 5;
 		contentPane.add(lblUsername, gbc_lblUsername);
 
 		txtUsername = new JTextField();
@@ -91,7 +111,7 @@ public class UpdateInfoView {
 		gbc_txtUsername.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtUsername.insets = new Insets(0, 0, 5, 5);
 		gbc_txtUsername.gridx = 2;
-		gbc_txtUsername.gridy = 4;
+		gbc_txtUsername.gridy = 5;
 		contentPane.add(txtUsername, gbc_txtUsername);
 
 		JLabel lblPassword = new JLabel("Password");
@@ -101,7 +121,7 @@ public class UpdateInfoView {
 		gbc_lblPassword.anchor = GridBagConstraints.WEST;
 		gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPassword.gridx = 4;
-		gbc_lblPassword.gridy = 4;
+		gbc_lblPassword.gridy = 5;
 		contentPane.add(lblPassword, gbc_lblPassword);
 
 		txtPassword = new JPasswordField();
@@ -111,7 +131,7 @@ public class UpdateInfoView {
 		gbc_txtPassword.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtPassword.insets = new Insets(0, 0, 5, 0);
 		gbc_txtPassword.gridx = 5;
-		gbc_txtPassword.gridy = 4;
+		gbc_txtPassword.gridy = 5;
 		contentPane.add(txtPassword, gbc_txtPassword);
 
 		JLabel lblFirstName = new JLabel("First Name");
@@ -121,7 +141,7 @@ public class UpdateInfoView {
 		gbc_lblFirstName.anchor = GridBagConstraints.WEST;
 		gbc_lblFirstName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblFirstName.gridx = 1;
-		gbc_lblFirstName.gridy = 5;
+		gbc_lblFirstName.gridy = 6;
 		contentPane.add(lblFirstName, gbc_lblFirstName);
 
 		txtFirstName = new JTextField();
@@ -132,7 +152,7 @@ public class UpdateInfoView {
 		gbc_txtFirstName.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtFirstName.insets = new Insets(0, 0, 5, 5);
 		gbc_txtFirstName.gridx = 2;
-		gbc_txtFirstName.gridy = 5;
+		gbc_txtFirstName.gridy = 6;
 		contentPane.add(txtFirstName, gbc_txtFirstName);
 
 		JSeparator separator = new JSeparator();
@@ -144,7 +164,7 @@ public class UpdateInfoView {
 		gbc_separator.fill = GridBagConstraints.VERTICAL;
 		gbc_separator.insets = new Insets(0, 0, 5, 5);
 		gbc_separator.gridx = 3;
-		gbc_separator.gridy = 3;
+		gbc_separator.gridy = 4;
 		contentPane.add(separator, gbc_separator);
 
 		JLabel lblPassword2 = new JLabel("Confirm Password");
@@ -154,7 +174,7 @@ public class UpdateInfoView {
 		gbc_lblPassword2.anchor = GridBagConstraints.WEST;
 		gbc_lblPassword2.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPassword2.gridx = 4;
-		gbc_lblPassword2.gridy = 5;
+		gbc_lblPassword2.gridy = 6;
 		contentPane.add(lblPassword2, gbc_lblPassword2);
 
 		txtPassword2 = new JPasswordField();
@@ -164,7 +184,7 @@ public class UpdateInfoView {
 		gbc_txtPassword2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtPassword2.insets = new Insets(0, 0, 5, 0);
 		gbc_txtPassword2.gridx = 5;
-		gbc_txtPassword2.gridy = 5;
+		gbc_txtPassword2.gridy = 6;
 		contentPane.add(txtPassword2, gbc_txtPassword2);
 
 		JLabel lblLastName = new JLabel("Last Name");
@@ -174,7 +194,7 @@ public class UpdateInfoView {
 		gbc_lblLastName.anchor = GridBagConstraints.WEST;
 		gbc_lblLastName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblLastName.gridx = 1;
-		gbc_lblLastName.gridy = 6;
+		gbc_lblLastName.gridy = 7;
 		contentPane.add(lblLastName, gbc_lblLastName);
 
 		txtLastName = new JTextField();
@@ -185,7 +205,7 @@ public class UpdateInfoView {
 		gbc_txtLastName.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtLastName.insets = new Insets(0, 0, 5, 5);
 		gbc_txtLastName.gridx = 2;
-		gbc_txtLastName.gridy = 6;
+		gbc_txtLastName.gridy = 7;
 		contentPane.add(txtLastName, gbc_txtLastName);
 
 		JLabel lblEmail = new JLabel("Email");
@@ -195,7 +215,7 @@ public class UpdateInfoView {
 		gbc_lblEmail.anchor = GridBagConstraints.WEST;
 		gbc_lblEmail.insets = new Insets(0, 0, 5, 5);
 		gbc_lblEmail.gridx = 1;
-		gbc_lblEmail.gridy = 7;
+		gbc_lblEmail.gridy = 8;
 		contentPane.add(lblEmail, gbc_lblEmail);
 
 		txtEmail = new JTextField();
@@ -206,7 +226,7 @@ public class UpdateInfoView {
 		gbc_txtEmail.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtEmail.insets = new Insets(0, 0, 5, 5);
 		gbc_txtEmail.gridx = 2;
-		gbc_txtEmail.gridy = 7;
+		gbc_txtEmail.gridy = 8;
 		contentPane.add(txtEmail, gbc_txtEmail);
 
 		btnUpdate.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -214,7 +234,7 @@ public class UpdateInfoView {
 		gbc_btnUpdate.gridwidth = 2;
 		gbc_btnUpdate.insets = new Insets(0, 0, 5, 5);
 		gbc_btnUpdate.gridx = 1;
-		gbc_btnUpdate.gridy = 9;
+		gbc_btnUpdate.gridy = 10;
 		contentPane.add(btnUpdate, gbc_btnUpdate);
 
 		btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -222,7 +242,7 @@ public class UpdateInfoView {
 		gbc_btnChangePassword.gridwidth = 2;
 		gbc_btnChangePassword.insets = new Insets(0, 0, 5, 0);
 		gbc_btnChangePassword.gridx = 4;
-		gbc_btnChangePassword.gridy = 9;
+		gbc_btnChangePassword.gridy = 10;
 		contentPane.add(btnChangePassword, gbc_btnChangePassword);
 
 		contentPane.setLayout(gbl_formPane);
@@ -241,48 +261,45 @@ public class UpdateInfoView {
 				try {
 					boolean result = UpdateInfoView.this.updateInfoBUS.action_UpdateSubmit();
 					if (result == true) {
-						ViewBUS.gotoLoginView();
-						JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Your account has been updated.",
+						JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Your account has been update.",
 								"Information", JOptionPane.INFORMATION_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Unknown update info error", "Error",
+						JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Unknown update error", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, exception.getMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
-//				btnUpdate.setText("ok");
 			}
 		});
 		btnChangePassword.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				try {
-//					boolean result = RegisterView.this.registerBUS.action_RegisterSubmit();
-//					if (result == true) {
-//						ViewBUS.gotoLoginView();
-//						JOptionPane.showMessageDialog(RegisterView.this.contentPane, "Your account has been created.",
-//								"Information", JOptionPane.INFORMATION_MESSAGE);
-//					} else {
-//						JOptionPane.showMessageDialog(RegisterView.this.contentPane, "Unknown register error", "Error",
-//								JOptionPane.ERROR_MESSAGE);
-//					}
-//				} catch (Exception exception) {
-//					JOptionPane.showMessageDialog(RegisterView.this.contentPane, exception.getMessage(), "Error",
-//							JOptionPane.ERROR_MESSAGE);
-//				}
+				try {
+				boolean result = UpdateInfoView.this.updateInfoBUS.action_ChangePassword();
+				if (result == true) {
+					JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Your password has been update.",
+							"Information", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, "Unknown update error", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			} catch (Exception exception) {
+				JOptionPane.showMessageDialog(UpdateInfoView.this.contentPane, exception.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
 			}
 		});
 	}
 
 	private void initViewBinder() {
-//		UpdateInfoView.this.registerBUS.viewBinder.txtUsername = txtUsername;
-//		RegisterView.this.registerBUS.viewBinder.txtPassword = txtPassword;
-//		RegisterView.this.registerBUS.viewBinder.txtPassword2 = txtPassword2;
-//		RegisterView.this.registerBUS.viewBinder.txtFirstName = txtFirstName;
-//		RegisterView.this.registerBUS.viewBinder.txtLastName = txtLastName;
-//		RegisterView.this.registerBUS.viewBinder.txtEmail = txtEmail;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtUsername = txtUsername;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtPassword = txtPassword;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtPassword2 = txtPassword2;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtFirstName = txtFirstName;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtLastName = txtLastName;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtEmail = txtEmail;
 	}
 
 	public JPanel getContentPane() {

@@ -58,17 +58,14 @@ public class ViewBUS {
         mainFrame.setVisible(true);
     }
     
-    public static void test() {
-//        if (gameRoomView != null) {
-//            return;
-//        }
-        mainFrame.setContentPane(gameRoomView.getContentPane());
-        mainFrame.setVisible(true);
-    }
+//    public static void gotoUpdateInfoView(UpdateInfoBUS updateInfoBUS) {
+//        
+//        gotoUpdateInfoView();
+//    }
     
     public static void gotoUpdateInfoView() {
-        if (updateInfoView == null) {
-        	updateInfoView = new UpdateInfoView();
+    	if (updateInfoView == null) {
+        	updateInfoView = new UpdateInfoView(new UpdateInfoBUS());
         }
         mainFrame.setContentPane(updateInfoView.getContentPane());
         mainFrame.setVisible(true);
