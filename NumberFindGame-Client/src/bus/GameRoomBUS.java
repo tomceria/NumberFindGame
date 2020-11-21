@@ -1,6 +1,7 @@
 package bus;
 
 import Common.ViewBinder;
+import Run.GameMain;
 import Socket.GameClient;
 import Socket.Request.SocketRequest_GameRoomStartGame;
 import Socket.Response.SocketResponse_GameRoomProps;
@@ -41,7 +42,7 @@ public class GameRoomBUS {
     }
 
     public void listen_startGame(SocketResponse_GameInit response) {
-        MatchPlayer clientPlayer = ((GameRoom_Client) gameRoom).getClientPlayer();
+        MatchPlayer clientPlayer = ((GameClient) GameMain.client).getClientPlayer();
 
         Game_Client game = new Game_Client(response.game, this.getGameRoom().getClient(), clientPlayer);
         this.gameRoom.setGame(game);

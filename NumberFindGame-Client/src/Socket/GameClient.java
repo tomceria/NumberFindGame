@@ -2,11 +2,11 @@ package Socket;
 
 import bus.GameClientBUS;
 import dto.GameRoom_Client;
-
-import java.io.IOException;
+import dto.MatchPlayer;
 
 public class GameClient extends Client {
     private GameClientBUS gameClientBUS;
+    private MatchPlayer clientPlayer;
     private GameRoom_Client gameRoom;
 
     public GameClient() {
@@ -18,6 +18,13 @@ public class GameClient extends Client {
 
     public GameClientBUS getGameClientBUS() {
         return gameClientBUS;
+    }
+
+    public MatchPlayer getClientPlayer() {
+        return clientPlayer;
+    }
+    public void setClientPlayer(MatchPlayer clientPlayer) {
+        this.clientPlayer = clientPlayer;
     }
 
     public GameRoom_Client getGameRoom() {

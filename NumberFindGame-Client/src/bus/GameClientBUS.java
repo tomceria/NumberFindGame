@@ -21,7 +21,7 @@ public class GameClientBUS {
         gameClient.setGameRoom(
                 new GameRoom_Client(response.gameRoomId, response.gameRoomName, this.gameClient)
         );
-        gameClient.getGameRoom().setClientPlayer(
+        gameClient.setClientPlayer(
                 response.clientPlayer_MatchPlayer
         );
 
