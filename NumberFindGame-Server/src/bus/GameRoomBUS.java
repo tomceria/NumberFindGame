@@ -58,8 +58,10 @@ public class GameRoomBUS {
 
     public void joinRoom(ClientHandler playerClient) {
         if (this.gameRoom.getStatus() != GameRoomStatus.OPEN) {
-            // TODO: throw exception
-            return;
+            throw new RuntimeException("Room is currently unavailable to join.");
+        }
+        if (this.gameRoom.getPlayerClients().size() >= this.gameRoom.getMatchConfig().getMaxPlayer()) {
+            throw new RuntimeException("Room is full.");
         }
 
         /**
@@ -125,7 +127,7 @@ public class GameRoomBUS {
             MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
             broadcastResponseToRoom(new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())));
             this.notifyUpdateGameRoomProps();
-        } else {
+        } else if (this.gameRoom.getGame() != null) {
             /**
              * 3. ALT FLOW: Nếu phòng không còn ai nữa. Kết thúc trận đấu ngay lập tức và KHÔNG lưu lại kết quả. Xoá phòng
              */
