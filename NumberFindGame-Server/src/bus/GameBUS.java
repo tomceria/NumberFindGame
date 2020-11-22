@@ -77,11 +77,21 @@ public class GameBUS {
     }
 
     public boolean req_quitGame(ClientHandler playerClient, MatchPlayer_Server sendingPlayer) {
+        GameServer server = this.game.getServer();
+
+        /**
+         * Thông báo cho Client rằng Server sẽ thực hiện đóng kết nối giữa Client và Server
+         * Cách làm này tránh cho Client bị kẹt ở readObject()
+         */
+        server.getClientManager().sendResponseToClient(
+                playerClient.getId(),
+                new SocketResponse(SocketResponse.Status.SUCCESS, SocketResponse.Action.NET_CLOSE, "You have quit the game.")
+        );
+
         /**
          * Mục tiêu: Xoá playerClient khỏi Server. KHÔNG xoá khỏi Game
          */
 
-        GameServer server = this.game.getServer();
         server.getClientManager().disconnectClient(playerClient.getId());
 
         /**

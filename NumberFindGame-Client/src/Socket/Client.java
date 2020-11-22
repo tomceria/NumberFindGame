@@ -21,6 +21,7 @@ public class Client {
     private static Socket socket;                                // Chỉ được tương tác với socket thông qua Client
     private static ObjectInputStream input;                   // input và output được đặc static để các hàm BUS truy xuất
     private static ObjectOutputStream output;
+    private static ClientSocketProcess persistSocketProcess;
 
     public void performPersistSocketConnection(String hostname, int port, String username, String password) throws IOException {
         this.start(hostname, port);
@@ -33,8 +34,8 @@ public class Client {
         switch (authenticationResponse.getStatus()) {
             case SUCCESS: {                                                           // Đăng nhập thành công => Kết nối
                 System.out.println("CLIENT: Logged in successfully.");
-                ClientSocketProcess process = new ClientSocketProcess(this);
-                process.start();
+                persistSocketProcess = new ClientSocketProcess(this);
+                persistSocketProcess.start();
                 break;
             }
             case FAILED: {
@@ -92,6 +93,7 @@ public class Client {
 
         try {
             Client.output.writeObject(sealObject(request));
+            Client.output.flush();
         } catch (IOException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
@@ -131,8 +133,9 @@ public class Client {
 
     public void close() {
         try {
-            // TODO: Terminal ClientSocketProcess
-
+//            if (persistSocketProcess != null && persistSocketProcess.isAlive()) {
+//                persistSocketProcess.interrupt();
+//            }
             if (input != null) {
                 input.close();
             }
@@ -142,9 +145,11 @@ public class Client {
             if (socket != null) {
                 socket.close();
             }
+
             socket = null;
             output = null;
             input = null;
+            persistSocketProcess = null;
         } catch (IOException e) {
             e.printStackTrace();
         }

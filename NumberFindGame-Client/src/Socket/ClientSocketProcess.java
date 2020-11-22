@@ -1,9 +1,12 @@
 package Socket;
 
+import GUI.LoginView;
 import Socket.Response.*;
 import bus.*;
 import dto.GameRoom_Client;
 import dto.Game_Client;
+
+import javax.swing.*;
 
 public class ClientSocketProcess extends Thread {
     Client client;  // PARENT
@@ -29,12 +32,13 @@ public class ClientSocketProcess extends Thread {
                 case GAMEROOM_PLAYERJOIN: {
                     if (((GameClient) this.client).getGameRoom() != null) {
                         System.out.println("CLIENT: You're already in a room.");
+                    } else {
+                        ((GameClient) this.client).getGameClientBUS()
+                                .listen_clientPlayerJoinRoom(
+                                        (SocketResponse_GameRoomPlayerJoin) resultRaw
+                                );
                     }
 
-                    ((GameClient) this.client).getGameClientBUS()
-                            .listen_clientPlayerJoinRoom(
-                                    (SocketResponse_GameRoomPlayerJoin) resultRaw
-                            );
                     break;
                 }
                 case GAMEROOM_PROPS: {
@@ -75,8 +79,14 @@ public class ClientSocketProcess extends Thread {
                     break;
                 }
                 case NET_CLOSE: {
-                    client.close();
+                    ((GameClient) client).close();
                     isRunning = false;
+                    ViewBUS.gotoLoginView();
+                    JOptionPane.showMessageDialog(
+                            ViewBUS.loginView.getContentPane(),
+                            resultRaw.getMessage(),
+                            "Message",
+                            JOptionPane.INFORMATION_MESSAGE);
                     break;
                 }
             }

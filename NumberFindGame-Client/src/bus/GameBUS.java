@@ -132,7 +132,6 @@ public class GameBUS {
         this.game.getClient().sendRequest(
                 new SocketRequest_GameQuit()
         );
-        GameMain.end();
     }
 
     public void listen_GameUpdated(SocketResponse_GameProps response) {

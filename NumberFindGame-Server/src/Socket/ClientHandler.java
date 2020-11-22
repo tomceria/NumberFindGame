@@ -67,6 +67,7 @@ public class ClientHandler {
 
 		try {
 			output.writeObject(sealObject(response));
+			output.flush();
 		} catch (IOException | IllegalBlockSizeException e) {
 			e.printStackTrace();
 		}

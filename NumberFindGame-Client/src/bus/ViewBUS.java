@@ -45,9 +45,7 @@ public class ViewBUS {
     }
 
     public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
-        if (gameRoomView == null) {
-            gameRoomView = new GameRoomView(gameRoomBUS);
-        }
+        gameRoomView = new GameRoomView(gameRoomBUS);
         gotoGameRoomView();
     }
     public static void gotoGameRoomView() {
@@ -72,9 +70,10 @@ public class ViewBUS {
     }
 
     public static void gotoGameView(GameBUS gameBUS) {
-        if (gameView == null) {
-            gameView = new GameView(gameBUS);
-        }
+        gameView = new GameView(gameBUS);
+        gotoGameView();
+    }
+    public static void gotoGameView() {
         mainFrame.setContentPane(gameView.getContentPane());
         mainFrame.setVisible(true);
 
