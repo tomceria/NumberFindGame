@@ -76,9 +76,13 @@ public class GameBUS {
         return accept;
     }
 
-    public boolean req_quitGame(MatchPlayer_Server sendingPlayer) {
+    public boolean req_quitGame(ClientHandler playerClient, MatchPlayer_Server sendingPlayer) {
+        /**
+         * Mục tiêu: Xoá playerClient khỏi Server. KHÔNG xoá khỏi Game
+         */
+
         GameServer server = this.game.getServer();
-        this.game.getPlayerClients().remove(sendingPlayer.getClientHandlerId());
+        server.getClientManager().disconnectClient(playerClient.getId());
 
         /**
          * Trường hợp nếu Game được khởi tạo với GameRoom (common) => xoá player khỏi GameRoom
@@ -91,8 +95,6 @@ public class GameBUS {
             gameRoom.setGame(this.game);
             sendingPlayer.getGameRoomBUS().notifyUpdateGameRoomProps();
         }
-
-        server.getClientManager().disconnectClient(sendingPlayer.getClientHandlerId());
 
         return true;
     }

@@ -3,6 +3,7 @@ package bus;
 import Common.ViewBinder;
 import GUI.Components.GameMatchPlayerCellRenderer;
 import GUI.Components.LevelNodeButton;
+import Run.GameMain;
 import Socket.Request.SocketRequest_GameQuit;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
@@ -131,6 +132,7 @@ public class GameBUS {
         this.game.getClient().sendRequest(
                 new SocketRequest_GameQuit()
         );
+        GameMain.end();
     }
 
     public void listen_GameUpdated(SocketResponse_GameProps response) {

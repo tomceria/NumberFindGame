@@ -24,4 +24,9 @@ public class GameMain {
         ViewBUS.configureWindow(new JFrame(ClientMain.APP_NAME));
         ViewBUS.gotoLoginView();
     }
+
+    public static void end() {
+        GameMain.client.close();
+        System.exit(0);
+    }
 }

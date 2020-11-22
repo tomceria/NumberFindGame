@@ -133,7 +133,7 @@ public class RequestHandler {
                         case GAME_QUIT: {
                             SocketRequest_GameQuit request = ((SocketRequest_GameQuit) requestRaw);
                             MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
-                            matchPlayer.getGameBUS().req_quitGame(matchPlayer);
+                            matchPlayer.getGameBUS().req_quitGame(thisClientHandler, matchPlayer);
                             break;
                         }
                     }
