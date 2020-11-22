@@ -2,6 +2,7 @@ package dto;
 
 import Socket.ClientHandler;
 import Socket.GameServer;
+import Socket.Response.SocketResponse;
 import bus.GameBUS;
 import bus.GameRoomBUS;
 
@@ -26,7 +27,25 @@ public class GameRoom_Server extends GameRoom {
         this.setGame(null);  // Chưa bắt đầu game ngay lúc tạo phòng
     }
 
-    // Functions
+    // Overrides
+
+    @Override
+    public void setMatchConfig(MatchConfig matchConfig) {
+        super.setMatchConfig(matchConfig);
+        /**
+         * HƠI MẠNH TAY... Đá người chơi cuối cùng của phòng cho đến khi vừa đủ chỗ
+         */
+        while (this.playerClients.size() > this.getMatchConfig().getMaxPlayer()) {
+            ClientHandler playerClient = (ClientHandler) this.playerClients.values()
+                    .toArray()[this.playerClients.size() - 1];
+            this.server.getGameServerBUS().quitGame(
+                    playerClient,
+                    SocketResponse.Status.SUCCESS,
+                    "Room slots have been flushed. You are kicked."
+            );
+        }
+        this.getGameRoomBUS().notifyUpdateGameRoomProps();
+    }
 
     // Properties
 

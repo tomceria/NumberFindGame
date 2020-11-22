@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import Socket.ClientHandler;
 import Socket.Server;
+import Socket.GameServer;
 import bus.PlayerBUS;
 import dto.MatchPlayer;
 import dto.MatchConfig;
@@ -165,6 +164,10 @@ public class ConsoleCommand {
 			showCommand("config");
 			break;
 		}
+		}
+
+		if (new ArrayList<>(Arrays.asList("numberQty", "time", "maxPlayer")).contains(option)) {
+			((GameServer) this.server).getGameServerBUS().reloadConfigForAllGameRooms();
 		}
 	}
 

@@ -58,4 +58,12 @@ public class GameServerBUS {
          */
         this.gameServer.getClientManager().disconnectClient(playerClient.getId());
     }
+
+    public void reloadConfigForAllGameRooms() {
+        for (GameRoom_Server gameRoom : this.gameServer.getGameRooms()) {
+            gameRoom.setMatchConfig(
+                    gameRoom.getGameRoomBUS().getDefaultMatchConfig()
+            );
+        }
+    }
 }
