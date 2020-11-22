@@ -97,7 +97,7 @@ public class GameBUS {
         /**
          * Trường hợp nếu Game được khởi tạo với GameRoom (common) => xoá player khỏi GameRoom
          */
-        if (this.game.getGameRoomInfo() != null) {
+        if (this.game.getGameRoomInfo() != null && server.getGameRooms().size() > 0) {
             GameRoom gameRoom = server.getGameRooms().stream()
                     .filter(gR -> gR.getId() == this.getGame().getGameRoomInfo().getId())
                     .collect(Collectors.toList())
@@ -457,4 +457,7 @@ public class GameBUS {
         return game;
     }
 
+    public Timer getGameTimer() {
+        return gameTimer;
+    }
 }

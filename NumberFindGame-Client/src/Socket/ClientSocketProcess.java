@@ -82,11 +82,7 @@ public class ClientSocketProcess extends Thread {
                     ((GameClient) client).close();
                     isRunning = false;
                     ViewBUS.gotoLoginView();
-                    JOptionPane.showMessageDialog(
-                            ViewBUS.loginView.getContentPane(),
-                            resultRaw.getMessage(),
-                            "Message",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog( ViewBUS.loginView.getContentPane(), resultRaw.getMessage(), "Message", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 }
             }
