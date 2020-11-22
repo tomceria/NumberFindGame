@@ -1,5 +1,7 @@
 package Socket;
 
+import javax.swing.JOptionPane;
+
 import Socket.Response.*;
 import bus.*;
 import dto.GameRoom_Client;
@@ -79,6 +81,22 @@ public class ClientSocketProcess extends Thread {
                     isRunning = false;
                     break;
                 }
+                case MSG_UPDATEINFO: {
+                    JOptionPane.showMessageDialog(
+                            ViewBUS.updateInfoView.getContentPane(),
+                            resultRaw.getMessage(),
+                            "Message",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                }
+                case MSG_CHANGEPASSWORD: {
+                   JOptionPane.showMessageDialog(
+                           ViewBUS.updateInfoView.getContentPane(),
+                           resultRaw.getMessage(),
+                           "Message",
+                           JOptionPane.INFORMATION_MESSAGE);
+                   break;
+               }
             }
         }
     }

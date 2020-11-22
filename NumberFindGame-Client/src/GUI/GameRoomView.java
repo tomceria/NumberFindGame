@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.GroupLayout.Alignment;
 
 public class GameRoomView {
     // GameView.form's Components
@@ -19,7 +20,7 @@ public class GameRoomView {
     private GameRoomBUS gameRoomBUS;
     private JButton btnUpdateInfo;
     private JButton btnQuitGame;
-    private GridBagConstraints gbc_1;
+    private JButton btnLeaderBoard;
 
     public GameRoomView(GameRoomBUS gameRoomBUS) {
         this.gameRoomBUS = gameRoomBUS;
@@ -69,50 +70,66 @@ public class GameRoomView {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        GridBagLayout gbl_contentPane = new GridBagLayout();
-        gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-        gbl_contentPane.rowHeights = new int[]{0, 0, 45, 45, 45};
-        contentPane.setLayout(gbl_contentPane);
-        contentPane.setBackground(new Color(-14142061));
+        contentPane.setBackground(Color.decode("#35455d"));
+        contentPane.setSize(1024, 768);
         lblFavor01 = new JLabel();
+        lblFavor01.setFont(new Font("Tahoma", Font.BOLD, 15));
         lblFavor01.setForeground(new Color(-1));
         lblFavor01.setText("Waiting for more players...");
         GridBagConstraints gbc;
-        gbc = new GridBagConstraints();
-        gbc.insets = new Insets(0, 0, 5, 0);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        contentPane.add(lblFavor01, gbc);
         lblPlayerCount = new JLabel();
+        lblPlayerCount.setFont(new Font("Tahoma", Font.BOLD, 15));
         lblPlayerCount.setForeground(new Color(-1));
         lblPlayerCount.setText("1/8");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(6, 0, 5, 0);
-        contentPane.add(lblPlayerCount, gbc);
         btnStartGame = new JButton();
+        btnStartGame.setFont(new Font("Tahoma", Font.BOLD, 16));
         btnStartGame.setText("Start Game");
-        gbc_1 = new GridBagConstraints();
-        gbc_1.insets = new Insets(0, 0, 5, 0);
-        gbc_1.gridx = 0;
-        gbc_1.gridy = 2;
-        contentPane.add(btnStartGame, gbc_1);
         
         btnUpdateInfo = new JButton("Update Info");
-        
-        GridBagConstraints gbc_btnUpdateInfo = new GridBagConstraints();
-        gbc_btnUpdateInfo.insets = new Insets(0, 0, 5, 0);
-        gbc_btnUpdateInfo.gridx = 0;
-        gbc_btnUpdateInfo.gridy = 3;
-        contentPane.add(btnUpdateInfo, gbc_btnUpdateInfo);
+        btnUpdateInfo.setFont(new Font("Tahoma", Font.BOLD, 16));
         
         btnQuitGame = new JButton("Quit Game");
-        GridBagConstraints gbc_btnQuitGame = new GridBagConstraints();
-        gbc_btnQuitGame.insets = new Insets(0, 0, 5, 0);
-        gbc_btnQuitGame.gridx = 0;
-        gbc_btnQuitGame.gridy = 4;
-        contentPane.add(btnQuitGame, gbc_btnQuitGame);
+        btnQuitGame.setFont(new Font("Tahoma", Font.BOLD, 16));
+        
+        btnLeaderBoard = new JButton("Leader Board");
+        btnLeaderBoard.setFont(new Font("Tahoma", Font.BOLD, 16));
+        GroupLayout gl_contentPane = new GroupLayout(contentPane);
+        gl_contentPane.setHorizontalGroup(
+        	gl_contentPane.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGap(410)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        				.addComponent(lblFavor01, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addGap(88)
+        					.addComponent(lblPlayerCount, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addGap(32)
+        					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(btnStartGame, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(btnUpdateInfo, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(btnQuitGame, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(btnLeaderBoard, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        			.addContainerGap(409, Short.MAX_VALUE))
+        );
+        gl_contentPane.setVerticalGroup(
+        	gl_contentPane.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGap(268)
+        			.addComponent(lblFavor01)
+        			.addGap(16)
+        			.addComponent(lblPlayerCount)
+        			.addGap(15)
+        			.addComponent(btnStartGame)
+        			.addGap(16)
+        			.addComponent(btnUpdateInfo)
+        			.addGap(16)
+        			.addComponent(btnQuitGame)
+        			.addGap(16)
+        			.addComponent(btnLeaderBoard)
+        			.addContainerGap(267, Short.MAX_VALUE))
+        );
+        contentPane.setLayout(gl_contentPane);
     }
 
     /**

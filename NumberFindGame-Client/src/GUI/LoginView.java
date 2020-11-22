@@ -37,78 +37,88 @@ public class LoginView {
 	}
 
 	public void loginViewSetup() {
-		txtUsername.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtUsername.setColumns(10);
-		btnSubmit.setFont(new Font("Tahoma", Font.BOLD, 15));
 
-		contentPane.setBackground(new Color(-14142061));
+		contentPane.setBackground(Color.decode("#35455d"));
 		contentPane.setSize(1024, 768);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setForeground(Color.WHITE);
-		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 30));
+		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 32));
 		lblUsername.setForeground(Color.WHITE);
 		lblUsername.setFont(new Font("Tahoma", Font.BOLD, 15));
-
-		lblPassword.setForeground(Color.WHITE);
-		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
-		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtUsername.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		txtUsername.setColumns(10);
+		
+				lblPassword.setForeground(Color.WHITE);
+				lblPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
+		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		txtPassword.setColumns(10);
+		btnSubmit.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lnkGotoRegister.setForeground(Color.WHITE);
 		lnkGotoRegister.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblNetIp.setForeground(Color.WHITE);
-
-		lblNetIp.setFont(new Font("Tahoma", Font.BOLD, 13));
-
-		txtNetIp = new JTextField();
-		txtNetIp.setEditable(true);
-		txtNetIp.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtNetIp.setColumns(10);
-		GroupLayout gl_panel = new GroupLayout(contentPane);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup().addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup().addGap(358)
-								.addComponent(lblNetIp, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addComponent(txtNetIp, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel.createSequentialGroup().addGap(413).addComponent(lnkGotoRegister))
-						.addGroup(gl_panel.createSequentialGroup().addGap(366)
-								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(lblTitle, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addGroup(gl_panel.createSequentialGroup()
-												.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 90,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED).addComponent(txtUsername,
-														GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))))
-						.addGroup(gl_panel.createSequentialGroup().addGap(366)
-								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(btnSubmit, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addGroup(gl_panel.createSequentialGroup()
-												.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 90,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED).addComponent(txtPassword,
-														GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))))
-						.addContainerGap(364, Short.MAX_VALUE)));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup().addGap(289).addComponent(lblTitle)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panel.createSequentialGroup().addGap(3).addComponent(lblUsername)))
-						.addGap(5)
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panel.createSequentialGroup().addGap(3).addComponent(lblPassword)))
-						.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnSubmit)
-						.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(lnkGotoRegister).addGap(191)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNetIp, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtNetIp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE))));
-		contentPane.setLayout(gl_panel);
+		
+				lblNetIp.setFont(new Font("Tahoma", Font.BOLD, 15));
+				
+						txtNetIp = new JTextField();
+						txtNetIp.setEditable(true);
+						txtNetIp.setFont(new Font("Tahoma", Font.PLAIN, 17));
+						txtNetIp.setColumns(10);
+						GroupLayout gl_contentPane = new GroupLayout(contentPane);
+						gl_contentPane.setHorizontalGroup(
+							gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(357)
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+												.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 310, GroupLayout.PREFERRED_SIZE)
+												.addGroup(gl_contentPane.createSequentialGroup()
+													.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
+													.addGap(5)
+													.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))
+												.addGroup(gl_contentPane.createSequentialGroup()
+													.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
+													.addGap(5)
+													.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))
+												.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 310, GroupLayout.PREFERRED_SIZE)
+												.addGroup(gl_contentPane.createSequentialGroup()
+													.addGap(65)
+													.addComponent(lnkGotoRegister, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE))))
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(333)
+											.addComponent(lblNetIp)
+											.addGap(15)
+											.addComponent(txtNetIp, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)))
+									.addContainerGap(308, Short.MAX_VALUE))
+						);
+						gl_contentPane.setVerticalGroup(
+							gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(292)
+									.addComponent(lblTitle)
+									.addGap(11)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(3)
+											.addComponent(lblUsername))
+										.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGap(5)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(3)
+											.addComponent(lblPassword))
+										.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGap(15)
+									.addComponent(btnSubmit)
+									.addGap(16)
+									.addComponent(lnkGotoRegister)
+									.addGap(207)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addComponent(lblNetIp, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtNetIp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGap(59))
+						);
+						contentPane.setLayout(gl_contentPane);
 
 	}
 

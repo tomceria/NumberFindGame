@@ -91,14 +91,14 @@ public class RequestHandler {
 							result = identityBUS.performUpdateInfo(request);
 							if (result == true) {
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
-										SocketResponse.Action.MSG, "Your account has been updated."));
+										SocketResponse.Action.MSG_UPDATEINFO, "Your account has been updated."));
 							} else {
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-										SocketResponse.Action.MSG, "Update failed."));
+										SocketResponse.Action.MSG_UPDATEINFO, "Update failed."));
 							}
 						} catch (Exception e) {
 							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-									SocketResponse.Action.MSG, e.getMessage()));
+									SocketResponse.Action.MSG_UPDATEINFO, e.getMessage()));
 						}
 						break;
 					}
@@ -111,14 +111,14 @@ public class RequestHandler {
 							result = identityBUS.performChangePassword(request);
 							if (result == true) {
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
-										SocketResponse.Action.MSG, "Your password has been updated."));
+										SocketResponse.Action.MSG_CHANGEPASSWORD, "Your password has been updated."));
 							} else {
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-										SocketResponse.Action.MSG, "Update failed."));
+										SocketResponse.Action.MSG_CHANGEPASSWORD, "Update failed."));
 							}
 						} catch (Exception e) {
 							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-									SocketResponse.Action.MSG, e.getMessage()));
+									SocketResponse.Action.MSG_CHANGEPASSWORD, e.getMessage()));
 						}
 
 						break;
