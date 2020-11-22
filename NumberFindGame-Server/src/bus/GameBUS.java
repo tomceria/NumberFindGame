@@ -414,6 +414,7 @@ public class GameBUS {
 
         for (MatchPlayer mp : game.getMatchPlayers()) {
             mp.setMatch(match);
+            mp.setPlayerCount(game.getMatchPlayers().size());
             mpDAO.create(mp);
         }
     }
