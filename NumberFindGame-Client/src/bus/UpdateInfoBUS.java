@@ -9,8 +9,12 @@ import Socket.Request.SocketRequest_AccessUpdateInfo;
 import dto.MatchPlayer;
 import dto.PlayerDTO;
 import util.BCrypt;
+import util.dateParse;
 
 import javax.swing.*;
+
+import org.jdatepicker.impl.JDatePickerImpl;
+
 import java.io.IOException;
 
 public class UpdateInfoBUS {
@@ -31,14 +35,22 @@ public class UpdateInfoBUS {
 		String firstName = this.viewBinder.txtFirstName.getText();
 		String lastName = this.viewBinder.txtLastName.getText();
 		String email = this.viewBinder.txtEmail.getText();
+		String gender = this.viewBinder.comboBox.getItemAt(this.viewBinder.comboBox.getSelectedIndex()).toString();
+		String tmpBirthday = this.viewBinder.datePicker.getJFormattedTextField().getText();
 
-		if (UpdateValidate(firstName, lastName, email)) {
+		if (UpdateValidate(firstName, lastName, email, gender, tmpBirthday)) {
 			try {
-				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName));
+				dateParse dp = new dateParse();
+				String birthday = dp.dateParse(tmpBirthday);
+				
+				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName, gender, birthday));
+				//GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName));
 
 				player.setEmail(email);
 				player.setFirstName(firstName);
 				player.setLastName(lastName);
+				player.setGender(gender);
+				player.setBirthday(birthday);
 				matchPlayer.setPlayer(player);
 
 				result = true;
@@ -78,10 +90,11 @@ public class UpdateInfoBUS {
 
 	// Update info Form Validate
 
-	public static boolean UpdateValidate(String firstName, String lastName, String email) {
+	public static boolean UpdateValidate(String firstName, String lastName, String email, String gender,
+			String birthday) {
 		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-		String fields[] = { email, firstName, lastName };
-		String fieldsLabel[] = { "First Name", "Last Name", "Email" };
+		String fields[] = { email, firstName, lastName, gender, birthday };
+		String fieldsLabel[] = { "First Name", "Last Name", "Email", "Gender", "Birthday" };
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].equals("")) {
 				throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
@@ -131,6 +144,8 @@ public class UpdateInfoBUS {
 		public JTextField txtFirstName;
 		public JTextField txtLastName;
 		public JTextField txtEmail;
+		public JComboBox comboBox;
+		public JDatePickerImpl datePicker;
 
 		public UpdateInfoBUS_ViewBinder() {
 			super();
