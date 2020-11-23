@@ -30,7 +30,6 @@ public class MatchPlayerDAO {
     }
 
     /**
-     *
      * @param mp the new match_player to insert into database
      */
     public void create(MatchPlayer mp) {
@@ -56,15 +55,36 @@ public class MatchPlayerDAO {
         conn.Close();
     }
 
-    public ArrayList<LeaderBoard> getLeaderBoard() {
+    public ArrayList<LeaderBoard> getLeaderBoard(Integer top, String username) {
         MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
 
         ArrayList<LeaderBoard> leaderBoard = new ArrayList<>();
 
-        String query = "SELECT * FROM leaderboard";
+        String query = "SELECT * FROM leaderboard ";
+
+        // build query
+        if (top != null) {
+            query = "SELECT TOP ? * FROM leaderboard ";
+        }
+
+        if (username != null) {
+            query += "WHERE username = ?";
+        }
+
+        // prepare and bind
+        conn.prepare(query);
+
+        int order = 1;
+        if (top != null) {
+            conn.bind(order++, top);
+        }
+
+        if (username != null) {
+            conn.bind(order, username);
+        }
 
         try {
-            ResultSet rs = conn.executeQuery(query);
+            ResultSet rs = conn.executeQueryPre();
             while (rs.next()) {
                 // create new player
                 LeaderBoard result = this.mapToLeaderBoard(rs);
