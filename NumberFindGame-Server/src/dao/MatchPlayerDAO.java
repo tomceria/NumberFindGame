@@ -55,32 +55,34 @@ public class MatchPlayerDAO {
         conn.Close();
     }
 
-    public ArrayList<LeaderBoard> getLeaderBoard(Integer top, String username) {
+    public ArrayList<LeaderBoard> getLeaderBoard(int page, int pageSize, String username) {
         MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
 
         ArrayList<LeaderBoard> leaderBoard = new ArrayList<>();
 
+        // build query
+
         String query = "SELECT * FROM leaderboard ";
 
-        // build query
-        if (top != null) {
-            query = "SELECT TOP ? * FROM leaderboard ";
+        if (username != null) {
+            query += "WHERE username = ? ";
         }
 
-        if (username != null) {
-            query += "WHERE username = ?";
+        if (page >= 0 && pageSize >= 0) {
+            query += "LIMIT ? OFFSET ?";
         }
 
         // prepare and bind
         conn.prepare(query);
 
         int order = 1;
-        if (top != null) {
-            conn.bind(order++, top);
-        }
 
         if (username != null) {
-            conn.bind(order, username);
+            conn.bind(order++, username);
+        }
+        if (page >= 0 && pageSize >= 0) {
+            conn.bind(order++, pageSize);
+            conn.bind(order++, pageSize * (page - 1));
         }
 
         try {
@@ -99,5 +101,26 @@ public class MatchPlayerDAO {
         conn.Close();
 
         return leaderBoard;
+    }
+
+    public int getLeaderBoardCount() {
+        MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
+
+        int result = 0;
+
+        String query = "SELECT COUNT(*) count FROM leaderboard";
+        conn.prepare(query);
+        try {
+            ResultSet rs = conn.executeQueryPre();
+            while (rs.next()) {
+                result = rs.getInt("count");
+            }
+        } catch (SQLException ex) {
+            conn.displayError(ex);
+        }
+
+        conn.Close();
+
+        return result;
     }
 }
