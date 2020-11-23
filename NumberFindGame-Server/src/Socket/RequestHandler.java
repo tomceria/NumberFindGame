@@ -23,8 +23,6 @@ public class RequestHandler {
 						RequestHandler.this.clientHandler.clientManager.server);
 
 				if (thisClientHandler.isLoggedIn == false) {
-//					IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
-//							RequestHandler.this.clientHandler.clientManager.server);
 					switch (requestRaw.getAction()) {
 					case ACCESS_LOGIN: {
 						boolean result = false;
@@ -83,8 +81,6 @@ public class RequestHandler {
 						break;
 					}
 					case PLAYER_UPDATEINFO: {
-//						IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
-//								RequestHandler.this.clientHandler.clientManager.server);
 						SocketRequest_AccessUpdateInfo request = ((SocketRequest_AccessUpdateInfo) requestRaw);
 						boolean result = false;
 						try {
@@ -103,22 +99,20 @@ public class RequestHandler {
 						break;
 					}
 					case PLAYER_CHANGEPASSWORD: {
-//						IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
-//								RequestHandler.this.clientHandler.clientManager.server);
 						SocketRequest_AccessChangePassword request = ((SocketRequest_AccessChangePassword) requestRaw);
 						boolean result = false;
 						try {
 							result = identityBUS.performChangePassword(request);
 							if (result == true) {
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
-										SocketResponse.Action.MSG_CHANGEPASSWORD, "Your password has been updated."));
+										SocketResponse.Action.MSG_UPDATEINFO, "Your password has been updated."));
 							} else {
 								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-										SocketResponse.Action.MSG_CHANGEPASSWORD, "Update failed."));
+										SocketResponse.Action.MSG_UPDATEINFO, "Update failed."));
 							}
 						} catch (Exception e) {
 							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-									SocketResponse.Action.MSG_CHANGEPASSWORD, e.getMessage()));
+									SocketResponse.Action.MSG_UPDATEINFO, e.getMessage()));
 						}
 
 						break;

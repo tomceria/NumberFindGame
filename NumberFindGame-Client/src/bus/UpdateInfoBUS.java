@@ -15,8 +15,8 @@ import java.io.IOException;
 
 public class UpdateInfoBUS {
 	public UpdateInfoBUS_ViewBinder viewBinder;
-	public MatchPlayer matchPlayer = ((GameClient) GameMain.client).getClientPlayer();
-	public PlayerDTO player = matchPlayer.getPlayer();
+	public static MatchPlayer matchPlayer = ((GameClient) GameMain.client).getClientPlayer();
+	public static PlayerDTO player = matchPlayer.getPlayer();
 
 	public UpdateInfoBUS() {
 		this.viewBinder = new UpdateInfoBUS_ViewBinder();
@@ -35,12 +35,12 @@ public class UpdateInfoBUS {
 		if (UpdateValidate(firstName, lastName, email)) {
 			try {
 				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName));
-				
+
 				player.setEmail(email);
 				player.setFirstName(firstName);
 				player.setLastName(lastName);
 				matchPlayer.setPlayer(player);
-				
+
 				result = true;
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
@@ -62,10 +62,10 @@ public class UpdateInfoBUS {
 		if (ChangePasswordValidate(oldPassword, newPassword, newPassword2)) {
 			try {
 				GameMain.client.sendRequest(new SocketRequest_AccessChangePassword(username, newPassword));
-				
-				player.setPassword(newPassword);
+
+				player.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt(12)));
 				matchPlayer.setPlayer(player);
-				
+
 				result = true;
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
@@ -97,7 +97,8 @@ public class UpdateInfoBUS {
 
 	// Change password form validate
 	public static boolean ChangePasswordValidate(String oldPassword, String newPassword, String newPassword2) {
-		PlayerDTO player = ((GameClient) GameMain.client).getClientPlayer().getPlayer();
+		// PlayerDTO player = ((GameClient)
+		// GameMain.client).getClientPlayer().getPlayer();
 		String fields[] = { oldPassword, newPassword, newPassword2 };
 		String fieldsLabel[] = { "Old Password", "New Password", "Confirm password" };
 		for (int i = 0; i < fields.length; i++) {

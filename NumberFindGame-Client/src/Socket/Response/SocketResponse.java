@@ -10,7 +10,6 @@ public class SocketResponse implements Serializable {
     public static enum Action {
         MSG,
         MSG_UPDATEINFO,
-        MSG_CHANGEPASSWORD,
         NET_CLOSE,
         GAMEROOM_PROPS,
         GAMEROOM_PLAYERJOIN,

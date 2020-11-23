@@ -657,7 +657,7 @@ public class BCrypt {
 		StringBuffer rs = new StringBuffer();
 
 		if (salt.charAt(0) != '$' || salt.charAt(1) != '2')
-			throw new IllegalArgumentException ("Invalid salt version");
+			throw new IllegalArgumentException ("Invalid salt version " + salt +" " +password);
 		if (salt.charAt(2) == '$')
 			off = 3;
 		else {
