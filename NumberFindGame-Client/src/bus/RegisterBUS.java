@@ -5,49 +5,59 @@ import Run.GameMain;
 import Socket.Request.SocketRequest_AccessRegister;
 
 import javax.swing.*;
+
+import org.jdatepicker.impl.JDatePickerImpl;
+
 import java.io.IOException;
+import util.dateParse;
 
 public class RegisterBUS {
-    private String hostname;
-    private int netPort;
+	private String hostname;
+	private int netPort;
 
-    public RegisterBUS_ViewBinder viewBinder;
+	public RegisterBUS_ViewBinder viewBinder;
 
-    public RegisterBUS(String hostname, int netPort) {
-        this.hostname = hostname;
-        this.netPort = netPort;
-        this.viewBinder = new RegisterBUS_ViewBinder();
-    }
+	public RegisterBUS(String hostname, int netPort) {
+		this.hostname = hostname;
+		this.netPort = netPort;
+		this.viewBinder = new RegisterBUS_ViewBinder();
+	}
 
-    // Functions
+	// Functions
 
-    public boolean action_RegisterSubmit() throws IOException {
-        boolean result = false;
+	public boolean action_RegisterSubmit() throws IOException {
+		boolean result = false;
+		String username = this.viewBinder.txtUsername.getText();
+		String password = new String(this.viewBinder.txtPassword.getPassword());
+		String password2 = new String(this.viewBinder.txtPassword2.getPassword());
+		String firstName = this.viewBinder.txtFirstName.getText();
+		String lastName = this.viewBinder.txtLastName.getText();
+		String email = this.viewBinder.txtEmail.getText();
+		String gender = this.viewBinder.comboBox.getItemAt(this.viewBinder.comboBox.getSelectedIndex()).toString();
+		String tmpBirthdate = this.viewBinder.datePicker.getJFormattedTextField().getText();
+		
+		
+		
+		
+		if (RegisterValidate(username, password, password2, firstName, lastName, email, gender, tmpBirthdate)) {
+			dateParse dp = new dateParse();
+			String birthdate = dp.dateParse(tmpBirthdate);
+			result = (boolean) GameMain.client.performOneTimeSocketRequest(this.hostname, this.netPort,
+					new SocketRequest_AccessRegister(username, password, email, firstName, lastName));
+		}
 
-        String username = this.viewBinder.txtUsername.getText();
-        String password = new String(this.viewBinder.txtPassword.getPassword());
-        String password2 = new String(this.viewBinder.txtPassword2.getPassword());
-        String firstName = this.viewBinder.txtFirstName.getText();
-        String lastName = this.viewBinder.txtLastName.getText();
-        String email = this.viewBinder.txtEmail.getText();
+		return result;
+	}
 
-        if (RegisterValidate(username, password, password2, firstName, lastName, email)) {
-            result = (boolean) GameMain.client.performOneTimeSocketRequest(
-                    this.hostname,
-                    this.netPort,
-                    new SocketRequest_AccessRegister(username, password, email, firstName, lastName)
-            );
-        }
+	// Register Form Validate
 
-        return result;
-    }
+	public static boolean RegisterValidate(String username, String password, String password2, String firstName,
+			String lastName, String email, String gender, String birthdate) {
+		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		String fields[] = { username, password, password2, email, firstName, lastName, gender, birthdate};
+		String fieldsLabel[] = { "Username", "Password", "Confirm password", "Email", "First Name", "Last Name",
+				"Gender", "Birthdate"};
 
-    // Register Form Validate
-
-    public static boolean RegisterValidate(String username, String password, String password2, String firstName, String lastName, String email) {
-        String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        String fields[] = {username, password, password2, email, firstName, lastName};
-        String fieldsLabel[] = {"Username", "Password", "Confirm password", "Email", "First Name", "Last Name"};
         for (int i = 0; i < fields.length; i++) {
             if (fields[i].equals("")) {
                 throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
@@ -67,25 +77,27 @@ public class RegisterBUS {
             throw new RuntimeException("Invalid email address");
         }
 
-        return true;
-    }
+		 return true;
+	}
 
-    // Inner Classes
+	// Inner Classes
 
-    public class RegisterBUS_ViewBinder extends ViewBinder {
-        public JTextField txtUsername;
-        public JPasswordField txtPassword;
-        public JPasswordField txtPassword2;
-        public JTextField txtFirstName;
-        public JTextField txtLastName;
-        public JTextField txtEmail;
+	public class RegisterBUS_ViewBinder extends ViewBinder {
+		public JTextField txtUsername;
+		public JPasswordField txtPassword;
+		public JPasswordField txtPassword2;
+		public JTextField txtFirstName;
+		public JTextField txtLastName;
+		public JTextField txtEmail;
+		public JComboBox comboBox;
+		public JDatePickerImpl datePicker;
 
-        public RegisterBUS_ViewBinder() {
-            super();
-        }
+		public RegisterBUS_ViewBinder() {
+			super();
+		}
 
-        @Override
-        public void update() {
-        }
-    }
+		@Override
+		public void update() {
+		}
+	}
 }
