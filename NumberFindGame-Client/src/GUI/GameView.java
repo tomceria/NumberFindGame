@@ -12,12 +12,12 @@ public class GameView {
     // GameView.form's Components
     private JPanel contentPane;
     // ViewBinder's components
+    private JPanel gamePane;
     private JLabel lblFindThis;
     private JLabel lblTimer;
     private JList<MatchPlayer> listPlayers;
     // Others
     private JButton btnQuit;
-    private JPanel gamePane;
     private JPanel infoPane;
 
     private GameBUS gameBUS;
@@ -31,6 +31,7 @@ public class GameView {
     }
 
     public void init() {
+        this.gameBUS.viewBinder.gamePane = gamePane;
         this.gameBUS.viewBinder.lblFindThis = lblFindThis;
         this.gameBUS.viewBinder.lblTimer = lblTimer;
         this.gameBUS.viewBinder.listPlayers = listPlayers;

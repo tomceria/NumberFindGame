@@ -1,5 +1,6 @@
 package bus;
 
+import Common.ColorScheme;
 import Common.ViewBinder;
 import GUI.Components.GameMatchPlayerCellRenderer;
 import GUI.Components.LevelNodeButton;
@@ -8,6 +9,7 @@ import Socket.Request.SocketRequest_GameQuit;
 import Socket.Request.SocketRequest_GameSubmitLevelNode;
 import Socket.Response.SocketResponse_GameProps;
 import dto.*;
+import util.Interpolate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,10 +25,11 @@ import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 public class GameBUS {
-    public GameBUS_ViewBinder viewBinder;
-    // để tránh bị trùng với Timer của java swing
-    java.util.Timer blindingTimer;
     private Game_Client game; // PARENT
+    private java.util.Timer blindingTimer; // để tránh bị trùng với Timer của java swing
+    private Color defaultColor = ColorScheme.INDIGO;
+
+    public GameBUS_ViewBinder viewBinder;
 
     public GameBUS(Game_Client game) {
         this.game = game;
@@ -161,6 +164,10 @@ public class GameBUS {
         /**
          * 4. Cập nhật GUI
          */
+
+        /**
+         * 4.1. Thay đổi màu của LevelNodeButton được chọn
+         */
         ArrayList<LevelNode> levelNodes = game.getLevel();
         for (LevelNode levelNode : levelNodes) {
             MatchPlayer pickingMatchPlayer = levelNode.getPickingMatchPlayer();
@@ -169,11 +176,13 @@ public class GameBUS {
             }
         }
 
-        // blind các button của clients
         // nếu index >= 0 (chưa kết thúc game)
         // kết thúc game thì currentLevel.value = 1
         int prevLevelIndex = game.getCurrentLevel().getValue() - 1 - 1;
         if (prevLevelIndex >= 0) {
+            /**
+             * 4.2. Blind (ẩn) các LevelNodeButton của client
+             */
             LevelNode prevLevelNode = levelNodes.get(game.getCurrentLevel().getValue() - 1 - 1);
             if (prevLevelNode.getMutation() == LevelNode.Mutation.BLINDING) {
                 String clientPlayerUsername = game.getClientPlayer().getPlayer().getUsername();
@@ -183,7 +192,14 @@ public class GameBUS {
                     ui_blindingLevelNodeButton(3000);
                 }
             }
+            /**
+             * 4.3. Chớp màn hình (gamePane.background) bằng màu của MatchPlayer
+             */
+            this.ui_gamePaneBlink(
+                this.getMatchPlayerClient(prevLevelNode.getPickingMatchPlayer()).getUiColor()
+            );
         }
+
 
         /**
          * CUỐI CÙNG: Force lệnh update của ViewBinder để cập nhật ngay lập tức
@@ -194,6 +210,27 @@ public class GameBUS {
     public void listen_GameEnd() {
         ViewBUS.gotoGameResultView();
         ViewBUS.gameView = null;
+    }
+
+    public void ui_gamePaneBlink(Color matchPlayerColor) {
+        this.viewBinder.gamePane.setBackground(defaultColor);
+        Thread runThread = new Thread(() -> {
+            double ratio = 1;
+            while (ratio >= 0) {
+                ratio -= 0.05;
+                int red = Interpolate.interpolateInt(ratio, matchPlayerColor.getRed(), defaultColor.getRed());
+                int green = Interpolate.interpolateInt(ratio, matchPlayerColor.getGreen(), defaultColor.getGreen());
+                int blue = Interpolate.interpolateInt(ratio, matchPlayerColor.getBlue(), defaultColor.getBlue());
+                Color newColor = new Color(red, green, blue);
+                GameBUS.this.viewBinder.gamePane.setBackground(newColor);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        runThread.start();
     }
 
     public void ui_blindingLevelNodeButton(int milliseconds) {
@@ -273,6 +310,15 @@ public class GameBUS {
                 .getMutation();
     }
 
+    private MatchPlayer_Client getMatchPlayerClient(MatchPlayer matchPlayer) {
+        return (MatchPlayer_Client) this.game.getMatchPlayers().stream()
+                .filter(mP -> mP.getPlayer().getUsername().equals(
+                        matchPlayer.getPlayer().getUsername()
+                ))
+                .collect(Collectors.toList())
+                .get(0);
+    }
+
     // Properties
 
     public Game_Client getGame() {
@@ -282,6 +328,7 @@ public class GameBUS {
     // Inner Classes
 
     public class GameBUS_ViewBinder extends ViewBinder {
+        public JPanel gamePane;
         public JLabel lblFindThis;
         public JLabel lblTimer;
         public JList listPlayers;
