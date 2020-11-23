@@ -76,6 +76,33 @@ public class GameBUS {
         return accept;
     }
 
+    public boolean req_quitGame(ClientHandler playerClient, MatchPlayer_Server sendingPlayer) {
+        GameServer server = this.game.getServer();
+
+        server.getGameServerBUS().quitGame(
+                playerClient,
+                SocketResponse.Status.SUCCESS,
+                "You have quit the game."
+        );
+
+        /**
+         * KHÔNG xoá Player khỏi Game
+         */
+        /**
+         * Trường hợp nếu Game được khởi tạo với GameRoom (common) => xoá player khỏi GameRoom
+         */
+        if (this.game.getGameRoomInfo() != null && server.getGameRooms().size() > 0) {
+            GameRoom gameRoom = server.getGameRooms().stream()
+                    .filter(gR -> gR.getId() == this.getGame().getGameRoomInfo().getId())
+                    .collect(Collectors.toList())
+                    .get(0);
+            gameRoom.setGame(this.game);
+            sendingPlayer.getGameRoomBUS().notifyUpdateGameRoomProps();
+        }
+
+        return true;
+    }
+
     // Privates
 
     private GameServer getServer() {
@@ -142,8 +169,8 @@ public class GameBUS {
         int levelSize = level.size();
 
         // phần trăm các số lucky, blinding
-        double percentLucky  = 10;
-        double percentBlinding  = 5;
+        double percentLucky = 10;
+        double percentBlinding = 5;
 
         // các số sẽ biến đổi trên tổng số node
         double luckyNumbers = Math.ceil((double) levelSize * percentLucky / 100);
@@ -153,7 +180,7 @@ public class GameBUS {
         ArrayList<Integer> indexArr = new ArrayList<>();
 
         // thêm vị trí của level node vào mảng index
-        for (int i = 0;  i < levelSize; i++) {
+        for (int i = 0; i < levelSize; i++) {
             indexArr.add(i);
         }
         // shuffle mảng
@@ -322,7 +349,7 @@ public class GameBUS {
 
         // Bước 3: Với danh sách tạm đã có thứ tự thứ hạng => gán Placing
         for (int i = 0; i < matchPlayersWithScoreSize; i++) {
-            matchPlayersWithScore.get(i).setPlacing(i+1);
+            matchPlayersWithScore.get(i).setPlacing(i + 1);
         }
 
         // Bước 4: Gán Placing = LAST cho danh sách Người chơi ko có điểm
@@ -424,4 +451,7 @@ public class GameBUS {
         return game;
     }
 
+    public Timer getGameTimer() {
+        return gameTimer;
+    }
 }

@@ -2,6 +2,7 @@ package bus;
 
 import Socket.ClientHandler;
 import Socket.GameServer;
+import Socket.Response.SocketResponse;
 import dto.GameRoom_Server;
 import dto.MatchPlayer_Server;
 
@@ -27,7 +28,11 @@ public class GameServerBUS {
             this.gameServer.getGameRooms().add(new GameRoom_Server(this.gameServer));
         }
         int defaultGameRoomId = this.gameServer.getGameRooms().get(0).getId();
-        this.joinRoom(playerClient, defaultGameRoomId); // TODO: Phòng đầy. đá Client ra thì Client đi đâu???
+        try {
+            this.joinRoom(playerClient, defaultGameRoomId);
+        } catch (RuntimeException e) {
+            this.quitGame(playerClient, SocketResponse.Status.FAILED, e.getMessage());
+        }
     }
 
     public void joinRoom(ClientHandler playerClient, int gameRoomId) {
@@ -36,5 +41,29 @@ public class GameServerBUS {
                 .collect(Collectors.toList())
                 .get(0);
         gameRoom.getGameRoomBUS().joinRoom(playerClient);
+    }
+
+    public void quitGame(ClientHandler playerClient, SocketResponse.Status status, String message) {
+        /**
+         * Thông báo cho Client rằng Server sẽ thực hiện đóng kết nối giữa Client và Server
+         * Cách làm này tránh cho Client bị kẹt ở readObject()
+         */
+        this.gameServer.getClientManager().sendResponseToClient(
+                playerClient.getId(),
+                new SocketResponse(status, SocketResponse.Action.NET_CLOSE, message)
+        );
+
+        /**
+         * Xoá playerClient khỏi Server
+         */
+        this.gameServer.getClientManager().disconnectClient(playerClient.getId());
+    }
+
+    public void reloadConfigForAllGameRooms() {
+        for (GameRoom_Server gameRoom : this.gameServer.getGameRooms()) {
+            gameRoom.setMatchConfig(
+                    gameRoom.getGameRoomBUS().getDefaultMatchConfig()
+            );
+        }
     }
 }

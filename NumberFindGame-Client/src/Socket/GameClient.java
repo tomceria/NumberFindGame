@@ -1,5 +1,6 @@
 package Socket;
 
+import Run.GameMain;
 import bus.GameClientBUS;
 import dto.GameRoom_Client;
 import dto.MatchPlayer;
@@ -11,6 +12,15 @@ public class GameClient extends Client {
 
     public GameClient() {
         this.gameClientBUS = new GameClientBUS(this);
+    }
+
+    // Overrides
+
+    @Override
+    public void close() {
+        super.close();
+        this.clientPlayer = null;
+        this.gameRoom = null;
     }
 
     // Properties

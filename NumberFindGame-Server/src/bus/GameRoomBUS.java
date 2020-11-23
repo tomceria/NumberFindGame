@@ -58,8 +58,10 @@ public class GameRoomBUS {
 
     public void joinRoom(ClientHandler playerClient) {
         if (this.gameRoom.getStatus() != GameRoomStatus.OPEN) {
-            // TODO: throw exception
-            return;
+            throw new RuntimeException("Room is currently unavailable to join.");
+        }
+        if (this.gameRoom.getPlayerClients().size() >= this.gameRoom.getMatchConfig().getMaxPlayer()) {
+            throw new RuntimeException("Room is full.");
         }
 
         /**
@@ -108,13 +110,30 @@ public class GameRoomBUS {
     }
 
     public void leaveRoom(ClientHandler playerClient) {
-        this.gameRoom.getPlayerClients().remove(playerClient.getId());                               // Thoát khỏi phòng
-        getServer().getClientManager().getClientConnections().remove(playerClient.getId());            // Đá khỏi server
+        /**
+         * 1. Đá playerClient khỏi GameRoom
+         */
+        this.gameRoom.getPlayerClients().remove(playerClient.getId());
 
-        MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
+        /**
+         * 2. Đá playerClient khỏi Server
+         */
+        getServer().getClientManager().getClientConnections().remove(playerClient.getId());
+
         if (this.gameRoom.getPlayerClients().size() > 0) {
+            /**
+             * 3. MAIN FLOW: THÔNG BÁO cho các người chơi trong phòng về thông tin phòng mới cập nhật
+             */
+            MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
             broadcastResponseToRoom(new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())));
             this.notifyUpdateGameRoomProps();
+        } else if (this.gameRoom.getGame() != null) {
+            /**
+             * 3. ALT FLOW: Nếu phòng không còn ai nữa. Kết thúc trận đấu ngay lập tức và KHÔNG lưu lại kết quả. Xoá phòng
+             */
+            ((Game_Server) this.gameRoom.getGame()).getGameBUS().getGameTimer().cancel();
+            this.gameRoom.setGame(null);
+            this.getServer().getGameRooms().remove(this.gameRoom);
         }
     }
 
