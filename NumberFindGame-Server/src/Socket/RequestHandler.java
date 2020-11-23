@@ -60,53 +60,11 @@ public class RequestHandler {
 
                             break;
                         }
-					case ACCESS_UPDATEINFO: {
-						SocketRequest_AccessUpdateInfo request = ((SocketRequest_AccessUpdateInfo) requestRaw);
-						boolean result = false;
-						try {
-							result = identityBUS.performUpdateInfo(request);
-							if (result == true) {
-								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
-										SocketResponse.Action.MSG, "Your account has been updated."));
-							} else {
-								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-										SocketResponse.Action.MSG, "Update failed."));
-							}
-						} catch (Exception e) {
-							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-									SocketResponse.Action.MSG, e.getMessage()));
-						}
-
-                            break;
-                        }
-					case ACCESS_CHANGEPASSWORD: {
-						SocketRequest_AccessChangePassword request = ((SocketRequest_AccessChangePassword) requestRaw);
-						boolean result = false;
-						try {
-							result = identityBUS.performChangePassword(request);
-							if (result == true) {
-								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
-										SocketResponse.Action.MSG, "Your password has been updated."));
-							} else {
-								thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-										SocketResponse.Action.MSG, "Update failed."));
-							}
-						} catch (Exception e) {
-							thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
-									SocketResponse.Action.MSG, e.getMessage()));
-						}
-
-                            break;
-                        }
                         default: {
-                            thisClientHandler.sendResponse(
-                                    new SocketResponse(
-                                            SocketResponse.Status.FAILED,
-                                            SocketResponse.Action.MSG,
-                                            "Invalid access request."
-                                    )
-                            );
-                            thisClientHandler.isRunning = false;  // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp => Kết thúc Thread => Disconnect
+                            thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
+                                    SocketResponse.Action.MSG, "Invalid access request."));
+                            thisClientHandler.isRunning = false; // Yêu cầu ĐẦU TIÊN không hợp lệ => Thoát khỏi vòng lặp =>
+                            // Kết thúc Thread => Disconnect
                             break;
                         }
                     }
@@ -121,6 +79,47 @@ public class RequestHandler {
                             MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
 
                             matchPlayer.getGameRoomBUS().startGame();
+                            break;
+                        }
+                        case PLAYER_UPDATEINFO: {
+                            IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
+                                    RequestHandler.this.clientHandler.clientManager.server);
+                            SocketRequest_AccessUpdateInfo request = ((SocketRequest_AccessUpdateInfo) requestRaw);
+                            boolean result = false;
+                            try {
+                                result = identityBUS.performUpdateInfo(request);
+                                if (result == true) {
+                                    thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
+                                            SocketResponse.Action.MSG_UPDATEINFO, "Your account has been updated."));
+                                } else {
+                                    thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
+                                            SocketResponse.Action.MSG_UPDATEINFO, "Update failed."));
+                                }
+                            } catch (Exception e) {
+                                thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
+                                        SocketResponse.Action.MSG_UPDATEINFO, e.getMessage()));
+                            }
+                            break;
+                        }
+                        case PLAYER_CHANGEPASSWORD: {
+                            IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
+                                    RequestHandler.this.clientHandler.clientManager.server);
+                            SocketRequest_AccessChangePassword request = ((SocketRequest_AccessChangePassword) requestRaw);
+                            boolean result = false;
+                            try {
+                                result = identityBUS.performChangePassword(request);
+                                if (result == true) {
+                                    thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.SUCCESS,
+                                            SocketResponse.Action.MSG_UPDATEINFO, "Your password has been updated."));
+                                } else {
+                                    thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
+                                            SocketResponse.Action.MSG_UPDATEINFO, "Update failed."));
+                                }
+                            } catch (Exception e) {
+                                thisClientHandler.sendResponse(new SocketResponse(SocketResponse.Status.FAILED,
+                                        SocketResponse.Action.MSG_UPDATEINFO, e.getMessage()));
+                            }
+
                             break;
                         }
                         case GAME_SUBMITLEVELNODE: {

@@ -27,9 +27,7 @@ public class GameRoomBUS {
     // Functions
 
     public void action_RequestStartGame() {
-        this.getGameRoom().getClient().sendRequest(
-                new SocketRequest_GameRoomStartGame()
-        );
+        this.getGameRoom().getClient().sendRequest(new SocketRequest_GameRoomStartGame());
     }
 
     public void listen_setGameRoomProps(SocketResponse_GameRoomProps response) {
@@ -62,7 +60,7 @@ public class GameRoomBUS {
     }
 
     public void action_GotoUpdateInfoView() {
-    	ViewBUS.gotoUpdateInfoView();
+        ViewBUS.gotoUpdateInfoView();
     }
 
     // Privates

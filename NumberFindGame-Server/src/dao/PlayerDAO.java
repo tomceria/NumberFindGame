@@ -130,7 +130,7 @@ public class PlayerDAO {
 		String query = "UPDATE players "
 					 + "SET first_name = ?,"
 					 + "last_name = ?,"
-					 + "email = ?"
+					 + "email = ? "
 					 + "WHERE username = ?";
 
 		// prepare statement
@@ -150,12 +150,12 @@ public class PlayerDAO {
 		conn.Close();
 	}
 	
-	public void changePassword(PlayerDTO player) {
+	public void changePassword(String username, String password) {
 		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
 
 		String query = "UPDATE players "
-					 + "SET password = ?"
-					 + "WHERE username = ?";
+					 + "SET password = ? "
+					 + "WHERE username = ? ";
 
 		// prepare statement
 		conn.prepare(query);
@@ -163,8 +163,8 @@ public class PlayerDAO {
 		// bind values
 		int order = 1;
 		
-		conn.bind(order++, player.getPassword());
-		conn.bind(order, player.getUsername());
+		conn.bind(order++, password);
+		conn.bind(order, username);
 
 		// execute update with prepare statement
 		conn.executeUpdatePre();

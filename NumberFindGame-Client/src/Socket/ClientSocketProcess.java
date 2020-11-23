@@ -1,5 +1,7 @@
 package Socket;
 
+import javax.swing.JOptionPane;
+
 import GUI.LoginView;
 import Socket.Response.*;
 import bus.*;
@@ -9,7 +11,7 @@ import dto.Game_Client;
 import javax.swing.*;
 
 public class ClientSocketProcess extends Thread {
-    Client client;  // PARENT
+    Client client; // PARENT
     boolean isRunning = true;
 
     public ClientSocketProcess(Client client) {
@@ -27,6 +29,13 @@ public class ClientSocketProcess extends Thread {
             switch (resultRaw.getAction()) {
                 case MSG: {
                     System.out.println(String.format("[Server] : %s", resultRaw.getMessage()));
+                    break;
+                }
+                case MSG_UPDATEINFO: {
+                    int messageType = resultRaw.getStatus().equals(SocketResponse.Status.FAILED) ? JOptionPane.ERROR_MESSAGE
+                            : JOptionPane.INFORMATION_MESSAGE;
+                    JOptionPane.showMessageDialog(ViewBUS.updateInfoView.getContentPane(), resultRaw.getMessage(),
+                            "Message", messageType);
                     break;
                 }
                 case GAMEROOM_PLAYERJOIN: {
@@ -52,10 +61,7 @@ public class ClientSocketProcess extends Thread {
                 case GAME_INIT: {
                     GameRoom_Client gameRoom = ((GameClient) client).getGameRoom();
 
-                    gameRoom.getGameRoomBUS()
-                            .listen_startGame(
-                                    (SocketResponse_GameInit) resultRaw
-                            );
+                    gameRoom.getGameRoomBUS().listen_startGame((SocketResponse_GameInit) resultRaw);
 
                     break;
                 }

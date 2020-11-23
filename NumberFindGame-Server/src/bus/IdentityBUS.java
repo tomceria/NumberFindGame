@@ -86,10 +86,10 @@ public class IdentityBUS {
 	public boolean performUpdateInfo(SocketRequest_AccessUpdateInfo request) throws Exception {
 		PlayerBUS playerBus = new PlayerBUS();
 		
-		PlayerDTO player = new PlayerDTO(request.username, request.password, request.email, request.firstName,
+		PlayerDTO newPlayerInfo = new PlayerDTO(request.username, request.password, request.email, request.firstName,
 				request.lastName);
 
-		boolean result = playerBUS.updateInfo(player);
+		boolean result = playerBUS.updateInfo(newPlayerInfo);
 
 		return result;
 	}
@@ -97,10 +97,10 @@ public class IdentityBUS {
 	public boolean performChangePassword(SocketRequest_AccessChangePassword request) throws Exception {
 		PlayerBUS playerBus = new PlayerBUS();
 		
-		PlayerDTO player = new PlayerDTO(request.username, request.password, request.email, request.firstName,
-				request.lastName);
+//		PlayerDTO player = new PlayerDTO(request.username, request.password, request.email, request.firstName,
+//				request.lastName);
 
-		boolean result = playerBUS.updateInfo(player);
+		boolean result = playerBUS.changePassword(request.username, request.password);
 
 		return result;
 	}

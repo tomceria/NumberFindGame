@@ -8,7 +8,7 @@ public class SocketRequest_AccessUpdateInfo extends SocketRequest {
 	public String lastName;
 
 	public SocketRequest_AccessUpdateInfo(String username, String email, String firstName, String lastName) {
-		super(Action.ACCESS_UPDATEINFO, "Update info request.");
+		super(Action.PLAYER_UPDATEINFO, "Update info request.");
 		this.username = username;
 		this.email = email;
 		this.firstName = firstName;
