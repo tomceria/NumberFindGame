@@ -122,7 +122,7 @@ public class ClientHandler {
 		SecretKeySpec originalKey = null;
 		try {
 			byte[] decryptedKey = EncryptionHelper.DCIPHER.doFinal(encryptedKey);
-			originalKey  = new SecretKeySpec(decryptedKey , 0, decryptedKey .length, "RSA");
+			originalKey  = new SecretKeySpec(decryptedKey , 0, decryptedKey .length, "AES");
 		} catch (IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 		}
@@ -149,7 +149,7 @@ public class ClientHandler {
 	protected SealedObject sealObject(Object o) throws IOException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 		ISecretObject secretObject = new SecretObjectImpl((SocketResponse) o);
 		Cipher cipher = Cipher.getInstance("AES");
-		cipher.init(Cipher.DECRYPT_MODE, clientSecretKey);
+		cipher.init(Cipher.ENCRYPT_MODE, clientSecretKey);
 		SealedObject so = new SealedObject(secretObject, cipher);
 		return so;
 	}

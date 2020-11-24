@@ -118,16 +118,16 @@ public class EncryptionHelper {
             KeyFactory factory = KeyFactory.getInstance("RSA");
             ServerPublicKey = factory.generatePublic(spec);
 
-            // Đọc file chứa private key
-            FileInputStream fis2 = new FileInputStream("privatekey.txt");
-            byte[] b2 = new byte[fis2.available()];
-            fis2.read(b2);
-            fis2.close();
-
-            // Tạo private key
-            PKCS8EncodedKeySpec spec2 = new PKCS8EncodedKeySpec(b2);
-            KeyFactory factory2 = KeyFactory.getInstance("RSA");
-            PrivateKey ServerPrivateKey = factory2.generatePrivate(spec2);
+//            // Đọc file chứa private key
+//            FileInputStream fis2 = new FileInputStream("privatekey.txt");
+//            byte[] b2 = new byte[fis2.available()];
+//            fis2.read(b2);
+//            fis2.close();
+//
+//            // Tạo private key
+//            PKCS8EncodedKeySpec spec2 = new PKCS8EncodedKeySpec(b2);
+//            KeyFactory factory2 = KeyFactory.getInstance("RSA");
+//            PrivateKey ServerPrivateKey = factory2.generatePrivate(spec2);
 
             // sử dụng server private key để giải mã
             ServerPublicKeyCipher = Cipher.getInstance("RSA");

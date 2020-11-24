@@ -7,6 +7,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.*;
@@ -48,7 +49,7 @@ public class EncryptionHelper {
             SecureRandom sr = new SecureRandom();
             // Thuật toán phát sinh khóa - Rivest Shamir Adleman (RSA)
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(2048, sr);
+            kpg.initialize(4096, sr);
             // Phát sinh cặp khóa
             KeyPair kp = kpg.genKeyPair();
             // PublicKey
@@ -62,7 +63,7 @@ public class EncryptionHelper {
 //            fos.close();
 
             // Lưu Private Key
-//            fos = new FileOutputStream("private.txt");
+//            fos = new FileOutputStream("privatekey.txt");
 //            fos.write(ServerPrivateKey.getEncoded());
 //            fos.close();
             // sử dụng server private key để giải mã

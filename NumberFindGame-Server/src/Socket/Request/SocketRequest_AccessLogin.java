@@ -3,7 +3,6 @@ package Socket.Request;
 public class SocketRequest_AccessLogin extends SocketRequest {
     public String username;
     public String password;
-    public byte[] encryptedSecretKey;
 
     public SocketRequest_AccessLogin(String username, String password) {
         super(SocketRequest.Action.ACCESS_LOGIN, "Login request.");
