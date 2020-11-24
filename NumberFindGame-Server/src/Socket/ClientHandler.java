@@ -30,9 +30,8 @@ public class ClientHandler {
 	IClientIdentifier clientIdentifier; // inherits MatchPlayer
 	ClientManager clientManager; // PARENT
 
-	EncryptionHelper encryptionHelper;
 	PublicKey publicKey;
-	SecretKey clientSecretKey;
+	SecretKey clientSecretKey = null;
 
 	public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
 		this.id = id;
@@ -84,18 +83,14 @@ public class ClientHandler {
 		SealedObject sealedObject = null;
 		Object tmp = input.readObject();
 
-		if (tmp instanceof SocketRequest) {
-			request = (SocketRequest) tmp;
-		} else if (tmp instanceof SocketRequestPackage) {
+		if (clientSecretKey != null) {
+			request = unsealObject(tmp);
+		} else {
 			sealedObject = ((SocketRequestPackage) tmp).data;
 			clientSecretKey = decryptSecretKey(((SocketRequestPackage) tmp).encryptedSecretKey);
-		} else {
-			throw new IOException("Invalid request object type.");
+			request = unsealObject(sealedObject);
 		}
 
-//		request = decryptObject(tmp);
-		request = unsealObject(sealedObject);
-//		request = (SocketRequest) input.readObject();
 		return request;
 	}
 
