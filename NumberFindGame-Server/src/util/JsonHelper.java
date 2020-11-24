@@ -55,17 +55,26 @@ public class JsonHelper {
         try {
             //Get number quantity
             int numberQty = ((Long) config.get("numberQty")).intValue();
+            if (numberQty < 0 || numberQty > 900) {
+                throw new Exception("Number quantity out of limit range");
+            }
 
             //Get time
             int time = ((Long) config.get("time")).intValue();
+            if (time < 1000 || time > 3600000) {
+                throw new Exception("Time out of limit range");
+            }
 
             //Get max player
             int maxPlayer = ((Long) config.get("maxPlayer")).intValue();
+            if (maxPlayer < 2 || maxPlayer > 8) {
+                throw new Exception("Max player out of limit range");
+            }
 
             matchConfig.setNumberQty(numberQty);
             matchConfig.setTime(time);
             matchConfig.setMaxPlayer(maxPlayer);
-        } catch (ClassCastException e) {
+        } catch (Exception e) {
 //            e.printStackTrace();
         }
 
