@@ -106,7 +106,7 @@ public class UpdateInfoBUS {
 			throw new RuntimeException("Invalid email address");
 		}
 
-		if (birthday.matches(birthdayRegex)) {
+		if (!birthday.matches(birthdayRegex)) {
 			throw new RuntimeException("Invalid Birthday");
 		}
 
