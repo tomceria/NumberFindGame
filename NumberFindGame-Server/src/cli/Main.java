@@ -16,8 +16,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		EncryptionHelper encryptionHelper = new EncryptionHelper();
-		encryptionHelper.createKey(Cipher.ENCRYPT_MODE);
-		encryptionHelper.createKey(Cipher.DECRYPT_MODE);
+//		encryptionHelper.createKey(Cipher.ENCRYPT_MODE);
+//		encryptionHelper.createKey(Cipher.DECRYPT_MODE);
+		encryptionHelper.generateKeysForServer();
 
 		server = new GameServer(54321);
 		server.listen();

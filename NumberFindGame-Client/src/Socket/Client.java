@@ -28,6 +28,7 @@ public class Client {
         this.start(hostname, port);
 
         SocketRequest_AccessLogin authenticationRequest = new SocketRequest_AccessLogin(username, password);
+        authenticationRequest.publicKey = EncryptionHelper.ClientPublicKey;
         sendRequest(authenticationRequest);                                          // Gửi thông tin đăng nhập để server duyệt
         SocketResponse authenticationResponse = receiveResponse();
         System.out.println("SERVER AUTH MESSAGE: " + authenticationResponse.getMessage());

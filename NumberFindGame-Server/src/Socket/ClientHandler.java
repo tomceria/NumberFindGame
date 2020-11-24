@@ -7,12 +7,13 @@ import Socket.Response.SocketResponse;
 import util.EncryptionHelper;
 import util.NotifyingThread;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.SealedObject;
+import javax.crypto.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.UUID;
 
 public class ClientHandler {
@@ -28,6 +29,7 @@ public class ClientHandler {
 	ClientManager clientManager; // PARENT
 
 	EncryptionHelper encryptionHelper;
+	PublicKey publicKey;
 
 	public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
 		this.id = id;
@@ -66,16 +68,19 @@ public class ClientHandler {
 		}
 
 		try {
-			output.writeObject(sealObject(response));
+//			output.writeObject(sealObject(response));
+			output.writeObject(encryptObject(response));
 			output.flush();
-		} catch (IOException | IllegalBlockSizeException e) {
+		} catch (IOException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
 			e.printStackTrace();
 		}
 	}
 
 	protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException, BadPaddingException, IllegalBlockSizeException {
 		SocketRequest request = null;
-		request = unsealObject(input.readObject());
+		Object tmp = input.readObject();
+		request = decryptObject(tmp);
+//		request = unsealObject(input.readObject());
 //		request = (SocketRequest) input.readObject();
 		return request;
 	}
@@ -96,6 +101,22 @@ public class ClientHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	// mã hóa request bằng server public key
+	protected SealedObject encryptObject(Object o) throws IOException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+		Cipher c = Cipher.getInstance("RSA");
+		c.init(Cipher.ENCRYPT_MODE, this.publicKey);
+		ISecretObject secretObject = new SecretObjectImpl((SocketRequest) o);
+		SealedObject so = new SealedObject(secretObject, c);
+		return so;
+	}
+
+	// giải mã response bằng client private key
+	protected SocketRequest decryptObject(Object o) throws IOException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
+		SealedObject s = (SealedObject) o;
+		ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);
+		return decryptedSecretObject.getSecretRequest();
 	}
 
 	// mã hóa response trước khi gửi đi
