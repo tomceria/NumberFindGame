@@ -18,7 +18,7 @@ public class PagedResult<T> implements Serializable {
         this.pageSize = pageSize;
         this.count = count;
 
-        this.totalPage = (int) Math.ceil(count / pageSize);
+        this.totalPage = (int) Math.ceil(count * 1.0 / pageSize);
         this.willPrev = currentPage > 1;
         this.willNext = currentPage < totalPage;
     }
