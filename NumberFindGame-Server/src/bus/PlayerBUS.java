@@ -64,7 +64,7 @@ public class PlayerBUS {
      * @return true if username and password is correct, false if username or password is incorrect
      */
     public boolean login(String username, String password) {
-        PlayerDTO player = playerDao.getByUsername(username);
+        PlayerDTO player = playerDao.getByUsernameOrEmail(username);
 
         if (player != null) {
             String hashedPassword = player.getPassword();
