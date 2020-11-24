@@ -3,6 +3,7 @@ package Socket;
 import Socket.Encryption.ISecretObject;
 import Socket.Encryption.SecretObjectImpl;
 import Socket.Request.SocketRequest;
+import Socket.Request.SocketRequestPackage;
 import Socket.Response.SocketResponse;
 import util.EncryptionHelper;
 import util.NotifyingThread;
@@ -80,6 +81,16 @@ public class ClientHandler {
 	protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException, BadPaddingException, IllegalBlockSizeException {
 		SocketRequest request = null;
 		Object tmp = input.readObject();
+
+		if (tmp instanceof SocketRequest) {
+//			request = (SocketRequest) tmp;
+		} else if (tmp instanceof SocketRequestPackage) {
+//			request = ((SocketRequestPackage) tmp).data;
+//			encryptedSecretKey = ((SocketRequestPackage) tmp).encryptedSecretKey;
+		} else {
+			throw new IOException("Invalid request object type.");
+		}
+
 		request = decryptObject(tmp);
 //		request = unsealObject(input.readObject());
 //		request = (SocketRequest) input.readObject();

@@ -4,6 +4,7 @@ import Socket.Encryption.ISecretObject;
 import Socket.Encryption.SecretObjectImpl;
 import Socket.Helper.EncryptionHelper;
 import Socket.Request.SocketRequest;
+import Socket.Request.SocketRequestPackage;
 import Socket.Request.SocketRequest_AccessLogin;
 import Socket.Response.SocketResponse;
 
@@ -25,9 +26,6 @@ public class Client {
         this.start(hostname, port);
 
         SocketRequest_AccessLogin authenticationRequest = new SocketRequest_AccessLogin(username, password);
-        // mã hóa secret key bằng server public key
-        /* TUI ĐANG BÍ CHỖ NÀY */
-        authenticationRequest.encryptedSecretKey = encryptSecretKey();
         sendRequest(authenticationRequest);                                          // Gửi thông tin đăng nhập để server duyệt
         SocketResponse authenticationResponse = receiveResponse();
         System.out.println("SERVER AUTH MESSAGE: " + authenticationResponse.getMessage());
@@ -93,8 +91,20 @@ public class Client {
         }
 
         try {
-            // mã hóa dữ liệu bằng client secret key trước khi gửi
-            Client.output.writeObject(sealObject(request));
+            /**
+             * Kiểm tra xem đây có phải là lần đầu kết nối hay không
+             * (nếu đúng, nghĩa là persistSocketProcess chưa được thiết lập => isRunning == false)
+             */
+            if (persistSocketProcess != null && persistSocketProcess.isRunning) {
+                Client.output.writeObject(sealObject(request));
+            } else {
+                // mã hóa dữ liệu bằng client secret key trước khi gửi
+                Client.output.writeObject(new SocketRequestPackage(
+                        sealObject(request),
+                        this.encryptSecretKey() // mã hóa secret key bằng server public key
+                ));
+            }
+
 //            Client.output.writeObject(encryptObject(request));
             Client.output.flush();
         } catch (IOException | IllegalBlockSizeException e) {
