@@ -65,6 +65,20 @@ public class IdentityBUS {
 		return player != null;
 	}
 
+//	public boolean checkLeaderBoardUser(SocketRequest_LeaderboardUser request) {
+//		boolean result = false;
+//		PlayerBUS playerBus = new PlayerBUS();
+//		ArrayList<PlayerDTO> players = new ArrayList<PlayerDTO>();
+//		players = playerBus.getAll();
+//		for (PlayerDTO player : players) {
+//			if (request.username.equals(player.getUsername())) {
+//				return true;
+//			}
+//		}
+//		
+//		throw new RuntimeException("No user found.");
+//	}
+
 	public boolean performRegister(SocketRequest_AccessRegister request) throws Exception {
 		PlayerBUS playerBus = new PlayerBUS();
 		ArrayList<PlayerDTO> players = new ArrayList<PlayerDTO>();
@@ -82,10 +96,10 @@ public class IdentityBUS {
 
 		return result;
 	}
-	
+
 	public boolean performUpdateInfo(SocketRequest_AccessUpdateInfo request) throws Exception {
 		PlayerBUS playerBus = new PlayerBUS();
-		
+
 		PlayerDTO newPlayerInfo = new PlayerDTO(request.username, request.password, request.email, request.firstName,
 				request.lastName);
 
@@ -93,10 +107,10 @@ public class IdentityBUS {
 
 		return result;
 	}
-	
+
 	public boolean performChangePassword(SocketRequest_AccessChangePassword request) throws Exception {
 		PlayerBUS playerBus = new PlayerBUS();
-		
+
 //		PlayerDTO player = new PlayerDTO(request.username, request.password, request.email, request.firstName,
 //				request.lastName);
 

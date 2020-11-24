@@ -2,33 +2,76 @@ package bus;
 
 import Common.ViewBinder;
 import Run.GameMain;
-import Socket.GameClient;
-import Socket.Request.SocketRequest_AccessChangePassword;
-import Socket.Request.SocketRequest_AccessRegister;
-import Socket.Request.SocketRequest_AccessUpdateInfo;
-import dto.MatchPlayer;
-import dto.PlayerDTO;
-import util.BCrypt;
+import Socket.Request.SocketRequest_LeaderboardAll;
+import Socket.Request.SocketRequest_LeaderboardUser;
+import Socket.Response.SocketResponse_LeaderboardResult;
+import dto.LeaderBoard;
+import dto.PagedResult;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.*;
-import java.io.IOException;
+import javax.swing.table.DefaultTableModel;
 
 public class LeaderboardBUS {
 	public LeaderboardBUS_ViewBinder viewBinder;
+	public int rank;
+	public String player;
+	public int rankingPoint;
+	public double wintRate;
+	public int totalMatches;
 
 	public LeaderboardBUS() {
 		this.viewBinder = new LeaderboardBUS_ViewBinder();
 	}
 
+	public void listen_showResult(SocketResponse_LeaderboardResult response) {
+
+		PagedResult<LeaderBoard> pagedResult = response.result;
+//		if (pagedResult.getResult().size()) {
+//			throw new RuntimeException("No user found1");
+//		}
+		// int i = 0;
+		ArrayList<LeaderBoard> result = pagedResult.getResult();
+		Iterator it = result.iterator();
+
+		for (int i = 0; it.hasNext(); i++) {
+			rank = result.get(i).getRanking();
+			player = result.get(i).getUsername();
+			rankingPoint = result.get(i).getSumRP();
+			wintRate = result.get(i).getWinrate();
+			totalMatches = result.get(i).getTotalMatches();
+
+			it.next();
+			this.viewBinder.update();
+		}
+
+	}
+
+	public void ui_setLeaderboard(DefaultTableModel model) {
+
+		model.addRow(new Object[] { this.rank, this.player, this.rankingPoint, this.wintRate, this.totalMatches });
+	}
 	// Functions
 
-	public boolean action_UpdateSubmit() {
+	public void action_GetLeaderboardAll(int page) {
 		boolean result = false;
 
-		String username = this.viewBinder.txtSearch.getText();
-		
-		
-		return result;
+		GameMain.client.sendRequest(new SocketRequest_LeaderboardAll(page));
+
+		result = true;
+
+		return;
+	}
+
+	public void action_GetLeaderboardUser(String username) {
+		// ArrayList<LeaderBoard> result = new ArrayList<>();
+		if (username.trim().equals("")) {
+			throw new RuntimeException("Please enter search keyword");
+		}
+
+		GameMain.client.sendRequest(new SocketRequest_LeaderboardUser(username));
+
 	}
 
 //	public static boolean searchValidate(String firstName, String lastName, String email) {
@@ -52,6 +95,7 @@ public class LeaderboardBUS {
 
 	public class LeaderboardBUS_ViewBinder extends ViewBinder {
 		public JTextField txtSearch;
+		public DefaultTableModel leaderboardTableModel;
 
 		public LeaderboardBUS_ViewBinder() {
 			super();
@@ -59,6 +103,8 @@ public class LeaderboardBUS {
 
 		@Override
 		public void update() {
+			ui_setLeaderboard(leaderboardTableModel);
+			// this.stopUpdatePeriod();
 		}
 	}
 }
