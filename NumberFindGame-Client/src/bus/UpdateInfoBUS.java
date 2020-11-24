@@ -16,6 +16,7 @@ import javax.swing.*;
 import org.jdatepicker.impl.JDatePickerImpl;
 
 import java.io.IOException;
+import java.sql.Date;
 
 public class UpdateInfoBUS {
 	public UpdateInfoBUS_ViewBinder viewBinder;
@@ -41,7 +42,7 @@ public class UpdateInfoBUS {
 		if (UpdateValidate(firstName, lastName, email, gender, tmpBirthday)) {
 			try {
 				dateParse dp = new dateParse();
-				String birthday = dp.dateParse(tmpBirthday);
+				Date birthday = (Date) dp.dateParse(tmpBirthday);
 				
 				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName, gender, birthday));
 

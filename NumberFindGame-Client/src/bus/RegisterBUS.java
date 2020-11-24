@@ -9,6 +9,8 @@ import javax.swing.*;
 import org.jdatepicker.impl.JDatePickerImpl;
 
 import java.io.IOException;
+import java.sql.Date;
+
 import util.dateParse;
 
 public class RegisterBUS {
@@ -38,7 +40,7 @@ public class RegisterBUS {
 
 		if (RegisterValidate(username, password, password2, firstName, lastName, email, gender, tmpBirthday)) {
 			dateParse dp = new dateParse();
-			String birthday = dp.dateParse(tmpBirthday);
+			Date birthday = (Date) dp.dateParse(tmpBirthday);
 
 			result = (boolean) GameMain.client.performOneTimeSocketRequest(this.hostname, this.netPort,
 					new SocketRequest_AccessRegister(username, password, email, firstName, lastName, gender, birthday));
