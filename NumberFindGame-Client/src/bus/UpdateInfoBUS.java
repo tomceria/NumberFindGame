@@ -110,6 +110,12 @@ public class UpdateInfoBUS {
 			throw new RuntimeException("Invalid Birthday");
 		}
 
+		if (birthday.matches(birthdayRegex)) {
+			if (!DateUtil.checkAge(birthday)) {
+				throw new RuntimeException("Invalid Birthday");
+			}
+		}
+
 		return true;
 	}
 

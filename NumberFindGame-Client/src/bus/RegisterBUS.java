@@ -68,6 +68,12 @@ public class RegisterBUS {
 		if (!birthday.matches(birthdayRegex)) {
 			throw new RuntimeException("Invalid Birthday");
 		}
+		
+		if (birthday.matches(birthdayRegex)) {
+			if (!DateUtil.checkAge(birthday)) {
+				throw new RuntimeException("Invalid Birthday");
+			}
+		}
 
 		if (username.length() > 15) {
 			throw new RuntimeException("Username cannot be longer than 15 characters");

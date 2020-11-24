@@ -3,7 +3,7 @@ package util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Locale;
 
 public class DateUtil {
@@ -22,5 +22,13 @@ public class DateUtil {
 
 	public static String parseDateToString(Date date) {
 		return dateFormat.format(date);
+	}
+
+	public static boolean checkAge(String birthday) {
+		Date today = new Date();
+		if (parseStringToDate(birthday).before(today)) {
+			return true;
+		}
+		return false;
 	}
 }
