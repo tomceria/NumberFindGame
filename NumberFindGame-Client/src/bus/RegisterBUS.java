@@ -41,7 +41,6 @@ public class RegisterBUS {
 			String birthday = dp.dateParse(tmpBirthday);
 
 			result = (boolean) GameMain.client.performOneTimeSocketRequest(this.hostname, this.netPort,
-					//new SocketRequest_AccessRegister(username, password, email, firstName, lastName));
 					new SocketRequest_AccessRegister(username, password, email, firstName, lastName, gender, birthday));
 		}
 

@@ -44,7 +44,6 @@ public class UpdateInfoBUS {
 				String birthday = dp.dateParse(tmpBirthday);
 				
 				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName, gender, birthday));
-				//GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName));
 
 				player.setEmail(email);
 				player.setFirstName(firstName);
