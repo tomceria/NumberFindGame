@@ -3,13 +3,8 @@ package cli;
 import Socket.GameServer;
 import Socket.Server;
 import util.EncryptionHelper;
-import util.NumberValidException;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 public class Main {
 	static Server server;

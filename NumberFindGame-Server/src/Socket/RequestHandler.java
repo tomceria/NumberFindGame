@@ -2,10 +2,9 @@ package Socket;
 
 import Socket.Request.*;
 import Socket.Response.SocketResponse;
-import bus.IdentityBUS;
-import dto.MatchPlayer;
-import dto.MatchPlayer_Server;
-import dto.PlayerDTO;
+import Socket.Response.SocketResponse_LeaderboardResult;
+import bus.*;
+import dto.*;
 
 public class RequestHandler {
     Thread requestHandleThread;
@@ -133,6 +132,20 @@ public class RequestHandler {
                             SocketRequest_GameQuit request = ((SocketRequest_GameQuit) requestRaw);
                             MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
                             matchPlayer.getGameBUS().req_quitGame(thisClientHandler, matchPlayer);
+                            break;
+                        }
+                        case LEADERBOARD_ALL: {
+                            SocketRequest_LeaderboardAll request = ((SocketRequest_LeaderboardAll) requestRaw);
+                            thisClientHandler.sendResponse(new SocketResponse_LeaderboardResult(
+                                    LeaderBoardBUS.req_getLeaderBoardResult(request)
+                            ));
+                            break;
+                        }
+                        case LEADERBOARD_USER: {
+                            SocketRequest_LeaderboardUser request = ((SocketRequest_LeaderboardUser) requestRaw);
+                            thisClientHandler.sendResponse(new SocketResponse_LeaderboardResult(
+                                    LeaderBoardBUS.req_getLeaderBoardUser(request)
+                            ));
                             break;
                         }
                     }

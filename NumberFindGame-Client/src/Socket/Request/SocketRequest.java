@@ -12,7 +12,9 @@ public class SocketRequest implements Serializable {
         DISCONNECT,
         GAMEROOM_STARTGAME,
         GAME_SUBMITLEVELNODE,
-        GAME_QUIT
+        GAME_QUIT,
+        LEADERBOARD_ALL,
+        LEADERBOARD_USER
     }
 
     Action action;
