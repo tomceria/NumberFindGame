@@ -6,12 +6,10 @@ import Socket.Request.SocketRequest_AccessRegister;
 
 import javax.swing.*;
 
-import org.jdatepicker.impl.JDatePickerImpl;
-
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 
-import util.dateParse;
+import util.DateUtil;
 
 public class RegisterBUS {
 	private String hostname;
@@ -36,12 +34,9 @@ public class RegisterBUS {
 		String lastName = this.viewBinder.txtLastName.getText();
 		String email = this.viewBinder.txtEmail.getText();
 		String gender = this.viewBinder.comboBox.getItemAt(this.viewBinder.comboBox.getSelectedIndex()).toString();
-		String tmpBirthday = this.viewBinder.datePicker.getJFormattedTextField().getText();
+        Date birthday = DateUtil.parseStringToDate(this.viewBinder.datePicker.getText());
 
-		if (RegisterValidate(username, password, password2, firstName, lastName, email, gender, tmpBirthday)) {
-			dateParse dp = new dateParse();
-			Date birthday = (Date) dp.dateParse(tmpBirthday);
-
+		if (RegisterValidate(username, password, password2, firstName, lastName, email, gender, birthday)) {
 			result = (boolean) GameMain.client.performOneTimeSocketRequest(this.hostname, this.netPort,
 					new SocketRequest_AccessRegister(username, password, email, firstName, lastName, gender, birthday));
 		}
@@ -52,9 +47,9 @@ public class RegisterBUS {
 	// Register Form Validate
 
 	public static boolean RegisterValidate(String username, String password, String password2, String firstName,
-			String lastName, String email, String gender, String birthday) {
+			String lastName, String email, String gender, Date birthday) {
 		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-		String fields[] = { username, password, password2, email, firstName, lastName, gender, birthday };
+		Object fields[] = { username, password, password2, email, firstName, lastName, gender, birthday };
 		String fieldsLabel[] = { "Username", "Password", "Confirm password", "Email", "First Name", "Last Name",
 				"Gender", "Birthday" };
 
@@ -90,7 +85,7 @@ public class RegisterBUS {
 		public JTextField txtLastName;
 		public JTextField txtEmail;
 		public JComboBox comboBox;
-		public JDatePickerImpl datePicker;
+		public JTextField datePicker;
 
 		public RegisterBUS_ViewBinder() {
 			super();

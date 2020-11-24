@@ -29,7 +29,7 @@ public class RegisterView {
 	private JTextField txtLastName;
 	private JTextField txtEmail;
 	private JComboBox comboBox = new JComboBox();
-	private JDatePickerImpl datePicker;
+	private JTextField datePicker;
 	// Others
 	private JButton btnSubmit = new JButton("Submit");
 	private JButton btnNavBack = new JButton("<< Back");
@@ -42,32 +42,6 @@ public class RegisterView {
 		registerViewSetup();
 		bindListeners();
 		initViewBinder();
-	}
-
-	public void test() {
-		JFrame frame = new JFrame("Number Find Game");
-
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-
-		// JDatePanelImpl datePanel = new JDatePanelImpl(model, null);
-		datePicker = new JDatePickerImpl(datePanel, new DateComponentFormatter());
-		SpringLayout springLayout = (SpringLayout) datePicker.getLayout();
-
-		// frame.getContentPane().add(datePicker);
-
-		JPanel panel = new JPanel();
-		springLayout.putConstraint(SpringLayout.NORTH, panel, 116, SpringLayout.SOUTH,
-				datePicker.getJFormattedTextField());
-		springLayout.putConstraint(SpringLayout.WEST, panel, 92, SpringLayout.WEST, datePicker);
-		// datePicker.add(panel);
-		panel.add(datePicker);
-		frame.getContentPane().add(panel);
-		frame.setVisible(true);
 	}
 
 	public void registerViewSetup() {
@@ -145,14 +119,9 @@ public class RegisterView {
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 		flowLayout.setVgap(3);
 
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-		datePicker = new JDatePickerImpl(datePanel, new DateComponentFormatter());
-		datePicker.getJFormattedTextField().setFont(new Font("Tahoma", Font.PLAIN, 17));
+		datePicker = new JTextField();
+		datePicker.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		datePicker.setColumns(10);
 		panel.add(datePicker);
 
 		btnSubmit.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -165,7 +134,7 @@ public class RegisterView {
 				txtFirstName.setText("");
 				txtLastName.setText("");
 				txtEmail.setText("");
-				datePicker.getJFormattedTextField().setText("");
+				datePicker.setText("");
 			}
 		});
 		btnReset.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -284,7 +253,7 @@ public class RegisterView {
 				txtFirstName.setText("");
 				txtLastName.setText("");
 				txtEmail.setText("");
-				datePicker.getJFormattedTextField().setText("");
+				datePicker.setText("");
 				ViewBUS.gotoLoginView();
 			}
 		});

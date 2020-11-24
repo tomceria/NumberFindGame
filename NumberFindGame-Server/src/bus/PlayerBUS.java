@@ -44,11 +44,6 @@ public class PlayerBUS {
         return true;
     }
     
-    /**
-     * 
-     * @param player
-     * @return
-     */
     public boolean changePassword(String username, String password) {
         // hash password
         password = BCrypt.hashpw(password, BCrypt.gensalt(12));

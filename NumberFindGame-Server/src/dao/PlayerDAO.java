@@ -8,14 +8,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PlayerDAO {
-	
+
 	/**
 	 * @param rs result set of the query
-	 * @return PlayerDTO 
+	 * @return PlayerDTO
 	 */
 	private PlayerDTO mapping(ResultSet rs) {
 		PlayerDTO player = new PlayerDTO();
-		
+
 		try {
 			player.setId(rs.getInt("id"));
 			player.setUsername(rs.getString("username"));
@@ -28,10 +28,10 @@ public class PlayerDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return player;
 	}
-	
+
 	/**
 	 * @return all players
 	 */
@@ -158,7 +158,7 @@ public class PlayerDAO {
 		conn.bind(order++, player.getEmail());
 		conn.bind(order++, player.getFirstName());
 		conn.bind(order++, player.getLastName());
-		conn.bind(order++, player.getBirthday().toString());
+		conn.bind(order++, new java.sql.Date(player.getBirthday().getTime()).toString());
 		conn.bind(order, player.getGender());
 
 		// execute update with prepare statement
@@ -166,7 +166,7 @@ public class PlayerDAO {
 
 		conn.Close();
 	}
-	
+
 	public void updateInfo(PlayerDTO player) {
 		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
 
@@ -174,7 +174,9 @@ public class PlayerDAO {
 		String query = "UPDATE players "
 					 + "SET first_name = ?,"
 					 + "last_name = ?,"
-					 + "email = ? "
+					 + "email = ?,"
+					 + "birthday = ?,"
+					 + "gender = ?"
 					 + "WHERE username = ?";
 
 		// prepare statement
@@ -182,10 +184,12 @@ public class PlayerDAO {
 
 		// bind values
 		int order = 1;
-		
+
 		conn.bind(order++, player.getFirstName());
 		conn.bind(order++, player.getLastName());
 		conn.bind(order++, player.getEmail());
+		conn.bind(order++, new java.sql.Date(player.getBirthday().getTime()).toString());
+		conn.bind(order++, player.getGender());
 		conn.bind(order, player.getUsername());
 
 		// execute update with prepare statement
@@ -193,7 +197,7 @@ public class PlayerDAO {
 
 		conn.Close();
 	}
-	
+
 	public void changePassword(String username, String password) {
 		MySqlDataAccessHelper conn = new MySqlDataAccessHelper();
 
@@ -206,7 +210,7 @@ public class PlayerDAO {
 
 		// bind values
 		int order = 1;
-		
+
 		conn.bind(order++, password);
 		conn.bind(order, username);
 

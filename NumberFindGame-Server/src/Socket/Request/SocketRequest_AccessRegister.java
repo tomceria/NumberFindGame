@@ -1,5 +1,7 @@
 package Socket.Request;
 
+import java.util.Date;
+
 public class SocketRequest_AccessRegister extends SocketRequest {
     public String username;
     public String password;
@@ -7,9 +9,9 @@ public class SocketRequest_AccessRegister extends SocketRequest {
     public String firstName;
     public String lastName;
     public String gender;
-    public String birthday;
+    public Date birthday;
 
-    public SocketRequest_AccessRegister(String username, String password, String email, String firstName, String lastName, String gender, String birthday) {
+    public SocketRequest_AccessRegister(String username, String password, String email, String firstName, String lastName, String gender, Date birthday) {
         super(Action.ACCESS_REGISTER, "Register request.");
         this.username = username;
         this.password = password;

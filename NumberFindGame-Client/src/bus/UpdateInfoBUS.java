@@ -4,19 +4,16 @@ import Common.ViewBinder;
 import Run.GameMain;
 import Socket.GameClient;
 import Socket.Request.SocketRequest_AccessChangePassword;
-import Socket.Request.SocketRequest_AccessRegister;
 import Socket.Request.SocketRequest_AccessUpdateInfo;
 import dto.MatchPlayer;
 import dto.PlayerDTO;
 import util.BCrypt;
-import util.dateParse;
+import util.DateUtil;
 
 import javax.swing.*;
 
-import org.jdatepicker.impl.JDatePickerImpl;
-
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 
 public class UpdateInfoBUS {
 	public UpdateInfoBUS_ViewBinder viewBinder;
@@ -37,13 +34,13 @@ public class UpdateInfoBUS {
 		String lastName = this.viewBinder.txtLastName.getText();
 		String email = this.viewBinder.txtEmail.getText();
 		String gender = this.viewBinder.comboBox.getItemAt(this.viewBinder.comboBox.getSelectedIndex()).toString();
-		String tmpBirthday = this.viewBinder.datePicker.getJFormattedTextField().getText();
+		String tmpBirthday = this.viewBinder.datePicker.getText();
 
 		if (UpdateValidate(firstName, lastName, email, gender, tmpBirthday)) {
 			try {
-				dateParse dp = new dateParse();
-				Date birthday = (Date) dp.dateParse(tmpBirthday);
-				
+				DateUtil dp = new DateUtil();
+				Date birthday = DateUtil.parseStringToDate(this.viewBinder.datePicker.getText());
+
 				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName, gender, birthday));
 
 				player.setEmail(email);
@@ -145,7 +142,7 @@ public class UpdateInfoBUS {
 		public JTextField txtLastName;
 		public JTextField txtEmail;
 		public JComboBox comboBox;
-		public JDatePickerImpl datePicker;
+		public JTextField datePicker;
 
 		public UpdateInfoBUS_ViewBinder() {
 			super();

@@ -20,6 +20,7 @@ import org.jdatepicker.impl.DateComponentFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import util.DateUtil;
 
 public class UpdateInfoView {
 
@@ -35,7 +36,7 @@ public class UpdateInfoView {
 	private JTextField txtLastName;
 	private JTextField txtEmail;
 	private JComboBox comboBox = new JComboBox();
-	private JDatePickerImpl datePicker;
+	private JTextField datePicker;
 	// Others
 	private JButton btnUpdate = new JButton("Update");
 	private JButton btnNavBack = new JButton("<< Back");
@@ -150,14 +151,9 @@ public class UpdateInfoView {
 		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 		flowLayout.setVgap(3);
 
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-		datePicker = new JDatePickerImpl(datePanel, new DateComponentFormatter());
-		datePicker.getJFormattedTextField().setFont(new Font("Tahoma", Font.PLAIN, 17));
+		datePicker = new JTextField();
+		datePicker.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		datePicker.setColumns(10);
 		panel.add(datePicker);
 
 		btnUpdate.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -289,6 +285,8 @@ public class UpdateInfoView {
 		txtFirstName.setText(player.getFirstName());
 		txtLastName.setText(player.getLastName());
 		txtEmail.setText(player.getEmail());
+		comboBox.setSelectedItem(player.getGender());
+		datePicker.setText(DateUtil.parseDateToString(player.getBirthday()));
 
 		btnNavBack.addActionListener(new ActionListener() {
 			@Override
@@ -302,7 +300,7 @@ public class UpdateInfoView {
 				txtOldPassword.setText("");
 				txtNewPassword.setText("");
 				txtNewPassword2.setText("");
-				datePicker.getJFormattedTextField().setText("");
+				datePicker.setText("");
 			}
 		});
 		btnUpdate.addActionListener(new ActionListener() {

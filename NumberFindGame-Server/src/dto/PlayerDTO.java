@@ -1,7 +1,7 @@
 package dto;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 public class PlayerDTO implements Serializable {
     private int id;
