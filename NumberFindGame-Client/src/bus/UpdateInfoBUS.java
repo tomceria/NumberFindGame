@@ -34,14 +34,13 @@ public class UpdateInfoBUS {
 		String lastName = this.viewBinder.txtLastName.getText();
 		String email = this.viewBinder.txtEmail.getText();
 		String gender = this.viewBinder.comboBox.getItemAt(this.viewBinder.comboBox.getSelectedIndex()).toString();
-		String tmpBirthday = this.viewBinder.datePicker.getText();
+		String tmpBirthday = this.viewBinder.txtBirthday.getText();
 
 		if (UpdateValidate(firstName, lastName, email, gender, tmpBirthday)) {
 			try {
-				DateUtil dp = new DateUtil();
-				Date birthday = DateUtil.parseStringToDate(this.viewBinder.datePicker.getText());
-
-				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName, gender, birthday));
+				Date birthday = DateUtil.parseStringToDate(tmpBirthday);
+				GameMain.client.sendRequest(
+						new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName, gender, birthday));
 
 				player.setEmail(email);
 				player.setFirstName(firstName);
@@ -90,6 +89,11 @@ public class UpdateInfoBUS {
 	public static boolean UpdateValidate(String firstName, String lastName, String email, String gender,
 			String birthday) {
 		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		String birthdayRegex = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)"
+				+ "(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|"
+				+ "-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579]"
+				+ "[26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])"
+				+ "(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
 		String fields[] = { email, firstName, lastName, gender, birthday };
 		String fieldsLabel[] = { "First Name", "Last Name", "Email", "Gender", "Birthday" };
 		for (int i = 0; i < fields.length; i++) {
@@ -102,13 +106,15 @@ public class UpdateInfoBUS {
 			throw new RuntimeException("Invalid email address");
 		}
 
+		if (birthday.matches(birthdayRegex)) {
+			throw new RuntimeException("Invalid Birthday");
+		}
+
 		return true;
 	}
 
 	// Change password form validate
 	public static boolean ChangePasswordValidate(String oldPassword, String newPassword, String newPassword2) {
-		// PlayerDTO player = ((GameClient)
-		// GameMain.client).getClientPlayer().getPlayer();
 		String fields[] = { oldPassword, newPassword, newPassword2 };
 		String fieldsLabel[] = { "Old Password", "New Password", "Confirm password" };
 		for (int i = 0; i < fields.length; i++) {
@@ -142,7 +148,7 @@ public class UpdateInfoBUS {
 		public JTextField txtLastName;
 		public JTextField txtEmail;
 		public JComboBox comboBox;
-		public JTextField datePicker;
+		public JTextField txtBirthday;
 
 		public UpdateInfoBUS_ViewBinder() {
 			super();

@@ -8,10 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
 
-import org.jdatepicker.impl.DateComponentFormatter;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -29,12 +25,12 @@ public class RegisterView {
 	private JTextField txtLastName;
 	private JTextField txtEmail;
 	private JComboBox comboBox = new JComboBox();
-	private JTextField datePicker;
 	// Others
 	private JButton btnSubmit = new JButton("Submit");
 	private JButton btnNavBack = new JButton("<< Back");
 	private JButton btnReset = new JButton("Reset");
 	private RegisterBUS registerBUS;
+	private JTextField txtBirthday;
 
 	public RegisterView(RegisterBUS registerBUS) {
 		this.registerBUS = registerBUS;
@@ -115,15 +111,6 @@ public class RegisterView {
 		lblBirthday.setForeground(Color.WHITE);
 		lblBirthday.setFont(new Font("Tahoma", Font.BOLD, 15));
 
-		JPanel panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setVgap(3);
-
-		datePicker = new JTextField();
-		datePicker.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		datePicker.setColumns(10);
-		panel.add(datePicker);
-
 		btnSubmit.setFont(new Font("Tahoma", Font.BOLD, 16));
 
 		btnReset.addActionListener(new ActionListener() {
@@ -134,111 +121,131 @@ public class RegisterView {
 				txtFirstName.setText("");
 				txtLastName.setText("");
 				txtEmail.setText("");
-				datePicker.setText("");
+				txtBirthday.setText("");
 			}
 		});
 		btnReset.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		txtBirthday = new JTextField();
+		txtBirthday.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		txtBirthday.setColumns(10);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-						.createSequentialGroup().addGap(159)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(192).addComponent(lblTitle,
-										GroupLayout.PREFERRED_SIZE, 322, GroupLayout.PREFERRED_SIZE))
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(159)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 76,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(68)
-										.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, 185,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(65).addComponent(lblFirstName).addGap(17).addComponent(txtFirstName,
-												GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))
+									.addGap(192)
+									.addComponent(lblTitle, GroupLayout.PREFERRED_SIZE, 322, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_contentPane.createSequentialGroup()
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblEmail)
-														.addGap(102)
-														.addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 185,
-																GroupLayout.PREFERRED_SIZE)
-														.addGap(65).addComponent(lblLastName,
-																GroupLayout.PREFERRED_SIZE, 81,
-																GroupLayout.PREFERRED_SIZE))
+									.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE)
+									.addGap(65)
+									.addComponent(lblFirstName)
+									.addGap(17)
+									.addComponent(txtFirstName, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+										.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+											.addComponent(lblEmail)
+											.addGap(102)
+											.addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE)
+											.addGap(65)
+											.addComponent(lblLastName, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
+										.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+											.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+											.addGap(70)
+											.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE)
+											.addGap(65)
+											.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE))
+										.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+												.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
 												.addGroup(gl_contentPane.createSequentialGroup()
-														.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 74,
-																GroupLayout.PREFERRED_SIZE)
-														.addGap(70)
-														.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, 185,
-																GroupLayout.PREFERRED_SIZE)
-														.addGap(65).addComponent(lblGender, GroupLayout.PREFERRED_SIZE,
-																54, GroupLayout.PREFERRED_SIZE))
-												.addGroup(gl_contentPane.createSequentialGroup()
-														.addComponent(lblPassword2, GroupLayout.PREFERRED_SIZE, 139,
-																GroupLayout.PREFERRED_SIZE)
-														.addGap(5)
-														.addComponent(txtPassword2, GroupLayout.PREFERRED_SIZE, 185,
-																GroupLayout.PREFERRED_SIZE)
-														.addGap(65).addComponent(lblBirthday)))
-										.addGap(19)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-												.addComponent(txtLastName, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(panel, GroupLayout.PREFERRED_SIZE,
-														GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(228)
-										.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 91,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(65).addComponent(btnReset, GroupLayout.PREFERRED_SIZE, 95,
-												GroupLayout.PREFERRED_SIZE))))
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addComponent(btnNavBack)))
-				.addContainerGap(159, Short.MAX_VALUE)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap().addComponent(btnNavBack).addGap(222)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup().addGroup(gl_contentPane
-								.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(4).addComponent(lblUsername))
-								.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(4).addComponent(lblFirstName))
-								.addComponent(txtFirstName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE))
-								.addGap(5)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(
-												gl_contentPane.createSequentialGroup().addGap(4).addComponent(lblEmail))
-										.addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_contentPane.createSequentialGroup().addGap(4)
-												.addComponent(lblLastName))
-										.addComponent(txtLastName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)))
-						.addGroup(Alignment.TRAILING,
-								gl_contentPane.createSequentialGroup().addComponent(lblTitle).addGap(124)))
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-						.createSequentialGroup().addGap(5)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(5).addComponent(lblPassword))
-								.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(5).addComponent(lblGender)))
-						.addGap(7)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(6).addComponent(lblPassword2))
-								.addComponent(txtPassword2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_contentPane.createSequentialGroup().addGap(6).addComponent(lblBirthday)))
-						.addGap(45)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addComponent(btnSubmit)
+													.addComponent(lblPassword2, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
+													.addGap(5)
+													.addComponent(txtPassword2, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE)))
+											.addGap(65)
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+												.addComponent(btnReset, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(lblBirthday))))
+									.addGap(8)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(txtLastName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+										.addComponent(comboBox, Alignment.LEADING, 0, 212, Short.MAX_VALUE)
+										.addComponent(txtBirthday, Alignment.LEADING)))))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnNavBack)))
+					.addContainerGap(159, Short.MAX_VALUE))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnNavBack)
+					.addGap(222)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(4)
+									.addComponent(lblFirstName))
+								.addComponent(txtFirstName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(4)
+									.addComponent(lblUsername)))
+							.addGap(5)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(4)
+									.addComponent(lblEmail))
+								.addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(4)
+									.addComponent(lblLastName))
+								.addComponent(txtLastName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblTitle)
+							.addGap(124)))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(5)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(5)
+											.addComponent(lblPassword))
+										.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(10)
+									.addComponent(lblGender)))
+							.addGap(7)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(6)
+									.addComponent(lblPassword2))
+								.addComponent(txtPassword2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(6)
+									.addComponent(lblBirthday)))
+							.addGap(45)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnSubmit)
 								.addComponent(btnReset)))
-						.addGroup(gl_contentPane.createSequentialGroup().addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(panel,
-										GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)))
-				.addGap(356)));
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtBirthday, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)))
+					.addGap(356))
+		);
 		contentPane.setLayout(gl_contentPane);
 
 	}
@@ -253,7 +260,7 @@ public class RegisterView {
 				txtFirstName.setText("");
 				txtLastName.setText("");
 				txtEmail.setText("");
-				datePicker.setText("");
+				txtBirthday.setText("");
 				ViewBUS.gotoLoginView();
 			}
 		});
@@ -286,11 +293,10 @@ public class RegisterView {
 		RegisterView.this.registerBUS.viewBinder.txtLastName = txtLastName;
 		RegisterView.this.registerBUS.viewBinder.txtEmail = txtEmail;
 		RegisterView.this.registerBUS.viewBinder.comboBox = comboBox;
-		RegisterView.this.registerBUS.viewBinder.datePicker = datePicker;
+		RegisterView.this.registerBUS.viewBinder.txtBirthday = txtBirthday;
 	}
 
 	public JPanel getContentPane() {
 		return contentPane;
 	}
-
 }

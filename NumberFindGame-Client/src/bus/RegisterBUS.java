@@ -34,9 +34,10 @@ public class RegisterBUS {
 		String lastName = this.viewBinder.txtLastName.getText();
 		String email = this.viewBinder.txtEmail.getText();
 		String gender = this.viewBinder.comboBox.getItemAt(this.viewBinder.comboBox.getSelectedIndex()).toString();
-        Date birthday = DateUtil.parseStringToDate(this.viewBinder.datePicker.getText());
+		String tmpBirthday = this.viewBinder.txtBirthday.getText();
 
-		if (RegisterValidate(username, password, password2, firstName, lastName, email, gender, birthday)) {
+		if (RegisterValidate(username, password, password2, firstName, lastName, email, gender, tmpBirthday)) {
+			Date birthday = DateUtil.parseStringToDate(tmpBirthday);
 			result = (boolean) GameMain.client.performOneTimeSocketRequest(this.hostname, this.netPort,
 					new SocketRequest_AccessRegister(username, password, email, firstName, lastName, gender, birthday));
 		}
@@ -47,8 +48,13 @@ public class RegisterBUS {
 	// Register Form Validate
 
 	public static boolean RegisterValidate(String username, String password, String password2, String firstName,
-			String lastName, String email, String gender, Date birthday) {
+			String lastName, String email, String gender, String birthday) {
 		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		String birthdayRegex = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)"
+				+ "(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|"
+				+ "-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579]"
+				+ "[26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])"
+				+ "(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
 		Object fields[] = { username, password, password2, email, firstName, lastName, gender, birthday };
 		String fieldsLabel[] = { "Username", "Password", "Confirm password", "Email", "First Name", "Last Name",
 				"Gender", "Birthday" };
@@ -57,6 +63,10 @@ public class RegisterBUS {
 			if (fields[i].equals("")) {
 				throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
 			}
+		}
+
+		if (!birthday.matches(birthdayRegex)) {
+			throw new RuntimeException("Invalid Birthday");
 		}
 
 		if (username.length() > 15) {
@@ -86,6 +96,7 @@ public class RegisterBUS {
 		public JTextField txtEmail;
 		public JComboBox comboBox;
 		public JTextField datePicker;
+		public JTextField txtBirthday;
 
 		public RegisterBUS_ViewBinder() {
 			super();

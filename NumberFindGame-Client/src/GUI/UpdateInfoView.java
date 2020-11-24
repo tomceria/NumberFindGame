@@ -12,14 +12,9 @@ import Socket.GameClient;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Properties;
-
+import java.sql.Date;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import org.jdatepicker.impl.DateComponentFormatter;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 import util.DateUtil;
 
 public class UpdateInfoView {
@@ -36,7 +31,7 @@ public class UpdateInfoView {
 	private JTextField txtLastName;
 	private JTextField txtEmail;
 	private JComboBox comboBox = new JComboBox();
-	private JTextField datePicker;
+	private JTextField txtBirthday;
 	// Others
 	private JButton btnUpdate = new JButton("Update");
 	private JButton btnNavBack = new JButton("<< Back");
@@ -147,84 +142,70 @@ public class UpdateInfoView {
 		lblBirthday.setForeground(Color.WHITE);
 		lblBirthday.setFont(new Font("Tahoma", Font.BOLD, 15));
 
-		JPanel panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setVgap(3);
-
-		datePicker = new JTextField();
-		datePicker.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		datePicker.setColumns(10);
-		panel.add(datePicker);
-
 		btnUpdate.setFont(new Font("Tahoma", Font.BOLD, 16));
+
+		txtBirthday = new JTextField();
+		txtBirthday.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		txtBirthday.setColumns(10);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane
-				.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-										.createSequentialGroup().addGap(
-												91)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 76,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblFirstName)
-												.addComponent(lblLastName, GroupLayout.PREFERRED_SIZE, 81,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblEmail)
-												.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 54,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblBirthday))
-										.addGap(61)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtFirstName, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtLastName, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(panel, GroupLayout.PREFERRED_SIZE,
-														GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addGroup(gl_contentPane
-														.createSequentialGroup().addGap(121).addComponent(btnUpdate)))
-										.addGap(64)
-										.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(62)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(lblOldPassword, GroupLayout.PREFERRED_SIZE, 105,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblNewPassword, GroupLayout.PREFERRED_SIZE, 113,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblNewPassword2, GroupLayout.PREFERRED_SIZE, 139,
-														GroupLayout.PREFERRED_SIZE))
-										.addGap(5)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(txtOldPassword, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtNewPassword, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(txtNewPassword2, GroupLayout.PREFERRED_SIZE, 212,
-														GroupLayout.PREFERRED_SIZE)
-												.addGroup(gl_contentPane.createSequentialGroup().addGap(54)
-														.addComponent(btnChangePassword, GroupLayout.PREFERRED_SIZE, 91,
-																GroupLayout.PREFERRED_SIZE))))
-										.addGroup(gl_contentPane.createSequentialGroup().addGap(385).addComponent(
-												lblTitle, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-												.addComponent(btnNavBack)))
-								.addContainerGap(93, Short.MAX_VALUE))
-						.addGroup(Alignment.TRAILING,
-								gl_contentPane.createSequentialGroup().addGap(149)
-										.addComponent(lblAccountInfo, GroupLayout.PREFERRED_SIZE, 247,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
-										.addComponent(lblChangePassword, GroupLayout.PREFERRED_SIZE, 212,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(164)));
+		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
+				.createSequentialGroup()
+				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
+						.createSequentialGroup().addGap(91)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(lblBirthday, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblGender, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblEmail, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblLastName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblFirstName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 113,
+												Short.MAX_VALUE)))
+						.addGap(18)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+								.addComponent(txtFirstName, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+								.addComponent(txtLastName, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+								.addComponent(txtEmail, GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+								.addComponent(comboBox, 0, 212, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createSequentialGroup().addGap(121).addComponent(btnUpdate))
+								.addComponent(txtBirthday))
+						.addGap(64)
+						.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)
+						.addGap(62)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewPassword2, GroupLayout.PREFERRED_SIZE, 139,
+										GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(lblNewPassword, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblOldPassword, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 126,
+												Short.MAX_VALUE)))
+						.addGap(5)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtOldPassword, GroupLayout.PREFERRED_SIZE, 212,
+										GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtNewPassword, GroupLayout.PREFERRED_SIZE, 212,
+										GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtNewPassword2, GroupLayout.PREFERRED_SIZE, 212,
+										GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createSequentialGroup().addGap(54).addComponent(
+										btnChangePassword, GroupLayout.PREFERRED_SIZE, 91,
+										GroupLayout.PREFERRED_SIZE))))
+						.addGroup(gl_contentPane.createSequentialGroup().addGap(385).addComponent(lblTitle,
+								GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addComponent(btnNavBack)))
+				.addContainerGap(93, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup().addGap(149)
+						.addComponent(lblAccountInfo, GroupLayout.PREFERRED_SIZE, 247, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+						.addComponent(lblChangePassword, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)
+						.addGap(164)));
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
 				.createSequentialGroup().addContainerGap().addComponent(btnNavBack).addGap(148).addComponent(lblTitle)
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
@@ -254,10 +235,10 @@ public class UpdateInfoView {
 														.addGap(5)
 														.addComponent(comboBox, GroupLayout.PREFERRED_SIZE,
 																GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addGap(5)
-														.addComponent(panel, GroupLayout.PREFERRED_SIZE,
+														.addPreferredGap(ComponentPlacement.RELATED)
+														.addComponent(txtBirthday, GroupLayout.PREFERRED_SIZE,
 																GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-														.addGap(35).addComponent(btnUpdate))))
+														.addGap(13).addComponent(btnUpdate))))
 								.addGroup(gl_contentPane.createSequentialGroup().addGap(32).addGroup(gl_contentPane
 										.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup().addGap(8)
@@ -286,7 +267,7 @@ public class UpdateInfoView {
 		txtLastName.setText(player.getLastName());
 		txtEmail.setText(player.getEmail());
 		comboBox.setSelectedItem(player.getGender());
-		datePicker.setText(DateUtil.parseDateToString(player.getBirthday()));
+		txtBirthday.setText(DateUtil.parseDateToString((Date) player.getBirthday()));
 
 		btnNavBack.addActionListener(new ActionListener() {
 			@Override
@@ -300,7 +281,7 @@ public class UpdateInfoView {
 				txtOldPassword.setText("");
 				txtNewPassword.setText("");
 				txtNewPassword2.setText("");
-				datePicker.setText("");
+				txtBirthday.setText("");
 			}
 		});
 		btnUpdate.addActionListener(new ActionListener() {
@@ -338,7 +319,7 @@ public class UpdateInfoView {
 		UpdateInfoView.this.updateInfoBUS.viewBinder.txtLastName = txtLastName;
 		UpdateInfoView.this.updateInfoBUS.viewBinder.txtEmail = txtEmail;
 		UpdateInfoView.this.updateInfoBUS.viewBinder.comboBox = comboBox;
-		UpdateInfoView.this.updateInfoBUS.viewBinder.datePicker = datePicker;
+		UpdateInfoView.this.updateInfoBUS.viewBinder.txtBirthday = txtBirthday;
 	}
 
 	public JPanel getContentPane() {
