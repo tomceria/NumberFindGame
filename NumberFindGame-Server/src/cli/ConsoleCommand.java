@@ -11,7 +11,9 @@ import java.util.UUID;
 import Socket.ClientHandler;
 import Socket.Server;
 import Socket.GameServer;
+import bus.LeaderBoardBUS;
 import bus.PlayerBUS;
+import dto.LeaderBoard;
 import dto.MatchPlayer;
 import dto.MatchConfig;
 import dto.PlayerDTO;
@@ -124,7 +126,49 @@ public class ConsoleCommand {
 	 * Method or 'rank' commands
 	 */
 	public void rank() {
+		if (value.equals("")) {
+			if (!option.equals("show") && !option.equals("")) {
+				System.out.println("Error. Value can not be empty");
+
+				return;
+			}
+		}
+
+		LeaderBoardBUS leaderBoardBUS = new LeaderBoardBUS();
+		String[] table = new String[] { "Rank", "Player", "Ranking Point", "Win Rate", "Total matches" };
+		List<String[]> tableList = new ArrayList<>();
+		tableList.add(table);
+
 		switch (option) {
+		    case "top": {
+				try {
+					int val = Integer.parseInt(value);
+					ArrayList<LeaderBoard> leaderBoards = leaderBoardBUS.getLeaderBoard(1, val);
+					for (LeaderBoard lB : leaderBoards) {
+						table = new String[] {
+								lB.getRanking()+"", lB.getUsername(), lB.getSumRP()+"", lB.getWinrate()+"", lB.getTotalMatches()+""
+						};
+						tableList.add(table);
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("Error. Value must be integer");
+					return;
+				}
+				tableDisplay.tableDisplay(tableList);
+		    	break;
+			}
+			case "user": {
+				LeaderBoard lB = leaderBoardBUS.getUserRanking(value);
+				if (lB != null) {
+					tableList.add(
+							new String[] {
+									lB.getRanking()+"", lB.getUsername(), lB.getSumRP()+"", lB.getWinrate()+"", lB.getTotalMatches()+""
+							}
+					);
+					tableDisplay.tableDisplay(tableList);
+				}
+				break;
+			}
 			default: {
 				System.out.println("Command not found. Commands are case-sensitive");
 				showCommand("rank");
