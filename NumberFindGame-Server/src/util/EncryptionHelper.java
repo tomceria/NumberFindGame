@@ -43,7 +43,7 @@ public class EncryptionHelper {
             SecureRandom sr = new SecureRandom();
             sr.setSeed(159874);
             // Thuật toán phát sinh khóa - Rivest Shamir Adleman (RSA)
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("AES");
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
             kpg.initialize(2048, sr);
             // Phát sinh cặp khóa
             KeyPair kp = kpg.genKeyPair();
@@ -52,7 +52,7 @@ public class EncryptionHelper {
             // PrivateKey
             ServerPrivateKey = kp.getPrivate();
             // sử dụng server private key để giải mã
-            DCIPHER = Cipher.getInstance("AES");
+            DCIPHER = Cipher.getInstance("RSA");
             DCIPHER.init(Cipher.DECRYPT_MODE, ServerPrivateKey);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ignored) {
 
