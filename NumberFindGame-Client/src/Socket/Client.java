@@ -7,10 +7,7 @@ import Socket.Request.SocketRequest;
 import Socket.Request.SocketRequest_AccessLogin;
 import Socket.Response.SocketResponse;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.SealedObject;
+import javax.crypto.*;
 import javax.security.sasl.AuthenticationException;
 import java.io.EOFException;
 import java.io.IOException;
@@ -28,7 +25,9 @@ public class Client {
         this.start(hostname, port);
 
         SocketRequest_AccessLogin authenticationRequest = new SocketRequest_AccessLogin(username, password);
-        authenticationRequest.publicKey = EncryptionHelper.ClientPublicKey;
+        // mã hóa secret key bằng server public key
+        /* TUI ĐANG BÍ CHỖ NÀY */
+        authenticationRequest.encryptedSecretKey = encryptSecretKey();
         sendRequest(authenticationRequest);                                          // Gửi thông tin đăng nhập để server duyệt
         SocketResponse authenticationResponse = receiveResponse();
         System.out.println("SERVER AUTH MESSAGE: " + authenticationResponse.getMessage());
@@ -94,8 +93,9 @@ public class Client {
         }
 
         try {
-//            Client.output.writeObject(sealObject(request));
-            Client.output.writeObject(encryptObject(request));
+            // mã hóa dữ liệu bằng client secret key trước khi gửi
+            Client.output.writeObject(sealObject(request));
+//            Client.output.writeObject(encryptObject(request));
             Client.output.flush();
         } catch (IOException | IllegalBlockSizeException e) {
             e.printStackTrace();
@@ -110,8 +110,8 @@ public class Client {
         SocketResponse response = null;
         try {
 //            response = (SocketResponse) Client.input.readObject();
-//            response = unsealObject(Client.input.readObject());
-            response = decryptObject(Client.input.readObject());
+            response = unsealObject(Client.input.readObject());
+//            response = decryptObject(Client.input.readObject());
         } catch (NullPointerException | EOFException e) {
             // Disconnect
             close();
@@ -119,6 +119,17 @@ public class Client {
             e.printStackTrace();
         }
         return response;
+    }
+
+    // mã hóa secret key bằng server public key
+    protected byte[] encryptSecretKey() {
+        byte[] encryptedKey = null;
+        try {
+            encryptedKey = EncryptionHelper.ServerPublicKeyCipher.doFinal(EncryptionHelper.ClientSecretKey.getEncoded());
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return encryptedKey;
     }
 
     // mã hóa request bằng server public key

@@ -30,6 +30,7 @@ public class ClientHandler {
 
 	EncryptionHelper encryptionHelper;
 	PublicKey publicKey;
+	SecretKey clientSecretKey;
 
 	public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
 		this.id = id;

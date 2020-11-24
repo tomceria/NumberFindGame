@@ -9,8 +9,12 @@ public class ClientMain {
 
     public static void main (String[] args) {
         EncryptionHelper encryptionHelper = new EncryptionHelper();
-        encryptionHelper.generateKeysForClient();
+        // tạo server public key
         encryptionHelper.generateServerPublicKey();
+        // tạo client public và private key
+//        encryptionHelper.generateKeysForClient();
+        // tạo client secret key
+        encryptionHelper.generateSecretKeyAndInitCipher();
 
         GameMain.init();
     }
