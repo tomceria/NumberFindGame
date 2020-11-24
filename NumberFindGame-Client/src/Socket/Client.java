@@ -8,6 +8,7 @@ import Socket.Request.SocketRequest_AccessLogin;
 import Socket.Response.SocketResponse;
 
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SealedObject;
 import javax.security.sasl.AuthenticationException;
@@ -92,7 +93,8 @@ public class Client {
         }
 
         try {
-            Client.output.writeObject(sealObject(request));
+//            Client.output.writeObject(sealObject(request));
+            Client.output.writeObject(encryptObject(request));
             Client.output.flush();
         } catch (IOException | IllegalBlockSizeException e) {
             e.printStackTrace();
@@ -107,7 +109,8 @@ public class Client {
         SocketResponse response = null;
         try {
 //            response = (SocketResponse) Client.input.readObject();
-            response = unsealObject(Client.input.readObject());
+//            response = unsealObject(Client.input.readObject());
+            response = decryptObject(Client.input.readObject());
         } catch (NullPointerException | EOFException e) {
             // Disconnect
             close();
@@ -115,6 +118,20 @@ public class Client {
             e.printStackTrace();
         }
         return response;
+    }
+
+    // mã hóa request bằng server public key
+    protected SealedObject encryptObject(Object o) throws IOException, IllegalBlockSizeException {
+        ISecretObject secretObject = new SecretObjectImpl((SocketRequest) o);
+        SealedObject so = new SealedObject(secretObject, EncryptionHelper.CIPHER);
+        return so;
+    }
+
+    // giải mã response bằng client private key
+    protected SocketResponse decryptObject(Object o) throws IOException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
+        SealedObject s = (SealedObject) o;
+        ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);
+        return decryptedSecretObject.getSecretResponse();
     }
 
     // mã hóa request trước khi gửi đi

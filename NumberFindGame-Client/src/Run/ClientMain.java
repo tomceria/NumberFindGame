@@ -9,8 +9,8 @@ public class ClientMain {
 
     public static void main (String[] args) {
         EncryptionHelper encryptionHelper = new EncryptionHelper();
-        encryptionHelper.createKey(Cipher.ENCRYPT_MODE);
-        encryptionHelper.createKey(Cipher.DECRYPT_MODE);
+        encryptionHelper.generateKeysForClient();
+        encryptionHelper.generateServerPublicKey();
 
         GameMain.init();
     }
