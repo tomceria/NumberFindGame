@@ -115,21 +115,16 @@ public class GameRoomBUS {
          */
         this.gameRoom.getPlayerClients().remove(playerClient.getId());
 
-        /**
-         * 2. Đá playerClient khỏi Server
-         */
-        getServer().getClientManager().getClientConnections().remove(playerClient.getId());
-
         if (this.gameRoom.getPlayerClients().size() > 0) {
             /**
-             * 3. MAIN FLOW: THÔNG BÁO cho các người chơi trong phòng về thông tin phòng mới cập nhật
+             * 2. MAIN FLOW: THÔNG BÁO cho các người chơi trong phòng về thông tin phòng mới cập nhật
              */
             MatchPlayer matchPlayer = (MatchPlayer) playerClient.getClientIdentifier();
             broadcastResponseToRoom(new SocketResponse(SUCCESS, MSG, String.format("%s left the room.", matchPlayer.getPlayer().getUsername())));
             this.notifyUpdateGameRoomProps();
         } else if (this.gameRoom.getGame() != null) {
             /**
-             * 3. ALT FLOW: Nếu phòng không còn ai nữa. Kết thúc trận đấu ngay lập tức và KHÔNG lưu lại kết quả. Xoá phòng
+             * 2. ALT FLOW: Nếu phòng không còn ai nữa. Kết thúc trận đấu ngay lập tức và KHÔNG lưu lại kết quả. Xoá phòng
              */
             ((Game_Server) this.gameRoom.getGame()).getGameBUS().getGameTimer().cancel();
             this.gameRoom.setGame(null);
@@ -191,6 +186,15 @@ public class GameRoomBUS {
         JsonHelper jsonHelper = new JsonHelper();
         MatchConfig matchConfig = jsonHelper.readConfig();
         return matchConfig;
+    }
+
+    public void req_quitGame(ClientHandler playerClient, MatchPlayer_Server sendingPlayer) {
+        sendingPlayer.getGameRoomBUS().leaveRoom(playerClient);
+        this.getServer().getGameServerBUS().quitGame(
+                playerClient,
+                SocketResponse.Status.SUCCESS,
+                "You have quit the game."
+        );
     }
 
     // Privates

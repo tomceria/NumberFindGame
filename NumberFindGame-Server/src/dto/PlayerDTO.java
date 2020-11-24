@@ -1,6 +1,7 @@
 package dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class PlayerDTO implements Serializable {
     private int id;
@@ -9,6 +10,9 @@ public class PlayerDTO implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
+    private Date birthday;
+    private String gender;
+
     public PlayerDTO() {
     }
 
@@ -18,6 +22,32 @@ public class PlayerDTO implements Serializable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public PlayerDTO(String username, String password, String email, String firstName, String lastName, Date birthday, String gender) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.gender = gender;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     /**

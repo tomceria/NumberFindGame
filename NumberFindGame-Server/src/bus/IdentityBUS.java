@@ -76,7 +76,7 @@ public class IdentityBUS {
 		}
 
 		PlayerDTO player = new PlayerDTO(request.username, request.password, request.email, request.firstName,
-				request.lastName);
+				request.lastName, request.birthday, request.gender);
 
 		boolean result = playerBUS.register(player);
 
@@ -87,7 +87,7 @@ public class IdentityBUS {
 		PlayerBUS playerBus = new PlayerBUS();
 		
 		PlayerDTO newPlayerInfo = new PlayerDTO(request.username, request.password, request.email, request.firstName,
-				request.lastName);
+				request.lastName, request.birthday, request.gender);
 
 		boolean result = playerBUS.updateInfo(newPlayerInfo);
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2020 at 06:21 PM
+-- Generation Time: Nov 23, 2020 at 02:58 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -97,17 +97,19 @@ CREATE TABLE `players` (
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) DEFAULT NULL
+  `last_name` varchar(255) DEFAULT NULL,
+  `birthday` date NOT NULL DEFAULT current_timestamp(),
+  `gender` varchar(255) NOT NULL DEFAULT 'Male'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `players`
 --
 
-INSERT INTO `players` (`id`, `username`, `password`, `email`, `first_name`, `last_name`) VALUES
-(1, 'saidan00', '$2a$12$t16ofQxH1IaJIQMwZs2/muJqNCeqNEau7jUpNNU8kiA9sE2l0fBn.', 'jaysgh94@email.com', 'Huy', 'Võ'),
-(3, 'supersaidan00', '$2a$12$t16ofQxH1IaJIQMwZs2/muJqNCeqNEau7jUpNNU8kiA9sE2l0fBn.', 'jaysgh96@email.com', 'Huy', 'Võ'),
-(4, 'an00', '$2a$12$DWka38qjW1JT9GZLakkANOqjhZ3WYjAd3b.c6700gr4F64Mw0WBc.', 'an00@gmail.com', 'An', 'Thuy');
+INSERT INTO `players` (`id`, `username`, `password`, `email`, `first_name`, `last_name`, `birthday`, `gender`) VALUES
+(1, 'saidan00', '$2a$12$t16ofQxH1IaJIQMwZs2/muJqNCeqNEau7jUpNNU8kiA9sE2l0fBn.', 'jaysgh94@email.com', 'Huy', 'Võ', '2020-11-23', 'Male'),
+(3, 'supersaidan00', '$2a$12$t16ofQxH1IaJIQMwZs2/muJqNCeqNEau7jUpNNU8kiA9sE2l0fBn.', 'jaysgh96@email.com', 'Huy', 'Võ', '2020-11-23', 'Male'),
+(4, 'an00', '$2a$12$DWka38qjW1JT9GZLakkANOqjhZ3WYjAd3b.c6700gr4F64Mw0WBc.', 'an00@gmail.com', 'An', 'Thuy', '2020-11-23', 'Male');
 
 -- --------------------------------------------------------
 

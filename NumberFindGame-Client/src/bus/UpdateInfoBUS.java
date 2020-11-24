@@ -4,14 +4,16 @@ import Common.ViewBinder;
 import Run.GameMain;
 import Socket.GameClient;
 import Socket.Request.SocketRequest_AccessChangePassword;
-import Socket.Request.SocketRequest_AccessRegister;
 import Socket.Request.SocketRequest_AccessUpdateInfo;
 import dto.MatchPlayer;
 import dto.PlayerDTO;
 import util.BCrypt;
+import util.DateUtil;
 
 import javax.swing.*;
+
 import java.io.IOException;
+import java.util.Date;
 
 public class UpdateInfoBUS {
 	public UpdateInfoBUS_ViewBinder viewBinder;
@@ -31,14 +33,20 @@ public class UpdateInfoBUS {
 		String firstName = this.viewBinder.txtFirstName.getText();
 		String lastName = this.viewBinder.txtLastName.getText();
 		String email = this.viewBinder.txtEmail.getText();
+		String gender = this.viewBinder.comboBox.getItemAt(this.viewBinder.comboBox.getSelectedIndex()).toString();
+		String tmpBirthday = this.viewBinder.txtBirthday.getText();
 
-		if (UpdateValidate(firstName, lastName, email)) {
+		if (UpdateValidate(firstName, lastName, email, gender, tmpBirthday)) {
 			try {
-				GameMain.client.sendRequest(new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName));
+				Date birthday = DateUtil.parseStringToDate(tmpBirthday);
+				GameMain.client.sendRequest(
+						new SocketRequest_AccessUpdateInfo(username, email, firstName, lastName, gender, birthday));
 
 				player.setEmail(email);
 				player.setFirstName(firstName);
 				player.setLastName(lastName);
+				player.setGender(gender);
+				player.setBirthday(birthday);
 				matchPlayer.setPlayer(player);
 
 				result = true;
@@ -78,10 +86,16 @@ public class UpdateInfoBUS {
 
 	// Update info Form Validate
 
-	public static boolean UpdateValidate(String firstName, String lastName, String email) {
+	public static boolean UpdateValidate(String firstName, String lastName, String email, String gender,
+			String birthday) {
 		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-		String fields[] = { email, firstName, lastName };
-		String fieldsLabel[] = { "First Name", "Last Name", "Email" };
+		String birthdayRegex = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)"
+				+ "(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|"
+				+ "-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579]"
+				+ "[26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])"
+				+ "(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
+		String fields[] = { email, firstName, lastName, gender, birthday };
+		String fieldsLabel[] = { "First Name", "Last Name", "Email", "Gender", "Birthday" };
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].equals("")) {
 				throw new RuntimeException(fieldsLabel[i] + " cannot be empty");
@@ -92,13 +106,21 @@ public class UpdateInfoBUS {
 			throw new RuntimeException("Invalid email address");
 		}
 
+		if (birthday.matches(birthdayRegex)) {
+			throw new RuntimeException("Invalid Birthday");
+		}
+
+		if (birthday.matches(birthdayRegex)) {
+			if (!DateUtil.checkAge(birthday)) {
+				throw new RuntimeException("Invalid Birthday");
+			}
+		}
+
 		return true;
 	}
 
 	// Change password form validate
 	public static boolean ChangePasswordValidate(String oldPassword, String newPassword, String newPassword2) {
-		// PlayerDTO player = ((GameClient)
-		// GameMain.client).getClientPlayer().getPlayer();
 		String fields[] = { oldPassword, newPassword, newPassword2 };
 		String fieldsLabel[] = { "Old Password", "New Password", "Confirm password" };
 		for (int i = 0; i < fields.length; i++) {
@@ -131,6 +153,8 @@ public class UpdateInfoBUS {
 		public JTextField txtFirstName;
 		public JTextField txtLastName;
 		public JTextField txtEmail;
+		public JComboBox comboBox;
+		public JTextField txtBirthday;
 
 		public UpdateInfoBUS_ViewBinder() {
 			super();
