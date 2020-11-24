@@ -193,8 +193,10 @@ public class GameBUS {
         }
 
         // lấy % số tiếp theo từ mảng vị trí, gán mutation = BLINDING
-        for (int i = (int) luckyNumbers; i < luckyNumbers + blindingNumbers; i++) {
-            level.get(indexArr.get(i)).setMutation(LevelNode.Mutation.BLINDING);
+        if (luckyNumbers + blindingNumbers < levelSize) {
+            for (int i = (int) luckyNumbers; i < luckyNumbers + blindingNumbers; i++) {
+                level.get(indexArr.get(i)).setMutation(LevelNode.Mutation.BLINDING);
+            }
         }
     }
 
