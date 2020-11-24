@@ -89,14 +89,15 @@ public class GameBUS {
          * KHÔNG xoá Player khỏi Game
          */
         /**
-         * Trường hợp nếu Game được khởi tạo với GameRoom (common) => xoá player khỏi GameRoom
+         * Trường hợp nếu Game được khởi tạo với GameRoom (common) => xoá Game và Player khỏi GameRoom
          */
         if (this.game.getGameRoomInfo() != null && server.getGameRooms().size() > 0) {
-            GameRoom gameRoom = server.getGameRooms().stream()
+            GameRoom_Server gameRoom = server.getGameRooms().stream()
                     .filter(gR -> gR.getId() == this.getGame().getGameRoomInfo().getId())
                     .collect(Collectors.toList())
                     .get(0);
             gameRoom.setGame(this.game);
+            gameRoom.getGameRoomBUS().leaveRoom(playerClient);
             sendingPlayer.getGameRoomBUS().notifyUpdateGameRoomProps();
         }
 

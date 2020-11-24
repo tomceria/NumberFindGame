@@ -81,6 +81,12 @@ public class RequestHandler {
                             matchPlayer.getGameRoomBUS().startGame();
                             break;
                         }
+                        case GAMEROOM_QUIT: {
+                            SocketRequest_GameRoomQuit request = ((SocketRequest_GameRoomQuit) requestRaw);
+                            MatchPlayer_Server matchPlayer = (MatchPlayer_Server) clientIdentifier;
+                            matchPlayer.getGameRoomBUS().leaveRoom(thisClientHandler);
+                            break;
+                        }
                         case PLAYER_UPDATEINFO: {
                             IdentityBUS identityBUS = new IdentityBUS(thisClientHandler,
                                     RequestHandler.this.clientHandler.clientManager.server);

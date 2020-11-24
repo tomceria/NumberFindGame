@@ -3,6 +3,8 @@ package bus;
 import Common.ViewBinder;
 import Run.GameMain;
 import Socket.GameClient;
+import Socket.Request.SocketRequest_GameQuit;
+import Socket.Request.SocketRequest_GameRoomQuit;
 import Socket.Request.SocketRequest_GameRoomStartGame;
 import Socket.Response.SocketResponse_GameInit;
 import Socket.Response.SocketResponse_GameRoomProps;
@@ -30,6 +32,11 @@ public class GameRoomBUS {
         this.getGameRoom().getClient().sendRequest(new SocketRequest_GameRoomStartGame());
     }
 
+    public void action_QuitGame() {
+        this.getGameRoom().getClient().sendRequest(
+                new SocketRequest_GameRoomQuit()
+        );
+    }
     public void listen_setGameRoomProps(SocketResponse_GameRoomProps response) {
         ((GameRoom_Client) this.gameRoom).setPlayers(response.players);
         this.gameRoom.setMatchConfig(response.matchConfig);

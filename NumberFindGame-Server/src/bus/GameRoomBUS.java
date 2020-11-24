@@ -118,7 +118,11 @@ public class GameRoomBUS {
         /**
          * 2. Đá playerClient khỏi Server
          */
-        getServer().getClientManager().getClientConnections().remove(playerClient.getId());
+        this.getServer().getGameServerBUS().quitGame(
+                playerClient,
+                SocketResponse.Status.SUCCESS,
+                "You have quit the game."
+        );
 
         if (this.gameRoom.getPlayerClients().size() > 0) {
             /**

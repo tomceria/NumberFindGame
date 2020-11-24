@@ -11,6 +11,7 @@ public class SocketRequest implements Serializable {
         PLAYER_CHANGEPASSWORD,
         DISCONNECT,
         GAMEROOM_STARTGAME,
+        GAMEROOM_QUIT,
         GAME_SUBMITLEVELNODE,
         GAME_QUIT
     }

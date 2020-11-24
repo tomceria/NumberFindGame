@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 
 import Run.GameMain;
 import Socket.GameClient;
@@ -59,6 +58,12 @@ public class GameRoomView {
         btnUpdateInfo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GameRoomView.this.gameRoomBUS.action_GotoUpdateInfoView();
+            }
+        });
+        btnQuitGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameRoomView.this.gameRoomBUS.action_QuitGame();
             }
         });
     }
