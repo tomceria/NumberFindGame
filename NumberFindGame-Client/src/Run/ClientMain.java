@@ -10,7 +10,8 @@ public class ClientMain {
     public static void main (String[] args) {
         EncryptionHelper encryptionHelper = new EncryptionHelper();
         // tạo server public key
-        encryptionHelper.generateServerPublicKey();
+//        encryptionHelper.generateServerPublicKey();
+        encryptionHelper.getServerKeysFromFile();
         // tạo client public và private key
 //        encryptionHelper.generateKeysForClient();
         // tạo client secret key
