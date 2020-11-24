@@ -22,6 +22,7 @@ import static util.Maths.valueFromTwoRanges;
 
 public class GameBUS {
     private Game_Server game;  // PARENT
+    private boolean isStarted = false;
     private Timer gameTimer;
 
     public GameBUS(Game_Server game) {
@@ -29,6 +30,7 @@ public class GameBUS {
     }
 
     public void initGame() {
+        this.isStarted = true;
         game.setLevel(generateLevel(game.getMatchConfig().getNumberQty()));
         this.mutateLevel(game.getLevel());
         this.performPlacingPlayers();
@@ -56,6 +58,13 @@ public class GameBUS {
      * @return
      */
     public synchronized boolean req_sendLevelNodeForValidation(LevelNode levelNode, MatchPlayer_Server sendingPlayer) {
+        if (this.isStarted != true) {
+            /**
+             * Game has not started / Game already ended
+             */
+            return false;
+        }
+
         boolean accept = false;
 
         if (this.getCurrentLevelNodeValue() == levelNode.getValue()) {  // Kiểm tra xem số gửi từ Client có đúng với CurrentLevel của Server hay ko
@@ -267,7 +276,7 @@ public class GameBUS {
         return levelNodes;
     }
 
-    private void performSuccessLevelNodeValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {
+    private synchronized void performSuccessLevelNodeValidation(LevelNode levelNode, MatchPlayer sendingPlayer) {
         /**
          * Tăng điểm cho sendingPlayer
          */
@@ -284,7 +293,7 @@ public class GameBUS {
         this.performPlacingPlayers();
     }
 
-    private void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
+    private synchronized void performGoNextLevel(LevelNode levelNode, MatchPlayer sendingPlayer) {
         /**
          * Gán levelNode.picker = sendingPlayer (lọc theo levelNode value)
          */
@@ -361,11 +370,16 @@ public class GameBUS {
         }
     }
 
-    private void performEndGame() {
+    private synchronized void performEndGame() {
+        this.isStarted = false;
         /**
          * Ngưng timer của game. Ưu tiên thực hiện trước hết
          */
         this.gameTimer.cancel();
+        /**
+         * Điều chỉnh lại currentLevel để tránh người chơi thứ 2 chọn cùng lúc
+         */
+        game.setCurrentLevelAndResetTimer(1);
 
         /**
          * 1. Thông báo với players rằng game đã kết thúc
