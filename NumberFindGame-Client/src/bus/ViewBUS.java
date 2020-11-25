@@ -100,7 +100,7 @@ public class ViewBUS {
 	public static void endGameSessionUnexpectedly(Exception e) {
 		ViewBUS.gotoLoginView();
 		ViewBUS.terminateAllViews();
-		String message = e.getMessage() != null ? e.getMessage() : "";
-		JOptionPane.showMessageDialog(ViewBUS.loginView.getContentPane(), "You have been disconnected.\nError: " + message, "Message", JOptionPane.INFORMATION_MESSAGE);
+		String message = e.getMessage() != null ? "Error: " + e.getMessage() : "";
+		JOptionPane.showMessageDialog(ViewBUS.loginView.getContentPane(), "You have been disconnected.\n" + message, "Message", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

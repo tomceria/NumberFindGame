@@ -110,6 +110,10 @@ public class Client {
 
 //            Client.output.writeObject(encryptObject(request));
             Client.output.flush();
+        } catch (SocketException e) {
+            // Disconnect
+            ViewBUS.endGameSessionUnexpectedly(e);
+            close();
         } catch (IOException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
@@ -176,9 +180,9 @@ public class Client {
 
     public void close() {
         try {
-//            if (persistSocketProcess != null && persistSocketProcess.isAlive()) {
-//                persistSocketProcess.interrupt();
-//            }
+            if (persistSocketProcess != null && persistSocketProcess.isAlive()) {
+                persistSocketProcess.interrupt();
+            }
             if (input != null) {
                 input.close();
             }
