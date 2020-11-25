@@ -96,4 +96,11 @@ public class ViewBUS {
 		gameView = null;
 		gameResultView = null;
 	}
+
+	public static void endGameSessionUnexpectedly(Exception e) {
+		ViewBUS.gotoLoginView();
+		ViewBUS.terminateAllViews();
+		String message = e.getMessage() != null ? e.getMessage() : "";
+		JOptionPane.showMessageDialog(ViewBUS.loginView.getContentPane(), "You have been disconnected.\nError: " + message, "Message", JOptionPane.INFORMATION_MESSAGE);
+	}
 }

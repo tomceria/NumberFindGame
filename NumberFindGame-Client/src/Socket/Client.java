@@ -7,14 +7,17 @@ import Socket.Request.SocketRequest;
 import Socket.Request.SocketRequestPackage;
 import Socket.Request.SocketRequest_AccessLogin;
 import Socket.Response.SocketResponse;
+import bus.ViewBUS;
 
 import javax.crypto.*;
 import javax.security.sasl.AuthenticationException;
+import javax.swing.*;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Client {
     private static Socket socket;                                // Chỉ được tương tác với socket thông qua Client
@@ -122,8 +125,9 @@ public class Client {
 //            response = (SocketResponse) Client.input.readObject();
             response = unsealObject(Client.input.readObject());
 //            response = decryptObject(Client.input.readObject());
-        } catch (NullPointerException | EOFException e) {
+        } catch (NullPointerException | EOFException | SocketException e) {
             // Disconnect
+            ViewBUS.endGameSessionUnexpectedly(e);
             close();
         } catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
