@@ -22,8 +22,11 @@ public class LeaderBoardBUS {
 	public static PagedResult<LeaderBoard> req_getLeaderBoardUser(SocketRequest_LeaderboardUser request) {
 		LeaderBoardBUS leaderBoardBUS = new LeaderBoardBUS();
 		ArrayList<LeaderBoard> result = new ArrayList<>();
-		result.add(leaderBoardBUS.getUserRanking(request.username));
-		return new PagedResult<>(result, 1, 1, 1);
+		LeaderBoard userRanking = leaderBoardBUS.getUserRanking(request.username);
+		if (userRanking != null) {
+			result.add(userRanking);
+		}
+		return new PagedResult<>(result, 1, 1, result.size());
 	}
 
 	// Functions

@@ -15,11 +15,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class LeaderboardBUS {
 	public LeaderboardBUS_ViewBinder viewBinder;
-	public int rank;
-	public String player;
-	public int rankingPoint;
-	public double wintRate;
-	public int totalMatches;
+
+	private ArrayList<LeaderBoard> rankings;
 
 	public LeaderboardBUS() {
 		this.viewBinder = new LeaderboardBUS_ViewBinder();
@@ -32,25 +29,23 @@ public class LeaderboardBUS {
 //			throw new RuntimeException("No user found1");
 //		}
 		// int i = 0;
-		ArrayList<LeaderBoard> result = pagedResult.getResult();
-		Iterator it = result.iterator();
+		this.rankings = pagedResult.getResult();
 
-		for (int i = 0; it.hasNext(); i++) {
-			rank = result.get(i).getRanking();
-			player = result.get(i).getUsername();
-			rankingPoint = result.get(i).getSumRP();
-			wintRate = result.get(i).getWinrate();
-			totalMatches = result.get(i).getTotalMatches();
-
-			it.next();
-			this.viewBinder.update();
-		}
-
+		this.viewBinder.update();
 	}
 
 	public void ui_setLeaderboard(DefaultTableModel model) {
+	    model.setRowCount(0);
 
-		model.addRow(new Object[] { this.rank, this.player, this.rankingPoint, this.wintRate, this.totalMatches });
+		for (LeaderBoard ranking : this.rankings) {
+			model.addRow(new Object[] {
+					ranking.getRanking(),
+					ranking.getUsername(),
+					ranking.getSumRP(),
+					ranking.getWinrate(),
+					ranking.getTotalMatches()
+			});
+		}
 	}
 	// Functions
 

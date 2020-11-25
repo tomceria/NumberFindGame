@@ -207,15 +207,14 @@ public class LeaderboardView {
 	}
 
 	public void getLeaderboardAll() {
+		try {
 
-//		try {
-//
-//			LeaderboardView.this.leaderboardBUS.action_GetLeaderboardAll(1);
-//
-//		} catch (Exception exception) {
-//			JOptionPane.showMessageDialog(LeaderboardView.this.contentPane, exception.getMessage(), "Error",
-//					JOptionPane.ERROR_MESSAGE);
-//		}
+			LeaderboardView.this.leaderboardBUS.action_GetLeaderboardAll(1);
+
+		} catch (Exception exception) {
+			JOptionPane.showMessageDialog(LeaderboardView.this.contentPane, exception.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void initViewBinder() {

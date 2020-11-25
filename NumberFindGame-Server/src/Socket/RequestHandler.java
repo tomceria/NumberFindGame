@@ -142,7 +142,8 @@ public class RequestHandler {
 					}
 					case LEADERBOARD_USER: {
 						SocketRequest_LeaderboardUser request = ((SocketRequest_LeaderboardUser) requestRaw);
-						new SocketResponse_LeaderboardResult(LeaderBoardBUS.req_getLeaderBoardUser(request));
+						thisClientHandler.sendResponse(
+								new SocketResponse_LeaderboardResult(LeaderBoardBUS.req_getLeaderBoardUser(request)));
 						break;
 					}
 					}
