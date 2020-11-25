@@ -35,6 +35,7 @@ public class LeaderboardView {
 	private JButton btnNextPage = new JButton(">");
 	private final JScrollPane scrollPane = new JScrollPane();
 	private JTable table = new JTable();
+	private JLabel lblCurrentPage;
 	private int currentPage = 1;
 
 	private DefaultTableModel leaderboardTableModel;
@@ -97,7 +98,7 @@ public class LeaderboardView {
 
 		scrollPane.setViewportView(table);
 
-		JLabel lblCurrentPage = new JLabel("Page 1 of 5");
+		lblCurrentPage = new JLabel("Page 1 of 5");
 		lblCurrentPage.setForeground(Color.WHITE);
 		lblCurrentPage.setFont(new Font("Tahoma", Font.BOLD, 15));
 
@@ -264,6 +265,7 @@ public class LeaderboardView {
 		this.leaderboardBUS.viewBinder.txtSearch = txtSearch;
 		this.leaderboardBUS.viewBinder.leaderboardTableModel = leaderboardTableModel;
 		this.leaderboardBUS.viewBinder.btnNextPage = btnNextPage;
+		this.leaderboardBUS.viewBinder.lblCurrentPage = lblCurrentPage;
 	}
 
 	// Properties

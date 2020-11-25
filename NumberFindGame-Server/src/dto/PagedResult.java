@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class PagedResult<T> implements Serializable {
 	private ArrayList<T> result;
-	int currentPage;
+	public int currentPage;
 	int pageSize;
 	int count;
-	int totalPage;
-	boolean willPrev;
-	boolean willNext;
+	public int totalPage;
+	public boolean willPrev;
+	public boolean willNext;
 
 	public PagedResult(ArrayList<T> result, int currentPage, int pageSize, int count) {
 		this.setResult(result);
@@ -18,7 +18,7 @@ public class PagedResult<T> implements Serializable {
 		this.pageSize = pageSize;
 		this.count = count;
 
-		this.totalPage = (int) Math.ceil(count / pageSize);
+		this.totalPage = (int) Math.ceil(count * 1.0 / pageSize);
 		this.willPrev = currentPage > 1;
 		this.willNext = currentPage < totalPage;
 	}

@@ -18,6 +18,8 @@ public class LeaderboardBUS {
 
 	private ArrayList<LeaderBoard> rankings;
 	private boolean willNext = false;
+	private int currentPage = 0;
+	private int totalPage = 0;
 
 	public LeaderboardBUS() {
 		this.viewBinder = new LeaderboardBUS_ViewBinder();
@@ -30,13 +32,15 @@ public class LeaderboardBUS {
 //			throw new RuntimeException("No user found1");
 //		}
 		// int i = 0;
-		//this.willNext = pagedResult.isWillNext();
+		this.willNext = pagedResult.willNext;
+		this.currentPage = pagedResult.currentPage;
+		this.totalPage = pagedResult.totalPage;
 		this.rankings = pagedResult.getResult();
 
 		this.viewBinder.update();
 	}
 
-	public void ui_setLeaderboard(DefaultTableModel model) {
+	public void ui_setLeaderboard(DefaultTableModel model, JButton btnNextPage, JLabel lblCurrentPage) {
 	    model.setRowCount(0);
 
 		for (LeaderBoard ranking : this.rankings) {
@@ -48,9 +52,9 @@ public class LeaderboardBUS {
 					ranking.getTotalMatches()
 			});
 		}
-//		if(this.willNext==false) {
-//			btnNextPage.setEnabled(false);
-//		}
+
+		btnNextPage.setEnabled(this.willNext);
+		lblCurrentPage.setText(String.format("Page %s of %s", this.currentPage, this.totalPage));
 	}
 	// Functions
 
@@ -97,6 +101,7 @@ public class LeaderboardBUS {
 		public JTextField txtSearch;
 		public DefaultTableModel leaderboardTableModel;
 		public JButton btnNextPage;
+		public JLabel lblCurrentPage;
 
 		public LeaderboardBUS_ViewBinder() {
 			super();
@@ -104,7 +109,7 @@ public class LeaderboardBUS {
 
 		@Override
 		public void update() {
-			ui_setLeaderboard(leaderboardTableModel);
+			ui_setLeaderboard(leaderboardTableModel, btnNextPage, lblCurrentPage);
 			// this.stopUpdatePeriod();
 		}
 	}
