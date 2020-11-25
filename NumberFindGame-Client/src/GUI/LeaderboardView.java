@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import Run.GameMain;
@@ -29,8 +31,11 @@ public class LeaderboardView {
 	private final JTextField txtSearch = new JTextField();
 	private final JButton btnSearch = new JButton("Search");
 	private final JButton btnReset = new JButton("Reset");
+	private JButton btnPreviousPage = new JButton("<");
+	private JButton btnNextPage = new JButton(">");
 	private final JScrollPane scrollPane = new JScrollPane();
 	private JTable table = new JTable();
+	private int currentPage = 1;
 
 	private DefaultTableModel leaderboardTableModel;
 
@@ -60,22 +65,31 @@ public class LeaderboardView {
 		btnReset.setFont(new Font("Tahoma", Font.BOLD, 16));
 
 		leaderboardTableModel = new DefaultTableModel(
-				new String[] { "Rank", "Player", "Ranking Point", "Win Rate", "Total Matches" }, 0);
+				new String[] { "Rank", "Player", "Ranking Point", "Win Rate", "Matches" }, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// all cells false
+				return false;
+			}
+		};
 		table = new JTable(leaderboardTableModel);
-//		table.setModel(new DefaultTableModel(new Object[][] { { null, null, null, null, null },
-//				{ null, null, null, null, null }, { null, null, null, null, null }, { null, null, null, null, null },
-//				{ null, null, null, null, null }, { null, null, null, null, null }, { null, null, null, null, null },
-//				{ null, null, null, null, null }, { null, null, null, null, null }, { null, null, null, null, null }, },
-//				new String[] { "Rank", "Player", "Ranking Point", "Win Rate", "Total Matches" }) {
-
-//			private static final long serialVersionUID = 1L;
-//			boolean[] columnEditables = new boolean[] { false, false, false, false, false };
-//
-//			public boolean isCellEditable(int row, int column) {
-//				return columnEditables[column];
-//			}
-//		});
-		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
+		table.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 15));
+		;
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		table.getColumnModel().getColumn(0).setPreferredWidth(70);
+		table.getColumnModel().getColumn(1).setPreferredWidth(130);
+		table.getColumnModel().getColumn(2).setPreferredWidth(150);
+		table.getColumnModel().getColumn(3).setPreferredWidth(100);
+		table.getColumnModel().getColumn(4).setPreferredWidth(100);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		for (int i = 0; i < 5; i++) {
+			if (i == 1)
+				continue;
+			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
 		table.setRowSelectionAllowed(false);
 		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		table.setColumnSelectionAllowed(true);
@@ -87,29 +101,22 @@ public class LeaderboardView {
 		lblCurrentPage.setForeground(Color.WHITE);
 		lblCurrentPage.setFont(new Font("Tahoma", Font.BOLD, 15));
 
-		JButton btnPreviousPage = new JButton("<");
 		btnPreviousPage.setEnabled(false);
 		btnPreviousPage.setFont(new Font("Tahoma", Font.BOLD, 16));
 
-		JButton btnNextPage = new JButton(">");
-		btnNextPage.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		
 
-			}
-		});
 		btnNextPage.setFont(new Font("Tahoma", Font.BOLD, 16));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
 				.createSequentialGroup()
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addComponent(btnNavBack))
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(287).addGroup(gl_contentPane
-								.createParallelGroup(Alignment.LEADING)
-								.addGroup(
-										gl_contentPane.createSequentialGroup().addGap(124).addComponent(lblLeaderboard))
-								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 451, GroupLayout.PREFERRED_SIZE)
-								.addGroup(
-										gl_contentPane.createSequentialGroup().addGap(101)
+						.addGroup(gl_contentPane.createSequentialGroup().addGap(287)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup().addGap(124)
+												.addComponent(lblLeaderboard))
+										.addGroup(gl_contentPane.createSequentialGroup().addGap(101)
 												.addComponent(lblCurrentPage, GroupLayout.PREFERRED_SIZE, 107,
 														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
@@ -117,22 +124,24 @@ public class LeaderboardView {
 														GroupLayout.PREFERRED_SIZE)
 												.addGap(18).addComponent(btnNextPage, GroupLayout.PREFERRED_SIZE, 60,
 														GroupLayout.PREFERRED_SIZE))))
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(281)
-								.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createSequentialGroup().addGap(271)
+								.addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
 								.addGap(17)
 								.addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
 								.addGap(5)
 								.addComponent(btnSearch, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-								.addGap(5).addComponent(btnReset)))
-				.addContainerGap(275, Short.MAX_VALUE)));
+								.addGap(5).addComponent(btnReset))
+						.addGroup(gl_contentPane.createSequentialGroup().addGap(237).addComponent(scrollPane,
+								GroupLayout.PREFERRED_SIZE, 550, GroupLayout.PREFERRED_SIZE)))
+				.addContainerGap(237, Short.MAX_VALUE)));
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
 				.createSequentialGroup().addContainerGap().addComponent(btnNavBack).addGap(120)
 				.addComponent(lblLeaderboard).addGap(50)
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(5).addComponent(lblUsername))
 						.addGroup(gl_contentPane.createSequentialGroup().addGap(1).addComponent(txtSearch,
 								GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addComponent(btnSearch).addComponent(btnReset))
+						.addComponent(btnSearch).addComponent(btnReset)
+						.addGroup(gl_contentPane.createSequentialGroup().addGap(5).addComponent(lblUsername)))
 				.addGap(74).addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 189, GroupLayout.PREFERRED_SIZE)
 				.addGap(40)
 				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
@@ -157,6 +166,7 @@ public class LeaderboardView {
 			public void mouseClicked(MouseEvent e) {
 				txtSearch.setFont(new Font("Tahoma", Font.PLAIN, 17));
 				txtSearch.setEnabled(true);
+				txtSearch.requestFocus(true);
 			}
 		});
 
@@ -204,12 +214,45 @@ public class LeaderboardView {
 			}
 		});
 
+		btnNextPage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentPage++;
+				try {
+
+					LeaderboardView.this.leaderboardBUS.action_GetLeaderboardAll(currentPage);
+					btnPreviousPage.setEnabled(true);
+
+				} catch (Exception exception) {
+					JOptionPane.showMessageDialog(LeaderboardView.this.contentPane, exception.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		btnPreviousPage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentPage--;
+				try {
+
+					LeaderboardView.this.leaderboardBUS.action_GetLeaderboardAll(currentPage);
+					if(currentPage==1) {
+						btnPreviousPage.setEnabled(false);
+					}
+
+				} catch (Exception exception) {
+					JOptionPane.showMessageDialog(LeaderboardView.this.contentPane, exception.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+
 	}
 
 	public void getLeaderboardAll() {
 		try {
-
-			LeaderboardView.this.leaderboardBUS.action_GetLeaderboardAll(1);
+			currentPage = 1;
+			LeaderboardView.this.leaderboardBUS.action_GetLeaderboardAll(currentPage);
+			btnPreviousPage.setEnabled(false);
 
 		} catch (Exception exception) {
 			JOptionPane.showMessageDialog(LeaderboardView.this.contentPane, exception.getMessage(), "Error",
@@ -220,6 +263,7 @@ public class LeaderboardView {
 	private void initViewBinder() {
 		this.leaderboardBUS.viewBinder.txtSearch = txtSearch;
 		this.leaderboardBUS.viewBinder.leaderboardTableModel = leaderboardTableModel;
+		this.leaderboardBUS.viewBinder.btnNextPage = btnNextPage;
 	}
 
 	// Properties

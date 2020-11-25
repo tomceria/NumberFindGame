@@ -17,6 +17,7 @@ public class LeaderboardBUS {
 	public LeaderboardBUS_ViewBinder viewBinder;
 
 	private ArrayList<LeaderBoard> rankings;
+	private boolean willNext = false;
 
 	public LeaderboardBUS() {
 		this.viewBinder = new LeaderboardBUS_ViewBinder();
@@ -29,6 +30,7 @@ public class LeaderboardBUS {
 //			throw new RuntimeException("No user found1");
 //		}
 		// int i = 0;
+		//this.willNext = pagedResult.isWillNext();
 		this.rankings = pagedResult.getResult();
 
 		this.viewBinder.update();
@@ -46,6 +48,9 @@ public class LeaderboardBUS {
 					ranking.getTotalMatches()
 			});
 		}
+//		if(this.willNext==false) {
+//			btnNextPage.setEnabled(false);
+//		}
 	}
 	// Functions
 
@@ -91,6 +96,7 @@ public class LeaderboardBUS {
 	public class LeaderboardBUS_ViewBinder extends ViewBinder {
 		public JTextField txtSearch;
 		public DefaultTableModel leaderboardTableModel;
+		public JButton btnNextPage;
 
 		public LeaderboardBUS_ViewBinder() {
 			super();
