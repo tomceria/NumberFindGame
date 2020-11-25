@@ -13,6 +13,7 @@ public class ViewBUS {
 	public static UpdateInfoView updateInfoView = null;
 	public static GameView gameView = null;
 	public static GameResultView gameResultView = null;
+	public static LeaderboardView leaderboardView = null;
 
 	public static void configureWindow(JFrame mainFrame) {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,38 +42,43 @@ public class ViewBUS {
 		mainFrame.setVisible(true);
 	}
 
-    public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
-        gameRoomView = new GameRoomView(gameRoomBUS);
-        gotoGameRoomView();
-    }
-    public static void gotoGameRoomView() {
-        if (gameRoomView == null) {
-            return;
-        }
-        mainFrame.setContentPane(gameRoomView.getContentPane());
-        mainFrame.setVisible(true);
-    }
+	public static void gotoGameRoomView(GameRoomBUS gameRoomBUS) {
+		gameRoomView = new GameRoomView(gameRoomBUS);
+		gotoGameRoomView();
+	}
 
-//    public static void gotoUpdateInfoView(UpdateInfoBUS updateInfoBUS) {
-//
-//        gotoUpdateInfoView();
-//    }
+	public static void gotoGameRoomView() {
+		if (gameRoomView == null) {
+			return;
+		}
+		mainFrame.setContentPane(gameRoomView.getContentPane());
+		mainFrame.setVisible(true);
+	}
 
-    public static void gotoUpdateInfoView() {
-    	if (updateInfoView == null) {
-        	updateInfoView = new UpdateInfoView(new UpdateInfoBUS());
-        }
-        mainFrame.setContentPane(updateInfoView.getContentPane());
-        mainFrame.setVisible(true);
-    }
+	public static void gotoUpdateInfoView() {
+		if (updateInfoView == null) {
+			updateInfoView = new UpdateInfoView(new UpdateInfoBUS());
+		}
+		mainFrame.setContentPane(updateInfoView.getContentPane());
+		mainFrame.setVisible(true);
+	}
 
-    public static void gotoGameView(GameBUS gameBUS) {
-        gameView = new GameView(gameBUS);
-        gotoGameView();
-    }
-    public static void gotoGameView() {
-        mainFrame.setContentPane(gameView.getContentPane());
-        mainFrame.setVisible(true);
+	public static void gotoLeaderboardView() {
+		if (leaderboardView == null) {
+			leaderboardView = new LeaderboardView(new LeaderboardBUS());
+		}
+		mainFrame.setContentPane(leaderboardView.getContentPane());
+		mainFrame.setVisible(true);
+	}
+
+	public static void gotoGameView(GameBUS gameBUS) {
+		gameView = new GameView(gameBUS);
+		gotoGameView();
+	}
+
+	public static void gotoGameView() {
+		mainFrame.setContentPane(gameView.getContentPane());
+		mainFrame.setVisible(true);
 
 		gameView.init();
 	}

@@ -16,7 +16,8 @@ public class SocketResponse implements Serializable {
         GAME_INIT,
         GAME_PROPS,
         GAME_END,
-        GAME_RESULT
+        GAME_RESULT,
+        LEADERBOARD_RESULT
     }
 
     Status status;

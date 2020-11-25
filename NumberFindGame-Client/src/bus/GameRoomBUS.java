@@ -18,19 +18,19 @@ import javax.swing.*;
 import bus.LoginBUS;
 
 public class GameRoomBUS {
-    GameRoom gameRoom; // PARENT
-    public GameRoomBUS_ViewBinder viewBinder;
+	GameRoom gameRoom; // PARENT
+	public GameRoomBUS_ViewBinder viewBinder;
 
-    public GameRoomBUS(GameRoom gameRoom) {
-        this.gameRoom = gameRoom;
-        this.viewBinder = new GameRoomBUS_ViewBinder();
-    }
+	public GameRoomBUS(GameRoom gameRoom) {
+		this.gameRoom = gameRoom;
+		this.viewBinder = new GameRoomBUS_ViewBinder();
+	}
 
-    // Functions
+	// Functions
 
-    public void action_RequestStartGame() {
-        this.getGameRoom().getClient().sendRequest(new SocketRequest_GameRoomStartGame());
-    }
+	public void action_RequestStartGame() {
+		this.getGameRoom().getClient().sendRequest(new SocketRequest_GameRoomStartGame());
+	}
 
     public void action_QuitGame() {
         ViewBUS.gotoLoginView();
@@ -44,73 +44,73 @@ public class GameRoomBUS {
         this.gameRoom.setMatchConfig(response.matchConfig);
         this.gameRoom.setStatus(response.status);
 
-        /**
-         * Force lệnh update của ViewBinder khi có cập nhật về thông tin phòng
-         */
-        this.viewBinder.update();
-    }
+		/**
+		 * Force lệnh update của ViewBinder khi có cập nhật về thông tin phòng
+		 */
+		this.viewBinder.update();
+	}
 
-    public void listen_startGame(SocketResponse_GameInit response) {
-        MatchPlayer clientPlayer = ((GameClient) GameMain.client).getClientPlayer();
+	public void listen_startGame(SocketResponse_GameInit response) {
+		MatchPlayer clientPlayer = ((GameClient) GameMain.client).getClientPlayer();
 
-        Game_Client game = new Game_Client(response.game, this.getGameRoom().getClient(), clientPlayer);
-        this.gameRoom.setGame(game);
-        game.getGameBUS().initGame();
+		Game_Client game = new Game_Client(response.game, this.getGameRoom().getClient(), clientPlayer);
+		this.gameRoom.setGame(game);
+		game.getGameBUS().initGame();
 
-        ViewBUS.gotoGameView(game.getGameBUS());
-    }
+		ViewBUS.gotoGameView(game.getGameBUS());
+	}
 
-    public void ui_loadPlayerCount(JLabel lblPlayerCount) {
-        lblPlayerCount.setText(String.format(
-                "%s / %s",
-                this.getGameRoom().getPlayers().size(),
-                this.getGameRoom().getMatchConfig().getMaxPlayer()
-        ));
-    }
+	public void ui_loadPlayerCount(JLabel lblPlayerCount) {
+		lblPlayerCount.setText(String.format("%s / %s", this.getGameRoom().getPlayers().size(),
+				this.getGameRoom().getMatchConfig().getMaxPlayer()));
+	}
 
-    public void action_GotoUpdateInfoView() {
-        ViewBUS.gotoUpdateInfoView();
-    }
+	public void action_GotoUpdateInfoView() {
+		ViewBUS.gotoUpdateInfoView();
+	}
 
-    // Privates
+	public void action_GotoLeaderboardView() {
+		ViewBUS.gotoLeaderboardView();
+	}
 
-    private Game_Client getGame() {
-        return (Game_Client) this.gameRoom.getGame();
-    }
+	// Privates
 
-    private GameRoom_Client getGameRoom() {
-        return ((GameRoom_Client) this.gameRoom);
-    }
+	private Game_Client getGame() {
+		return (Game_Client) this.gameRoom.getGame();
+	}
 
-    // Inner Classes
+	private GameRoom_Client getGameRoom() {
+		return ((GameRoom_Client) this.gameRoom);
+	}
 
-    public class GameRoomBUS_ViewBinder extends ViewBinder {
-        public JLabel lblPlayerCount;
-        public JButton btnStartGame;
+	// Inner Classes
 
-        public GameRoomBUS_ViewBinder() {
-            super();
-            this.update();
-            this.startUpdatePeriod();
-        }
+	public class GameRoomBUS_ViewBinder extends ViewBinder {
+		public JLabel lblPlayerCount;
+		public JButton btnStartGame;
 
-        @Override
-        public void update() {
-            if (gameRoom != null) {
-                if (lblPlayerCount != null &&
-                        GameRoomBUS.this.getGameRoom().getPlayers() != null &&
-                        GameRoomBUS.this.getGameRoom().getPlayers().size() > 0) {
-                    ui_loadPlayerCount(lblPlayerCount);
-                }
+		public GameRoomBUS_ViewBinder() {
+			super();
+			this.update();
+			this.startUpdatePeriod();
+		}
 
-                if (GameRoomBUS.this.getGameRoom().getPlayers() != null) {
-                    if (GameRoomBUS.this.getGameRoom().getPlayers().size() > 1) {
-                        btnStartGame.setVisible(true);
-                    } else {
-                        btnStartGame.setVisible(false);
-                    }
-                }
-            }
-        }
-    }
+		@Override
+		public void update() {
+			if (gameRoom != null) {
+				if (lblPlayerCount != null && GameRoomBUS.this.getGameRoom().getPlayers() != null
+						&& GameRoomBUS.this.getGameRoom().getPlayers().size() > 0) {
+					ui_loadPlayerCount(lblPlayerCount);
+				}
+
+				if (GameRoomBUS.this.getGameRoom().getPlayers() != null) {
+					if (GameRoomBUS.this.getGameRoom().getPlayers().size() > 1) {
+						btnStartGame.setVisible(true);
+					} else {
+						btnStartGame.setVisible(false);
+					}
+				}
+			}
+		}
+	}
 }

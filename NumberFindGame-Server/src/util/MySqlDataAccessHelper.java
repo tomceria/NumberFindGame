@@ -30,7 +30,7 @@ public class MySqlDataAccessHelper {
 		this.Password = "CaraCara123123";
 		this.DataBase = "NumberFindGameDB";
 		/* NGAN */
-//		this.Host = "localhost";
+//		this.Host = "127.0.0.1:3307";
 //		this.UserName = "root";
 //		this.Password = "password";
 //		this.DataBase = "numberfindgame";
