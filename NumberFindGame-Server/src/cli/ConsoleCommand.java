@@ -352,12 +352,15 @@ public class ConsoleCommand {
 		List<String[]> tableList = new ArrayList<>();
 		tableList.add(table);
 		for (ClientHandler clientHandler : clientConections.values()) {
-			onlinePlayer = ((MatchPlayer) clientHandler.getClientIdentifier()).getPlayer();
 			clientHandlerID = clientHandler.getId();
 			clientSocket = clientHandler.getClient();
+			onlinePlayer = ((MatchPlayer) clientHandler.getClientIdentifier()).getPlayer();
 
-			table = new String[] { onlinePlayer.getUsername(), clientHandlerID.toString(),
-					clientSocket.getInetAddress().getHostAddress() };
+			table = new String[] {
+					onlinePlayer != null ? onlinePlayer.getUsername() : "null",
+					clientHandlerID.toString(),
+					clientSocket.getInetAddress().getHostAddress()
+			};
 			tableList.add(table);
 		}
 		tableDisplay.tableDisplay(tableList);

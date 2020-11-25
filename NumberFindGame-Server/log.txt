@@ -350,3 +350,6 @@
 25-11-2020 12:52:01  Login detected. Client ID '9a7a6109-5870-4788-81b8-d4d904fafe28'; IP: /127.0.0.1
 25-11-2020 12:52:02  saidan00 logged in.
 25-11-2020 12:52:12  Client '9a7a6109-5870-4788-81b8-d4d904fafe28' disconnected.
+25-11-2020 16:00:54  Login detected. Client ID 'e4e4beba-0e04-463b-8477-4a77820187d2'; IP: /127.0.0.1
+25-11-2020 16:00:55  hoangluuminh logged in.
+25-11-2020 16:01:12  Client 'e4e4beba-0e04-463b-8477-4a77820187d2' disconnected.
