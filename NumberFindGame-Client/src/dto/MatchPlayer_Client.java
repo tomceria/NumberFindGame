@@ -27,6 +27,8 @@ public class MatchPlayer_Client extends MatchPlayer {
             add(Color.decode("#33eb91"));
             add(Color.decode("#ffa733"));
             add(Color.decode("#834bff"));
+            add(Color.decode("#DB4E3F"));
+            add(Color.decode("#B0E08D"));
         }};
         for (int i = 0; i < matchPlayers.size(); i++) {
             ((MatchPlayer_Client) matchPlayers.get(i)).uiColor = colors.get(i);
