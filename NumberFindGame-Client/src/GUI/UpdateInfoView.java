@@ -267,7 +267,7 @@ public class UpdateInfoView {
 		txtLastName.setText(player.getLastName());
 		txtEmail.setText(player.getEmail());
 		comboBox.setSelectedItem(player.getGender());
-		txtBirthday.setText(DateUtil.parseDateToString((Date) player.getBirthday()));
+		txtBirthday.setText(DateUtil.parseDateToString(player.getBirthday()));
 
 		btnNavBack.addActionListener(new ActionListener() {
 			@Override
@@ -281,7 +281,7 @@ public class UpdateInfoView {
 				txtOldPassword.setText("");
 				txtNewPassword.setText("");
 				txtNewPassword2.setText("");
-				txtBirthday.setText("");
+				txtBirthday.setText(DateUtil.parseDateToString(player.getBirthday()));
 			}
 		});
 		btnUpdate.addActionListener(new ActionListener() {
