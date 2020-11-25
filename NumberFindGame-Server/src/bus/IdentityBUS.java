@@ -49,7 +49,7 @@ public class IdentityBUS {
 		}
 
 		if (playerBUS.login(request.username, request.password)) {
-			player = playerBUS.getOneByUsername(request.username);
+			player = playerBUS.getOneByUsernameOrEmail(request.username);
 		}
 
 		if (player != null) { // Validate thành công => có player

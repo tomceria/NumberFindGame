@@ -22,6 +22,12 @@ public class PlayerBUS {
         return player;
     }
 
+    public PlayerDTO getOneByUsernameOrEmail(String username) {
+        PlayerDTO player = playerDao.getByUsernameOrEmail(username);
+
+        return player;
+    }
+
     /**
      * @param player the new player to register
      */

@@ -88,4 +88,12 @@ public class ViewBUS {
 	private static void setMainFrame(JFrame mainFrame) {
 		ViewBUS.mainFrame = mainFrame;
 	}
+
+	public static void terminateAllViews() {
+		registerView = null;
+		gameRoomView = null;
+		updateInfoView = null;
+		gameView = null;
+		gameResultView = null;
+	}
 }

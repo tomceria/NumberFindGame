@@ -132,6 +132,8 @@ public class GameBUS {
     }
 
     public void action_QuitGame() {
+        ViewBUS.gotoLoginView();
+        ViewBUS.terminateAllViews();
         this.game.getClient().sendRequest(
                 new SocketRequest_GameQuit()
         );

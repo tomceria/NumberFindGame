@@ -33,6 +33,8 @@ public class GameRoomBUS {
     }
 
     public void action_QuitGame() {
+        ViewBUS.gotoLoginView();
+        ViewBUS.terminateAllViews();
         this.getGameRoom().getClient().sendRequest(
                 new SocketRequest_GameRoomQuit()
         );
