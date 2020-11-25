@@ -11,7 +11,9 @@ import java.util.UUID;
 import Socket.ClientHandler;
 import Socket.Server;
 import Socket.GameServer;
+import bus.LeaderBoardBUS;
 import bus.PlayerBUS;
+import dto.LeaderBoard;
 import dto.MatchPlayer;
 import dto.MatchConfig;
 import dto.PlayerDTO;
@@ -39,7 +41,7 @@ public class ConsoleCommand {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputCommand: the input string from user
 	 */
 	public void handleCommand(String inputCommand) {
@@ -58,7 +60,7 @@ public class ConsoleCommand {
 
 	/**
 	 * Initiate server cli
-	 * 
+	 *
 	 * @throws NumberValidException
 	 */
 	public void init() {
@@ -71,6 +73,10 @@ public class ConsoleCommand {
 			switch (command) {
 			case "list": {
 				list();
+				break;
+			}
+			case "rank": {
+				rank();
 				break;
 			}
 			case "config": {
@@ -113,6 +119,61 @@ public class ConsoleCommand {
 			showCommand("list");
 			break;
 		}
+		}
+	}
+
+	/**
+	 * Method or 'rank' commands
+	 */
+	public void rank() {
+		if (value.equals("")) {
+			if (!option.equals("show") && !option.equals("")) {
+				System.out.println("Error. Value can not be empty");
+
+				return;
+			}
+		}
+
+		LeaderBoardBUS leaderBoardBUS = new LeaderBoardBUS();
+		String[] table = new String[] { "Rank", "Player", "Ranking Point", "Win Rate", "Total matches" };
+		List<String[]> tableList = new ArrayList<>();
+		tableList.add(table);
+
+		switch (option) {
+		    case "top": {
+				try {
+					int val = Integer.parseInt(value);
+					ArrayList<LeaderBoard> leaderBoards = leaderBoardBUS.getLeaderBoard(1, val);
+					for (LeaderBoard lB : leaderBoards) {
+						table = new String[] {
+								lB.getRanking()+"", lB.getUsername(), lB.getSumRP()+"", lB.getWinrate()+"", lB.getTotalMatches()+""
+						};
+						tableList.add(table);
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("Error. Value must be integer");
+					return;
+				}
+				tableDisplay.tableDisplay(tableList);
+		    	break;
+			}
+			case "user": {
+				LeaderBoard lB = leaderBoardBUS.getUserRanking(value);
+				if (lB != null) {
+					tableList.add(
+							new String[] {
+									lB.getRanking()+"", lB.getUsername(), lB.getSumRP()+"", lB.getWinrate()+"", lB.getTotalMatches()+""
+							}
+					);
+					tableDisplay.tableDisplay(tableList);
+				}
+				break;
+			}
+			default: {
+				System.out.println("Command not found. Commands are case-sensitive");
+				showCommand("rank");
+				break;
+			}
 		}
 	}
 
@@ -173,7 +234,7 @@ public class ConsoleCommand {
 
 	/**
 	 * Config number quantity
-	 * 
+	 *
 	 * @param value: the value to set number quantity
 	 * @throws NumberValidException
 	 */
@@ -195,7 +256,7 @@ public class ConsoleCommand {
 
 	/**
 	 * Config time
-	 * 
+	 *
 	 * @param value: the value to set time
 	 * @throws NumberValidException
 	 */
@@ -217,7 +278,7 @@ public class ConsoleCommand {
 
 	/**
 	 * Config max player
-	 * 
+	 *
 	 * @param value: the value to set max player
 	 * @throws NumberValidException
 	 */
@@ -309,19 +370,36 @@ public class ConsoleCommand {
 	public void showCommand(String s) {
 		switch (s) {
 		case "help":
-			System.out.print("Command:\n\thelp \t\t\t\tshow all commands\n" + "\tlist <option> \t\t\tlist users\n"
-					+ "\tconfig <option> <value> \tconfig game\n" + "\texit \t\t\t\tshut down server\n");
+			System.out.print(
+					"All commands:\n\thelp \t\t\t\t\t\tShow all commands\n" +
+					"\tlist <option> \t\t\t\tShow list of users\n" +
+					"\trank <option> <value> \t\tShow global leaderboard\n" +
+					"\tconfig <option> <value> \tSet or view game's config\n" +
+					"\texit \t\t\t\t\t\tShut down server"
+			);
 			break;
 		case "list":
-			System.out.print("Command: list <option>\n" + "\t user\t Show list of registered users\n"
-					+ "\t online\t Show list of active users\n");
+			System.out.print(
+					"Syntax: list <option>\n" +
+					"\t user\t Show list of registered users\n" +
+					"\t online\t Show list of active users"
+			);
+			break;
+		case "rank":
+			System.out.print(
+					"Syntax: rank <option> <value>\n" +
+							"\t top\t Get Top <value> of leaderboard\n" +
+							"\t user\t Get ranking of username <value>"
+			);
 			break;
 		case "config":
 			System.out.print(
-					"Syntax: config <option> <value>\n" + "\t numberQty <1-900>\t Config game number quantity\n"
-							+ "\t time <1000-3600000>\t Config game time\n"
-							+ "\t maxPlayer <2-8>\t Config game max number of player\n"
-							+ "\t show\t\t\t Show current game config\n");
+					"Syntax: config <option> <value>\n" +
+					"\t numberQty <1-900>\t Config game number quantity\n" +
+					"\t time <1000-3600000>\t Config game time\n" +
+					"\t maxPlayer <2-8>\t Config game max number of player\n" +
+					"\t show\t\t\t Show current game config"
+			);
 			break;
 		}
 		System.out.println();
