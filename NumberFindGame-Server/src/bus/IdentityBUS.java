@@ -41,8 +41,8 @@ public class IdentityBUS {
 					continue;
 				}
 				onlinePlayer = connectPlayer.getPlayer();
-				if (onlinePlayer.getUsername().equals(request.username)) {
-					throw new RuntimeException("This account is already logged in.");
+				if (onlinePlayer.getUsername().equals(request.username) || onlinePlayer.getEmail().equals(request.username)) {
+					throw new RuntimeException("This account has already logged in.");
 				}
 
 			}
@@ -71,7 +71,10 @@ public class IdentityBUS {
 		players = playerBus.getAll();
 		for (PlayerDTO player : players) {
 			if (request.username.equals(player.getUsername())) {
-				throw new RuntimeException("This Username is already been taken. Please choose another username.");
+				throw new RuntimeException("This Username has already been taken. Please choose another username.");
+			}
+			if (request.email.equals(player.getEmail())) {
+				throw new RuntimeException("This Email has already been used.");
 			}
 		}
 
