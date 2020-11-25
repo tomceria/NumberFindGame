@@ -49,6 +49,7 @@ public class RegisterBUS {
 
 	public static boolean RegisterValidate(String username, String password, String password2, String firstName,
 			String lastName, String email, String gender, String birthday) {
+		String usernameRegex = "^(?=.{0,15}$)[a-zA-Z0-9._]+$";
 		String emailRegex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 		String birthdayRegex = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)"
 				+ "(?:0?[13-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|"
@@ -65,6 +66,11 @@ public class RegisterBUS {
 			}
 		}
 
+		if (!username.matches(usernameRegex)) {
+			throw new RuntimeException("Invalid username.\nMust be 15 characters maximum, includes only alphanumerals and . _");
+		}
+
+
 		if (!birthday.matches(birthdayRegex)) {
 			throw new RuntimeException("Invalid Birthday");
 		}
@@ -75,9 +81,6 @@ public class RegisterBUS {
 			}
 		}
 
-		if (username.length() > 15) {
-			throw new RuntimeException("Username cannot be longer than 15 characters");
-		}
 		if (password.length() < 5) {
 			throw new RuntimeException("Password must be longer than 5 characters");
 		}

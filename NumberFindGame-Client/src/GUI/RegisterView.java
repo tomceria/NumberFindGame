@@ -262,6 +262,7 @@ public class RegisterView {
 				txtEmail.setText("");
 				txtBirthday.setText("");
 				ViewBUS.gotoLoginView();
+				ViewBUS.registerView = null;
 			}
 		});
 		btnSubmit.addActionListener(new ActionListener() {
@@ -271,6 +272,7 @@ public class RegisterView {
 					boolean result = RegisterView.this.registerBUS.action_RegisterSubmit();
 					if (result == true) {
 						ViewBUS.gotoLoginView();
+						ViewBUS.registerView = null;
 						JOptionPane.showMessageDialog(RegisterView.this.contentPane, "Your account has been created.",
 								"Information", JOptionPane.INFORMATION_MESSAGE);
 					} else {
@@ -278,7 +280,12 @@ public class RegisterView {
 								JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception exception) {
-					JOptionPane.showMessageDialog(RegisterView.this.contentPane, exception.getMessage(), "Error",
+					String message = exception.getMessage();
+					if (message.contains("Connection refused")) {
+						message = "Game server is currently unavailable.";
+					}
+
+					JOptionPane.showMessageDialog(RegisterView.this.contentPane, message, "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
