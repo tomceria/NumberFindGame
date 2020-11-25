@@ -8,8 +8,11 @@ import util.IThreadCompleteListener;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -83,7 +86,7 @@ public class ClientManager implements IThreadCompleteListener {
 		SocketRequest request = null;
 		try {
 			request = clientHandler.receiveRequest();
-		} catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException e) {
+		} catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
 			e.printStackTrace();
 		}
 		return request;

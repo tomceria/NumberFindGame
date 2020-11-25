@@ -4,12 +4,11 @@ import Socket.Encryption.ISecretObject;
 import Socket.Encryption.SecretObjectImpl;
 import Socket.Helper.EncryptionHelper;
 import Socket.Request.SocketRequest;
+import Socket.Request.SocketRequestPackage;
 import Socket.Request.SocketRequest_AccessLogin;
 import Socket.Response.SocketResponse;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.SealedObject;
+import javax.crypto.*;
 import javax.security.sasl.AuthenticationException;
 import java.io.EOFException;
 import java.io.IOException;
@@ -92,7 +91,21 @@ public class Client {
         }
 
         try {
-            Client.output.writeObject(sealObject(request));
+            /**
+             * Kiểm tra xem đây có phải là lần đầu kết nối hay không
+             * (nếu đúng, nghĩa là persistSocketProcess chưa được thiết lập => isRunning == false)
+             */
+            if (persistSocketProcess != null && persistSocketProcess.isRunning) {
+                Client.output.writeObject(sealObject(request));
+            } else {
+                // mã hóa dữ liệu bằng client secret key trước khi gửi
+                Client.output.writeObject(new SocketRequestPackage(
+                        sealObject(request),
+                        this.encryptSecretKey() // mã hóa secret key bằng server public key
+                ));
+            }
+
+//            Client.output.writeObject(encryptObject(request));
             Client.output.flush();
         } catch (IOException | IllegalBlockSizeException e) {
             e.printStackTrace();
@@ -108,6 +121,7 @@ public class Client {
         try {
 //            response = (SocketResponse) Client.input.readObject();
             response = unsealObject(Client.input.readObject());
+//            response = decryptObject(Client.input.readObject());
         } catch (NullPointerException | EOFException e) {
             // Disconnect
             close();
@@ -115,6 +129,31 @@ public class Client {
             e.printStackTrace();
         }
         return response;
+    }
+
+    // mã hóa secret key bằng server public key
+    protected byte[] encryptSecretKey() {
+        byte[] encryptedKey = null;
+        try {
+            encryptedKey = EncryptionHelper.ServerPublicKeyCipher.doFinal(EncryptionHelper.ClientSecretKey.getEncoded());
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return encryptedKey;
+    }
+
+    // mã hóa request bằng server public key
+    protected SealedObject encryptObject(Object o) throws IOException, IllegalBlockSizeException {
+        ISecretObject secretObject = new SecretObjectImpl((SocketRequest) o);
+        SealedObject so = new SealedObject(secretObject, EncryptionHelper.CIPHER);
+        return so;
+    }
+
+    // giải mã response bằng client private key
+    protected SocketResponse decryptObject(Object o) throws IOException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
+        SealedObject s = (SealedObject) o;
+        ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);
+        return decryptedSecretObject.getSecretResponse();
     }
 
     // mã hóa request trước khi gửi đi

@@ -3,16 +3,19 @@ package Socket;
 import Socket.Encryption.ISecretObject;
 import Socket.Encryption.SecretObjectImpl;
 import Socket.Request.SocketRequest;
+import Socket.Request.SocketRequestPackage;
 import Socket.Response.SocketResponse;
 import util.EncryptionHelper;
 import util.NotifyingThread;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.SealedObject;
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.UUID;
 
 public class ClientHandler {
@@ -27,7 +30,7 @@ public class ClientHandler {
 	IClientIdentifier clientIdentifier; // inherits MatchPlayer
 	ClientManager clientManager; // PARENT
 
-	EncryptionHelper encryptionHelper;
+	SecretKey clientSecretKey = null;
 
 	public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
 		this.id = id;
@@ -48,7 +51,7 @@ public class ClientHandler {
 					// Disconnect
 					Logger.writeFile(String.format("Client '%s' disconnected.", ClientHandler.this.id));
 					closeSocket();
-				} catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException e) {
+				} catch (IOException | ClassNotFoundException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
 					e.printStackTrace();
 				}
 			}
@@ -67,16 +70,26 @@ public class ClientHandler {
 
 		try {
 			output.writeObject(sealObject(response));
+//			output.writeObject(encryptObject(response));
 			output.flush();
-		} catch (IOException | IllegalBlockSizeException e) {
+		} catch (IOException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException, BadPaddingException, IllegalBlockSizeException {
+	protected SocketRequest receiveRequest() throws IOException, ClassNotFoundException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 		SocketRequest request = null;
-		request = unsealObject(input.readObject());
-//		request = (SocketRequest) input.readObject();
+		SealedObject sealedObject = null;
+		Object tmp = input.readObject();
+
+		if (clientSecretKey != null) {
+			request = unsealObject(tmp);
+		} else {
+			sealedObject = ((SocketRequestPackage) tmp).data;
+			clientSecretKey = decryptSecretKey(((SocketRequestPackage) tmp).encryptedSecretKey);
+			request = unsealObject(sealedObject);
+		}
+
 		return request;
 	}
 
@@ -98,17 +111,33 @@ public class ClientHandler {
 		}
 	}
 
+	// giải mã secret key của client bằng server private key
+	protected SecretKeySpec decryptSecretKey(byte[] encryptedKey) {
+		SecretKeySpec originalKey = null;
+		try {
+			byte[] decryptedKey = EncryptionHelper.DCIPHER.doFinal(encryptedKey);
+			originalKey  = new SecretKeySpec(decryptedKey , 0, decryptedKey .length, "AES");
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			e.printStackTrace();
+		}
+		return originalKey;
+	}
+
 	// mã hóa response trước khi gửi đi
-	protected SealedObject sealObject(Object o) throws IOException, IllegalBlockSizeException {
+	protected SealedObject sealObject(Object o) throws IOException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 		ISecretObject secretObject = new SecretObjectImpl((SocketResponse) o);
-		SealedObject so = new SealedObject(secretObject, EncryptionHelper.CIPHER);
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.ENCRYPT_MODE, clientSecretKey);
+		SealedObject so = new SealedObject(secretObject, cipher);
 		return so;
 	}
 
 	// giải mã request nhận được
-	protected SocketRequest unsealObject(Object o) throws ClassNotFoundException, BadPaddingException, IllegalBlockSizeException, IOException {
+	protected SocketRequest unsealObject(Object o) throws ClassNotFoundException, BadPaddingException, IllegalBlockSizeException, IOException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
 		SealedObject s = (SealedObject) o;
-		ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);
+		Cipher dcipher = Cipher.getInstance("AES");
+		dcipher.init(Cipher.DECRYPT_MODE, clientSecretKey);
+		ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(dcipher);
 		return decryptedSecretObject.getSecretRequest();
 	}
 
