@@ -17,62 +17,13 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 public class EncryptionHelper {
+    /**
+     * Chỉ dùng để giải mã Key của Request đầu
+     * Main CIPHER và DCIPHER là các instance tạo trong các hàm sealObject, unsealObject
+     */
     public static Cipher DCIPHER;
-    public static Cipher CIPHER;
     public static PublicKey ServerPublicKey;
     public static PrivateKey ServerPrivateKey;
-
-    public void createKey(int mode) {
-        // Create key
-        try {
-            final char[] password = "secret_password".toCharArray();
-            final byte[] salt = "random_salt".getBytes();
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            KeySpec spec = new PBEKeySpec(password, salt, 1024, 128);
-            SecretKey tmp = factory.generateSecret(spec);
-            SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-            if (mode == Cipher.ENCRYPT_MODE) {
-                CIPHER = Cipher.getInstance("AES");
-                CIPHER.init(Cipher.ENCRYPT_MODE, secret);
-            } else if (mode == Cipher.DECRYPT_MODE) {
-                DCIPHER = Cipher.getInstance("AES");
-                DCIPHER.init(mode, secret);
-            }
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void generateKeysForServer() {
-        try {
-            SecureRandom sr = new SecureRandom();
-            // Thuật toán phát sinh khóa - Rivest Shamir Adleman (RSA)
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(4096, sr);
-            // Phát sinh cặp khóa
-            KeyPair kp = kpg.genKeyPair();
-            // PublicKey
-            ServerPublicKey = kp.getPublic();
-
-            // PrivateKey
-            ServerPrivateKey = kp.getPrivate();
-            // Lưu Public Key
-//            FileOutputStream fos = new FileOutputStream("publickey.txt");
-//            fos.write(ServerPublicKey.getEncoded());
-//            fos.close();
-
-            // Lưu Private Key
-//            fos = new FileOutputStream("privatekey.txt");
-//            fos.write(ServerPrivateKey.getEncoded());
-//            fos.close();
-            // sử dụng server private key để giải mã
-            DCIPHER = Cipher.getInstance("RSA");
-            DCIPHER.init(Cipher.DECRYPT_MODE, ServerPrivateKey);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ignored) {
-
-        }
-    }
 
     public void getKeysFromFile() {
         try {

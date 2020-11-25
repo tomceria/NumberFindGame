@@ -30,7 +30,6 @@ public class ClientHandler {
 	IClientIdentifier clientIdentifier; // inherits MatchPlayer
 	ClientManager clientManager; // PARENT
 
-	PublicKey publicKey;
 	SecretKey clientSecretKey = null;
 
 	public ClientHandler(Socket client, UUID id, ClientManager clientManager) throws IOException {
@@ -122,22 +121,6 @@ public class ClientHandler {
 			e.printStackTrace();
 		}
 		return originalKey;
-	}
-
-	// mã hóa request bằng server public key
-	protected SealedObject encryptObject(Object o) throws IOException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-		Cipher c = Cipher.getInstance("RSA");
-		c.init(Cipher.ENCRYPT_MODE, this.publicKey);
-		ISecretObject secretObject = new SecretObjectImpl((SocketRequest) o);
-		SealedObject so = new SealedObject(secretObject, c);
-		return so;
-	}
-
-	// giải mã response bằng client private key
-	protected SocketRequest decryptObject(Object o) throws IOException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException {
-		SealedObject s = (SealedObject) o;
-		ISecretObject decryptedSecretObject = (ISecretObject) s.getObject(EncryptionHelper.DCIPHER);
-		return decryptedSecretObject.getSecretRequest();
 	}
 
 	// mã hóa response trước khi gửi đi
