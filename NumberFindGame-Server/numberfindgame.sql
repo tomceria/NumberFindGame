@@ -118,7 +118,89 @@ INSERT INTO `players` (`id`, `username`, `password`, `email`, `first_name`, `las
 --
 DROP TABLE IF EXISTS `leaderboard`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `leaderboard`  AS  select `tmp2`.`ranking` AS `ranking`,`tmp2`.`username` AS `username`,`tmp2`.`total_matches` AS `total_matches`,ifnull(`tmp2`.`sum_rp`,0) AS `sum_rp`,ifnull(`tmp2`.`winrate`,0) AS `winrate` from (select row_number() over ( order by `tmp`.`sum_rp` desc,round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100,2) desc) AS `ranking`,`tmp`.`username` AS `username`,`tmp`.`total_matches` AS `total_matches`,`tmp`.`sum_rp` AS `sum_rp`,round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100,2) AS `winrate` from (select `p`.`username` AS `username`,sum(`mp`.`ranking_point`) AS `sum_rp`,count(case `mp`.`placing` when 1 then 1 else NULL end) AS `win_matches`,count(`mp`.`placing`) AS `total_matches` from (`players` `p` left join `match_player` `mp` on(`p`.`id` = `mp`.`player_id`)) group by `p`.`username`) `tmp` order by `tmp`.`sum_rp` desc,round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100,2) desc) `tmp2` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `leaderboard`  AS 
+SELECT
+	`tmp2`.`ranking` AS `ranking`,
+	`tmp2`.`username` AS `username`,
+	`tmp2`.`total_matches` AS `total_matches`,
+	ifnull(`tmp2`.`sum_rp`, 0) AS `sum_rp`,
+	ifnull(`tmp2`.`winrate`, 0) AS `winrate`
+FROM (
+	SELECT
+		row_number() OVER (ORDER BY `tmp`.`sum_rp` DESC,
+			round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100, 2)
+			DESC) AS `ranking`,
+		`tmp`.`username` AS `username`,
+		`tmp`.`total_matches` AS `total_matches`,
+		`tmp`.`sum_rp` AS `sum_rp`,
+		round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100, 2) AS `winrate`
+	FROM (
+	SELECT
+		`p`.`username` AS `username`,
+		sum(`mp`.`ranking_point`) AS `sum_rp`,
+		count( CASE `mp`.`placing`
+		WHEN 1 THEN
+			1
+		ELSE
+			NULL
+		END) AS `win_matches`,
+		count(`mp`.`placing`) AS `total_matches`
+	FROM (`numberfindgamedb`.`players` `p`
+	LEFT JOIN `numberfindgamedb`.`match_player` `mp` ON (`p`.`id` = `mp`.`player_id`))
+GROUP BY
+	`p`.`username`) `tmp` ORDER BY
+	`tmp`.`sum_rp` DESC,
+	round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100, 2)
+	DESC, `username`) `tmp2` ;
+
+-- 2020-11-25 15:26:25.5270
+SELECT ordinal_position as ordinal_position,column_name as column_name,data_type AS data_type,is_nullable as is_nullable,column_type as column_type FROM information_schema.columns WHERE table_schema='NumberFindGameDB'AND table_name='leaderboard';
+
+-- 2020-11-25 15:26:25.5360
+SELECT VIEW_DEFINITION as create_statement FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_SCHEMA='NumberFindGameDB'AND TABLE_NAME='leaderboard';
+
+-- 2020-11-25 15:26:27.8730
+SELECT * FROM `NumberFindGameDB`.`leaderboard` LIMIT 300 OFFSET 0;
+
+-- 2020-11-25 15:26:27.8820
+SELECT table_rows as count FROM information_schema.TABLES WHERE TABLE_SCHEMA='NumberFindGameDB'AND TABLE_NAME='leaderboard';
+
+-- 2020-11-25 16:24:30.3610
+CREATE OR REPLACE VIEW `NumberFindGameDB`.`leaderboard` AS SELECT
+	`tmp2`.`ranking` AS `ranking`,
+	`tmp2`.`username` AS `username`,
+	`tmp2`.`total_matches` AS `total_matches`,
+	ifnull(`tmp2`.`sum_rp`, 0) AS `sum_rp`,
+	ifnull(`tmp2`.`winrate`, 0) AS `winrate`
+FROM (
+	SELECT
+		row_number() OVER (ORDER BY `tmp`.`sum_rp` DESC,
+			round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100, 2)
+			DESC, `username`) AS `ranking`,
+		`tmp`.`username` AS `username`,
+		`tmp`.`total_matches` AS `total_matches`,
+		`tmp`.`sum_rp` AS `sum_rp`,
+		round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100, 2) AS `winrate`
+	FROM (
+	SELECT
+		`p`.`username` AS `username`,
+		sum(`mp`.`ranking_point`) AS `sum_rp`,
+		count( CASE `mp`.`placing`
+		WHEN 1 THEN
+			1
+		ELSE
+			NULL
+		END) AS `win_matches`,
+		count(`mp`.`placing`) AS `total_matches`
+	FROM (`numberfindgamedb`.`players` `p`
+	LEFT JOIN `numberfindgamedb`.`match_player` `mp` ON (`p`.`id` = `mp`.`player_id`))
+GROUP BY
+	`p`.`username`) `tmp` ORDER BY
+	`tmp`.`sum_rp` DESC,
+	round(`tmp`.`win_matches` / `tmp`.`total_matches` * 100, 2)
+	DESC,
+	`tmp`.`username`) `tmp2`
+ ;
 
 --
 -- Indexes for dumped tables
